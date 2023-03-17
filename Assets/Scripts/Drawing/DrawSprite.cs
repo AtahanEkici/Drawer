@@ -1,129 +1,72 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawSprite : MonoBehaviour
 {
-    private Texture2D texture;
-    private Sprite sprite;
-    private Color[] pixels;
-    private Vector2 previousMousePosition;
-    private bool isDrawing;
-    private GameObject drawnObject;
+    public GameObject linePrefab;
 
-    public int width = 512;
-    public int height = 512;
-    public float pixelSize = 0.1f;
-    public Color lineColor = Color.white;
+    private GameObject currentLine; 
+    private Vector2 mousePosition;
 
-    void Start()
+    private void Awake()
     {
-        texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        pixels = new Color[width * height];
-        sprite = Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
-        GetComponent<SpriteRenderer>().sprite = sprite;
+        
     }
-
-    void Update()
+    private void Start()
     {
+        
+    }
+    private void Update()
+    {
+        DrawObjects();
+    }
+    private void DrawObjects()
+    {
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         if (Input.GetMouseButtonDown(0))
         {
-            previousMousePosition = Input.mousePosition;
-            isDrawing = true;
+            currentLine = Instantiate(linePrefab, mousePosition, Quaternion.identity); // Change the rotation //
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButton(0))
         {
-            isDrawing = false;
-            drawnObject = CreateDrawnObject();
+                GameObject newLine = Instantiate(linePrefab, mousePosition, Quaternion.identity);
+                newLine.transform.SetParent(currentLine.transform);
         }
-
-        if (isDrawing)
+        else if (Input.GetMouseButtonUp(0)) // Check if the left mouse button is released
         {
-            Vector2 currentMousePosition = Input.mousePosition;
-            Vector2Int pixelStart = WorldToPixel(previousMousePosition);
-            Vector2Int pixelEnd = WorldToPixel(currentMousePosition);
-            DrawLine(pixelStart, pixelEnd, lineColor);
-            previousMousePosition = currentMousePosition;
-            texture.SetPixels(pixels);
-            texture.Apply();
+            currentLine.AddComponent<Rigidbody2D>();
+            PolygonCollider2D PC2D = currentLine.AddComponent<PolygonCollider2D>();
+            //SetColliderBounds(currentLine, PC2D);
+            Debug.Log(currentLine.transform.childCount);
         }
     }
-
-    void DrawLine(Vector2Int start, Vector2Int end, Color color)
+    /*
+    private void SetColliderBounds(GameObject go, PolygonCollider2D pc2d)
     {
-        int dx = Mathf.Abs(end.x - start.x);
-        int dy = Mathf.Abs(end.y - start.y);
-        int sx = start.x < end.x ? 1 : -1;
-        int sy = start.y < end.y ? 1 : -1;
-        int err = dx - dy;
+        SpriteRenderer[] childSprites = go.GetComponentsInChildren<SpriteRenderer>();
 
-        while (true)
+        List<Vector2> vertices = new List<Vector2>();
+
+        foreach (SpriteRenderer sprite in childSprites)
         {
-            pixels[start.y * width + start.x] = color;
+            Vector3[] corners = new Vector3[4];
+            sprite.transform.localToWorldMatrix.MultiplyPoint3x4(sprite.sprite.bounds.min);
+            sprite.transform.localToWorldMatrix.MultiplyPoint3x4(sprite.sprite.bounds.max);
 
-            if (start.x == end.x && start.y == end.y)
-            {
-                break;
-            }
+            corners[0] = sprite.transform.InverseTransformPoint(corners[0]);
+            corners[1] = sprite.transform.InverseTransformPoint(corners[1]);
+            corners[2] = sprite.transform.InverseTransformPoint(corners[2]);
+            corners[3] = sprite.transform.InverseTransformPoint(corners[3]);
 
-            int e2 = 2 * err;
-
-            if (e2 > -dy)
-            {
-                err -= dy;
-                start.x += sx;
-            }
-
-            if (e2 < dx)
-            {
-                err += dx;
-                start.y += sy;
-            }
-        }
-    }
-
-    Vector2Int WorldToPixel(Vector2 worldPosition)
-    {
-        float pixelSizeInWorldUnits = pixelSize / Camera.main.orthographicSize;
-        Vector2 offset = new Vector2(width, height) * 0.5f;
-        Vector2Int pixelPosition = new Vector2Int((int)((worldPosition.x + offset.x) / pixelSizeInWorldUnits), (int)((worldPosition.y + offset.y) / pixelSizeInWorldUnits));
-        pixelPosition.x = Mathf.Clamp(pixelPosition.x, 0, width - 1);
-        pixelPosition.y = Mathf.Clamp(pixelPosition.y, 0, height - 1);
-        return pixelPosition;
-    }
-
-    private GameObject CreateDrawnObject()
-    {
-        // Create a new game object with a sprite renderer and a rigidbody 2D component
-        GameObject drawnObject = new GameObject();
-        drawnObject.AddComponent<SpriteRenderer>();
-        drawnObject.AddComponent<Rigidbody2D>();
-
-        // Assign the drawn sprite to the sprite renderer
-        SpriteRenderer spriteRenderer = drawnObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = sprite;
-
-        // Add a BoxCollider2D component to the game object and set its size based on the drawn sprite
-        BoxCollider2D boxCollider = drawnObject.AddComponent<BoxCollider2D>();
-        boxCollider.size = spriteRenderer.bounds.size;
-
-        // Add a Rigidbody2D component to the game object
-        Rigidbody2D rigidbody2D = drawnObject.GetComponent<Rigidbody2D>();
-        rigidbody2D.gravityScale = 1f;
-
-        // Move the drawn object to the center of the screen and reset its rotation
-        drawnObject.transform.position = new Vector3(0, 0, 0);
-        drawnObject.transform.rotation = Quaternion.identity;
-
-        // Set the pixels array to transparent, so that the next drawing starts on a blank slate
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = Color.clear;
+            vertices.Add(corners[0]);
+            vertices.Add(corners[1]);
+            vertices.Add(corners[2]);
+            vertices.Add(corners[3]);
         }
 
-        // Apply the changes to the texture
-        texture.SetPixels(pixels);
-        texture.Apply();
-
-        // Return the drawn object
-        return drawnObject;
+        // Set the collider vertices to the vertex list
+        pc2d.points = vertices.ToArray();
     }
+    */
 }

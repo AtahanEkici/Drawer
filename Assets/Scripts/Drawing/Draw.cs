@@ -1,8 +1,16 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Draw : MonoBehaviour
 {
+    private bool isDrawing = false;
+
+    [Header("Line Options")]
+    [SerializeField] private GameObject linePrefab; // The prefab for the line sprite
+
+    [Header("Sprite Options")]
+    [SerializeField] private int TextureWidth = 1;
+    [SerializeField] private int TextureHeight = 1;
+
     [Header("Mouse Options")]
     [SerializeField] private Vector3 InitialMousePosition = Vector3.zero;
     [SerializeField] private Vector3 CurrentMousePosition = Vector3.zero;
@@ -25,18 +33,20 @@ public class Draw : MonoBehaviour
     }
     private void GetMouseInputs()
     {
-        if(Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
+        if(Input.GetMouseButtonDown(0))
         {
+            isDrawing = true;
             Debug.Log("Mouse Down");
             InitialMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if(Input.GetMouseButtonUp((int)MouseButton.LeftMouse))
+        else if(Input.GetMouseButtonUp(0))
         {
             Debug.Log("Mouse Up");
             LastMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
-        else if(Input.GetMouseButton((int)MouseButton.LeftMouse))
+        else if(Input.GetMouseButton(0))
         {
+            isDrawing = false;
             Debug.Log("Mouse Held Down");
             CurrentMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
@@ -45,4 +55,5 @@ public class Draw : MonoBehaviour
            // Debug.Log("No Mouse Interaction");
         }
     }
+    
 }
