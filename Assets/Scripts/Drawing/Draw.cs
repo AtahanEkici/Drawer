@@ -2,14 +2,8 @@ using UnityEngine;
 
 public class Draw : MonoBehaviour
 {
-    private bool isDrawing = false;
-
     [Header("Line Options")]
     [SerializeField] private GameObject linePrefab; // The prefab for the line sprite
-
-    [Header("Sprite Options")]
-    [SerializeField] private int TextureWidth = 1;
-    [SerializeField] private int TextureHeight = 1;
 
     [Header("Mouse Options")]
     [SerializeField] private Vector3 InitialMousePosition = Vector3.zero;
@@ -35,7 +29,6 @@ public class Draw : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            isDrawing = true;
             Debug.Log("Mouse Down");
             InitialMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
@@ -46,7 +39,6 @@ public class Draw : MonoBehaviour
         }
         else if(Input.GetMouseButton(0))
         {
-            isDrawing = false;
             Debug.Log("Mouse Held Down");
             CurrentMousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         }
