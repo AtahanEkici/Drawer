@@ -1,46 +1,71 @@
-using System.Collections.Generic;
 using UnityEngine;
 public class DrawSprite : MonoBehaviour
 {
-    public GameObject linePrefab;
+    [Header("Line Resource")]
+    [SerializeField]private GameObject linePrefab;
+
+    [Header("Main Camera")]
+    [SerializeField] private Camera MainCamera;
+
+    [Header("Object Count")]
+    [SerializeField] private int ObjectCount = 0;
 
     private float prefabScale = 0f;
+
     private GameObject currentLine; 
+
     private Vector2 mousePosition;
     private Vector2 LastPosition;
     private void Start()
     {
-        prefabScale = linePrefab.transform.localScale.x / 2;
+        GetForeignReferences();
     }
     private void Update()
     {
+        GetMousePosition();
         DrawObjects();
+    }
+    private void GetForeignReferences()
+    {
+        if(MainCamera == null)
+        {
+            MainCamera = Camera.main;
+        }
+        if(prefabScale <= 0f)
+        {
+            prefabScale = linePrefab.transform.localScale.x / 1.5f;
+        }
+    }
+    private void GetMousePosition()
+    {
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
     private void DrawObjects()
     {
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
         if (Input.GetMouseButtonDown(0))
         {
             currentLine = Instantiate(linePrefab, mousePosition, Quaternion.identity);
             currentLine.name = "ParentObject";
+            ObjectCount++;
         }
         else if (Input.GetMouseButton(0) && Vector2.Distance(LastPosition, mousePosition) >= prefabScale)
         {
-                GameObject newLine = Instantiate(linePrefab, mousePosition, Quaternion.identity);
-                newLine.transform.SetParent(currentLine.transform);
-                LastPosition = newLine.transform.position;
+            GameObject newLine = Instantiate(linePrefab, mousePosition, Quaternion.identity);
+            newLine.transform.SetParent(currentLine.transform);
+            LastPosition = newLine.transform.position;
+            ObjectCount++;
         }
         else if (Input.GetMouseButtonUp(0)) 
         {
             CombineMeshes(currentLine);
+            Debug.Log(ObjectCount);
+            ObjectCount = 0;
         }
     }
     private void CombineMeshes(GameObject go)
     {
         MeshFilter[] meshFilters = go.GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
-        BoxCollider2D[] boxColliders = go.GetComponentsInChildren<BoxCollider2D>();
 
         for (int i=0;i<meshFilters.Length;i++)
         {
@@ -58,53 +83,18 @@ public class DrawSprite : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-            List<Vector2> colliderPoints = new List<Vector2>();
+        PolygonCollider2D PolCol = Combined.AddComponent<PolygonCollider2D>();
 
-            foreach (BoxCollider2D boxCollider in boxColliders)
-            {
-                Vector2[] points = GetBoxColliderPoints(boxCollider);
-                for (int i = 0; i < points.Length; i++)
-                {
-                    points[i] = boxCollider.transform.TransformPoint(points[i]);
-                }
-                colliderPoints.AddRange(points);
-                Destroy(boxCollider);
-            }
-        
-        PolygonCollider2D polygonCollider = Combined.AddComponent<PolygonCollider2D>();
-        polygonCollider.points = colliderPoints.ToArray();
-        Collider2DOptimization.PolygonColliderOptimizer.OptimizePoligonCollider(polygonCollider);
+        Vector3[] vertices = mesh_Filter.mesh.vertices;
+        Vector2[] vertices2D = new Vector2[vertices.Length];
 
-    /*
-    PolygonCollider2D PolCol = Combined.AddComponent<PolygonCollider2D>();
+        for(int i=0;i<vertices.Length;i++)
+        {
+            vertices2D[i] = (Vector2) vertices[i];
+        }
 
-    Vector3[] vertices = mesh_Filter.mesh.vertices;
+        PolCol.points = vertices2D;
 
-    int[] triangles = mesh_Filter.mesh.triangles;
-
-    Vector2[] edges = new Vector2[triangles.Length];
-
-    int edgeIndex = 0;
-
-    for (int i = 0; i < triangles.Length; i += 3)
-    {
-        edges[edgeIndex++] = new Vector2(vertices[triangles[i]].x, vertices[triangles[i]].y);
-        edges[edgeIndex++] = new Vector2(vertices[triangles[i + 1]].x, vertices[triangles[i + 1]].y);
-        edges[edgeIndex++] = new Vector2(vertices[triangles[i + 2]].x, vertices[triangles[i + 2]].y);
-    }
-    PolCol.points = edges;
-    */
-}
-    private Vector2[] GetBoxColliderPoints(BoxCollider2D boxCollider)
-    {
-        Vector2 size = boxCollider.size;
-        Vector2 center = boxCollider.offset;
-
-        Vector2 topLeft = new Vector2(center.x - size.x / 2f, center.y + size.y / 2f);
-        Vector2 topRight = new Vector2(center.x + size.x / 2f, center.y + size.y / 2f);
-        Vector2 bottomLeft = new Vector2(center.x - size.x / 2f, center.y - size.y / 2f);
-        Vector2 bottomRight = new Vector2(center.x + size.x / 2f, center.y - size.y / 2f);
-
-        return new Vector2[] { topLeft, topRight, bottomRight, bottomLeft };
+        Collider2DOptimization.PolygonColliderOptimizer.OptimizePoligonCollider(PolCol);
     }
 }
