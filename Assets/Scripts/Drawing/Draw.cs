@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 public class Draw : MonoBehaviour
 {
@@ -7,7 +6,7 @@ public class Draw : MonoBehaviour
 
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
-    [SerializeField] private float LineRendererWidth = 0.2f;
+    [SerializeField] private float LineRendererWidth = 0.1f;
 
     [Header("Mouse Options")]
     [SerializeField] private Vector3 mousePos;
@@ -18,11 +17,11 @@ public class Draw : MonoBehaviour
     [Header("Camera Info")]
     [SerializeField] private Camera MainCamera;
 
-    [Header("Drawing Count")]
-    [SerializeField] private int DrawingCount = 0;
+    [Header("Drawings")]
+    [SerializeField] private List<GameObject> Drawings = new();
 
     [Header("Simplification Coefficient")]
-    [SerializeField] private float SimplificationCoefficient = 2;
+    [SerializeField] private float SimplificationCoefficient = 0.01f;
 
     [Header("Line Material")]
     [SerializeField] private Material LineMaterial;
@@ -41,12 +40,12 @@ public class Draw : MonoBehaviour
     private void GetMouseInputs()
     {
         mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
-        
+
         if (Input.GetMouseButtonDown(0))
         {
             StartDrawing();
         }
-        else if(Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0))
         {
             WhileDrawing();
         }
@@ -55,11 +54,9 @@ public class Draw : MonoBehaviour
             EndDrawing();
         }
     }
-    
     private void StartDrawing()
     {
-        DrawingCount++;
-        NewDrawing = new("Drawing"+DrawingCount.ToString());
+        NewDrawing = new("Drawing" + Drawings.Count.ToString());
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
         Line_Renderer.startWidth = LineRendererWidth;
@@ -93,7 +90,11 @@ public class Draw : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        AttachCapsuleCollidersToPoints(Line_Renderer,NewDrawing);
+        AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
+
+        Drawings.Add(NewDrawing);
+
+        //RemoveOverlappingColliders(NewDrawing); // Does not work //
     }
     private static void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
     {
@@ -112,27 +113,46 @@ public class Draw : MonoBehaviour
             {
                 GameObject capsule = new GameObject("Capsule Collider " + i);
                 CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
-                collider.transform.position = positions[i];
+                collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
 
-                if (i < positions.Length - 1)
-                {
-                    float distance = Vector2.Distance(positions[i], positions[i + 1]);
-                    collider.size = new Vector2(distance, 0.1f);
-                    collider.direction = CapsuleDirection2D.Horizontal;
-                    Vector2 direction = positions[i + 1] - positions[i];
-                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                    collider.transform.rotation = Quaternion.Euler(0, 0, angle);
-                }
-                else
-                {
-                    collider.transform.rotation = capsule.transform.parent.GetChild(i-1).transform.rotation;
-                }
+                float distance = Vector2.Distance(positions[i], positions[i + 1]);
+                collider.size = new Vector2(distance, 0.1f);
+                collider.direction = CapsuleDirection2D.Horizontal;
+                Vector2 direction = positions[i + 1] - positions[i];
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                collider.transform.rotation = Quaternion.Euler(0, 0, angle);
+
                 capsule.transform.parent = go.transform;
             }
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.LogException(e);
+        }
+    }
+    private void RemoveOverlappingColliders(GameObject go)
+    {
+        CapsuleCollider2D[] colliders = go.GetComponentsInChildren<CapsuleCollider2D>();
+
+        foreach (CapsuleCollider2D collider in colliders)
+        {
+            Collider2D[] overlappingColliders = Physics2D.OverlapCapsuleAll(
+                collider.transform.position,
+                collider.size,
+                collider.direction,
+                collider.transform.rotation.eulerAngles.z,
+                collider.gameObject.layer
+            );
+
+            foreach (Collider2D overlappingCollider in overlappingColliders)
+            {
+                if (overlappingCollider != collider)
+                {
+                    Destroy(collider.gameObject);
+                    Debug.Log("Destroyed");
+                    break;
+                }
+            }
         }
     }
     private static void AssignPolygonCollider(LineRenderer lr, GameObject go)
@@ -143,7 +163,7 @@ public class Draw : MonoBehaviour
 
         Vector2[] points = new Vector2[posCount];
 
-        for(int i=0;i<posCount;i++)
+        for (int i = 0; i < posCount; i++)
         {
             points[i] = (Vector2)lr.GetPosition(i);
         }
@@ -160,7 +180,7 @@ public class Draw : MonoBehaviour
 
         List<Vector2> Points = new();
 
-        for (int i=0;i<maxPos;i++)
+        for (int i = 0; i < maxPos; i++)
         {
             Points.Add((Vector2)lr.GetPosition(i));
         }
@@ -168,6 +188,6 @@ public class Draw : MonoBehaviour
     }
     private static Material GetLineMaterial()
     {
-       return Resources.Load(LineMaterialResourcePath) as Material;
+        return Resources.Load(LineMaterialResourcePath) as Material;
     }
 }
