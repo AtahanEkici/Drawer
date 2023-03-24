@@ -1,30 +1,34 @@
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
-
 public class Draw : MonoBehaviour
 {
-    [Header("Line Options")]
-    [SerializeField] private GameObject linePrefab; // The prefab for the line sprite
+    private const string LineMaterialResourcePath = "Materials/LineMaterial/LineMaterial";
 
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
-    [SerializeField] private LineRenderer ResetState;
     [SerializeField] private float LineRendererWidth = 0.2f;
 
     [Header("Mouse Options")]
-    [SerializeField] private Vector3 InitialMousePosition = Vector3.zero;
-    [SerializeField] private Vector3 CurrentMousePosition = Vector3.zero;
-    [SerializeField] private Vector3 LastMousePosition = Vector3.zero;
+    [SerializeField] private Vector3 mousePos;
+
+    [Header("New Object")]
+    [SerializeField] private GameObject NewDrawing;
 
     [Header("Camera Info")]
     [SerializeField] private Camera MainCamera;
 
+    [Header("Drawing Count")]
+    [SerializeField] private int DrawingCount = 0;
+
+    [Header("Simplification Coefficient")]
+    [SerializeField] private float SimplificationCoefficient = 2;
+
+    [Header("Line Material")]
+    [SerializeField] private Material LineMaterial;
     private void Awake()
     {
-        Line_Renderer = GetComponent<LineRenderer>();
-        Line_Renderer.startWidth = LineRendererWidth;
-        Line_Renderer.endWidth = LineRendererWidth;
-        ResetState = Line_Renderer;
-
+        LineMaterial = GetLineMaterial();
     }
     private void OnEnable()
     {
@@ -36,31 +40,134 @@ public class Draw : MonoBehaviour
     }
     private void GetMouseInputs()
     {
-        Vector3 mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
         
-
         if (Input.GetMouseButtonDown(0))
         {
-            InitialMousePosition = mousePos;
-            Line_Renderer.positionCount = 1;
-            Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+            StartDrawing();
         }
         else if(Input.GetMouseButton(0))
         {
-            CurrentMousePosition = mousePos;
-            Line_Renderer.positionCount++;
-            Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+            WhileDrawing();
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            LastMousePosition = mousePos;
-            GameObject NewDrawing = new("Drawing");
-            LineRenderer lr = NewDrawing.AddComponent<LineRenderer>();
-            lr = Line_Renderer;
-            Line_Renderer = ResetState;
-            NewDrawing.AddComponent<Rigidbody2D>();
-            NewDrawing.AddComponent<EdgeCollider2D>();
+            EndDrawing();
         }
     }
     
+    private void StartDrawing()
+    {
+        DrawingCount++;
+        NewDrawing = new("Drawing"+DrawingCount.ToString());
+        Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
+        Line_Renderer.material = LineMaterial;
+        Line_Renderer.startWidth = LineRendererWidth;
+        Line_Renderer.endWidth = LineRendererWidth;
+        Line_Renderer.positionCount = 1;
+        Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+    }
+    private void WhileDrawing()
+    {
+        Line_Renderer.positionCount++;
+        Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+    }
+    private void EndDrawing()
+    {
+        Line_Renderer.Simplify(SimplificationCoefficient);
+
+        Mesh LineMesh = new();
+        Line_Renderer.BakeMesh(LineMesh, MainCamera, true);
+
+        MeshFilter NewMeshFilter = NewDrawing.AddComponent<MeshFilter>();
+        NewMeshFilter.mesh = LineMesh;
+
+        MeshRenderer NewMeshRenderer = NewDrawing.AddComponent<MeshRenderer>();
+        NewMeshRenderer.material = LineMaterial;
+
+        Destroy(Line_Renderer);
+
+        Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
+        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        rb.useAutoMass = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        AttachCapsuleCollidersToPoints(Line_Renderer,NewDrawing);
+    }
+    private static void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
+    {
+        try
+        {
+            int posCount = lr.positionCount;
+
+            Vector2[] positions = new Vector2[posCount];
+
+            for (int i = 0; i < posCount; i++)
+            {
+                positions[i] = (Vector2)lr.GetPosition(i);
+            }
+
+            for (int i = 0; i < positions.Length - 1; i++)
+            {
+                GameObject capsule = new GameObject("Capsule Collider " + i);
+                CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
+                collider.transform.position = positions[i];
+
+                if (i < positions.Length - 1)
+                {
+                    float distance = Vector2.Distance(positions[i], positions[i + 1]);
+                    collider.size = new Vector2(distance, 0.1f);
+                    collider.direction = CapsuleDirection2D.Horizontal;
+                    Vector2 direction = positions[i + 1] - positions[i];
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    collider.transform.rotation = Quaternion.Euler(0, 0, angle);
+                }
+                else
+                {
+                    collider.transform.rotation = capsule.transform.parent.GetChild(i-1).transform.rotation;
+                }
+                capsule.transform.parent = go.transform;
+            }
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+    private static void AssignPolygonCollider(LineRenderer lr, GameObject go)
+    {
+        PolygonCollider2D polCol = go.AddComponent<PolygonCollider2D>();
+
+        int posCount = lr.positionCount;
+
+        Vector2[] points = new Vector2[posCount];
+
+        for(int i=0;i<posCount;i++)
+        {
+            points[i] = (Vector2)lr.GetPosition(i);
+        }
+
+        polCol.points = points;
+
+        Collider2DOptimization.PolygonColliderOptimizer.OptimizePoligonCollider(polCol);
+    }
+    private static void AssignEdgeCollider(LineRenderer lr, GameObject go)
+    {
+        int maxPos = lr.positionCount;
+
+        EdgeCollider2D EdgeCollider = go.AddComponent<EdgeCollider2D>();
+
+        List<Vector2> Points = new();
+
+        for (int i=0;i<maxPos;i++)
+        {
+            Points.Add((Vector2)lr.GetPosition(i));
+        }
+        EdgeCollider.SetPoints(Points);
+    }
+    private static Material GetLineMaterial()
+    {
+       return Resources.Load(LineMaterialResourcePath) as Material;
+    }
 }
