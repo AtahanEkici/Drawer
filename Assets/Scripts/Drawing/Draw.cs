@@ -96,7 +96,7 @@ public class Draw : MonoBehaviour
 
         //RemoveOverlappingColliders(NewDrawing); // Does not work //
     }
-    private static void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
+    private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
     {
         try
         {
@@ -116,7 +116,7 @@ public class Draw : MonoBehaviour
                 collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
 
                 float distance = Vector2.Distance(positions[i], positions[i + 1]);
-                collider.size = new Vector2(distance, 0.1f);
+                collider.size = new Vector2(distance, LineRendererWidth);
                 collider.direction = CapsuleDirection2D.Horizontal;
                 Vector2 direction = positions[i + 1] - positions[i];
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
