@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 public class Draw : MonoBehaviour
 {
     private const string LineMaterialResourcePath = "Materials/LineMaterial/LineMaterial";
@@ -9,7 +10,7 @@ public class Draw : MonoBehaviour
     [SerializeField] private float LineRendererWidth = 0.1f;
 
     [Header("Mouse Options")]
-    [SerializeField] private Vector3 mousePos;
+    [SerializeField] private Vector2 mousePos;
 
     [Header("New Object")]
     [SerializeField] private GameObject NewDrawing;
@@ -35,12 +36,19 @@ public class Draw : MonoBehaviour
     }
     private void Update()
     {
+        GetMousePosition();
         GetMouseInputs();
+    }
+    void OnMouseEnter()
+    {
+        Debug.Log("Mouse entered the gameobject");
+    }
+    void OnMouseExit()
+    {
+        Debug.Log("Mouse exited the gameobject");
     }
     private void GetMouseInputs()
     {
-        mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
-
         if (Input.GetMouseButtonDown(0))
         {
             StartDrawing();
@@ -54,9 +62,36 @@ public class Draw : MonoBehaviour
             EndDrawing();
         }
     }
+    private void GetMousePosition()
+    {
+        mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
+    }
+    private void DisposeLineRenderer()
+    {
+        if(Line_Renderer != null)
+        {
+            Destroy(Line_Renderer);
+        }
+    }
+    private bool HasAnyObjectOnMouse()
+    {
+            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity);
+
+            if (hit.rigidbody == null) // nothing is hit //
+            {
+                return false;
+            }
+            else // Something is hit //
+            {
+                return true;
+            }
+    }
     private void StartDrawing()
     {
+        if (HasAnyObjectOnMouse()) { DisposeLineRenderer(); return; }
+
         NewDrawing = new("Drawing" + Drawings.Count.ToString());
+
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
         Line_Renderer.startWidth = LineRendererWidth;
@@ -66,11 +101,16 @@ public class Draw : MonoBehaviour
     }
     private void WhileDrawing()
     {
+        if (HasAnyObjectOnMouse()) { Destroy(NewDrawing); DisposeLineRenderer(); return; }
+        else if(Line_Renderer == null) { return; }
+
         Line_Renderer.positionCount++;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
     }
     private void EndDrawing()
     {
+        if(Line_Renderer == null) { return; }
+
         Line_Renderer.Simplify(SimplificationCoefficient);
 
         Mesh LineMesh = new();
@@ -82,7 +122,7 @@ public class Draw : MonoBehaviour
         MeshRenderer NewMeshRenderer = NewDrawing.AddComponent<MeshRenderer>();
         NewMeshRenderer.material = LineMaterial;
 
-        Destroy(Line_Renderer);
+        DisposeLineRenderer();
 
         Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
@@ -93,8 +133,6 @@ public class Draw : MonoBehaviour
         AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
 
         Drawings.Add(NewDrawing);
-
-        //RemoveOverlappingColliders(NewDrawing); // Does not work //
     }
     private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
     {
