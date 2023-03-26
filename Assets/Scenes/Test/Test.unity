@@ -380,6 +380,10 @@ PrefabInstance:
       propertyPath: LineRendererWidth
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
+      propertyPath: SimplificationCoefficient
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 50365862520302849, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: m_Name
       value: Drawer

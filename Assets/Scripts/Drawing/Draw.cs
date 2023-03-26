@@ -75,16 +75,7 @@ public class Draw : MonoBehaviour
     }
     private bool HasAnyObjectOnMouse()
     {
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity);
-
-            if (hit.rigidbody == null) // nothing is hit //
-            {
-                return false;
-            }
-            else // Something is hit //
-            {
-                return true;
-            }
+        return Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity);
     }
     private void StartDrawing()
     {
@@ -125,16 +116,16 @@ public class Draw : MonoBehaviour
         DisposeLineRenderer();
 
         Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
-        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        //rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         rb.useAutoMass = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
+        AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing, true);
 
         Drawings.Add(NewDrawing);
     }
-    private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go)
+    private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go, bool isBox)
     {
         try
         {
@@ -149,18 +140,31 @@ public class Draw : MonoBehaviour
 
             for (int i = 0; i < positions.Length - 1; i++)
             {
-                GameObject capsule = new GameObject("Capsule Collider " + i);
-                CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
-                collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
-
-                float distance = Vector2.Distance(positions[i], positions[i + 1]);
-                collider.size = new Vector2(distance, LineRendererWidth);
-                collider.direction = CapsuleDirection2D.Horizontal;
-                Vector2 direction = positions[i + 1] - positions[i];
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                collider.transform.rotation = Quaternion.Euler(0, 0, angle);
-
-                capsule.transform.parent = go.transform;
+                if(isBox)
+                {
+                    GameObject capsule = new GameObject("Box Collider " + i);
+                    BoxCollider2D collider = capsule.AddComponent<BoxCollider2D>();
+                    collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
+                    float distance = Vector2.Distance(positions[i], positions[i + 1]);
+                    collider.size = new Vector2(distance, LineRendererWidth);
+                    Vector2 direction = positions[i + 1] - positions[i];
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    collider.transform.rotation = Quaternion.Euler(0, 0, angle);
+                    capsule.transform.SetParent(go.transform);
+                }
+                else
+                {
+                    GameObject capsule = new GameObject("Capsule Collider " + i);
+                    CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
+                    collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
+                    float distance = Vector2.Distance(positions[i], positions[i + 1]);
+                    collider.size = new Vector2(distance, LineRendererWidth);
+                    collider.direction = CapsuleDirection2D.Horizontal;
+                    Vector2 direction = positions[i + 1] - positions[i];
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    collider.transform.rotation = Quaternion.Euler(0, 0, angle);
+                    capsule.transform.SetParent(go.transform);
+                }
             }
         }
         catch (System.Exception e)
