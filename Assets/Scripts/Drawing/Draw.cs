@@ -13,13 +13,12 @@ public class Draw : MonoBehaviour
     [SerializeField] private Vector2 mousePos;
 
     [Header("New Object")]
+    [SerializeField] private GameObject Drawings;
     [SerializeField] private GameObject NewDrawing;
+    [SerializeField] private int i = 1;
 
     [Header("Camera Info")]
     [SerializeField] private Camera MainCamera;
-
-    [Header("Drawings")]
-    [SerializeField] private List<GameObject> Drawings = new();
 
     [Header("Simplification Coefficient")]
     [SerializeField] private float SimplificationCoefficient = 0.01f;
@@ -29,6 +28,7 @@ public class Draw : MonoBehaviour
     private void Awake()
     {
         LineMaterial = GetLineMaterial();
+        Drawings = new("Drawings");
     }
     private void OnEnable()
     {
@@ -73,15 +73,11 @@ public class Draw : MonoBehaviour
             Destroy(Line_Renderer);
         }
     }
-    private bool HasAnyObjectOnMouse()
-    {
-        return Physics2D.Raycast(mousePos, Vector2.zero, Mathf.Infinity);
-    }
     private void StartDrawing()
     {
-        if (HasAnyObjectOnMouse()) { DisposeLineRenderer(); return; }
+        //if (HasAnyObjectOnMouse()) { DisposeLineRenderer(); return; }
 
-        NewDrawing = new("Drawing" + Drawings.Count.ToString());
+        NewDrawing = new("Drawing"+i.ToString());
 
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
@@ -89,11 +85,13 @@ public class Draw : MonoBehaviour
         Line_Renderer.endWidth = LineRendererWidth;
         Line_Renderer.positionCount = 1;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+        NewDrawing.transform.SetParent(Drawings.transform);
+        i++;
     }
     private void WhileDrawing()
     {
-        if (HasAnyObjectOnMouse()) { Destroy(NewDrawing); DisposeLineRenderer(); return; }
-        else if(Line_Renderer == null) { return; }
+        //if (HasAnyObjectOnMouse()) { Destroy(NewDrawing); DisposeLineRenderer(); return; }
+        if(Line_Renderer == null) { return; }
 
         Line_Renderer.positionCount++;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
@@ -122,8 +120,6 @@ public class Draw : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing, true);
-
-        Drawings.Add(NewDrawing);
     }
     private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go, bool isBox)
     {
@@ -142,20 +138,24 @@ public class Draw : MonoBehaviour
             {
                 if(isBox)
                 {
-                    GameObject capsule = new GameObject("Box Collider " + i);
-                    BoxCollider2D collider = capsule.AddComponent<BoxCollider2D>();
+                    GameObject box = new ("Box Collider " + i);
+                    BoxCollider2D collider = box.AddComponent<BoxCollider2D>();
+                    collider.isTrigger = true;
+                    box.AddComponent<CollisionChecker>().col = collider;
                     collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
                     float distance = Vector2.Distance(positions[i], positions[i + 1]);
                     collider.size = new Vector2(distance, LineRendererWidth);
                     Vector2 direction = positions[i + 1] - positions[i];
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     collider.transform.rotation = Quaternion.Euler(0, 0, angle);
-                    capsule.transform.SetParent(go.transform);
+                    box.transform.SetParent(go.transform);
                 }
                 else
                 {
                     GameObject capsule = new GameObject("Capsule Collider " + i);
                     CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
+                    collider.isTrigger = true;
+                    capsule.AddComponent<CollisionChecker>().col = collider;
                     collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
                     float distance = Vector2.Distance(positions[i], positions[i + 1]);
                     collider.size = new Vector2(distance, LineRendererWidth);
