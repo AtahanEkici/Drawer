@@ -3,7 +3,9 @@ public class CollisionChecker : MonoBehaviour
 {
     [Header("Timer")]
     [SerializeField] private float counter = 0f;
-    [SerializeField] private float Reach = 0f; 
+    [SerializeField] private float Reach = 0f;
+
+    private static Vector3 FailStress = new(50,90f,0.15f);// frequency,angle,stress amount //
 
     [Header("Collider2D")]
     [SerializeField] public Collider2D col;
@@ -13,7 +15,11 @@ public class CollisionChecker : MonoBehaviour
     }
     private void Update()
     {
-        if(counter >= Reach)
+        CheckTime();
+    }
+    private void CheckTime()
+    {
+        if (counter >= Reach)
         {
             col.isTrigger = false;
             Destroy(this);
@@ -27,5 +33,6 @@ public class CollisionChecker : MonoBehaviour
     {
         //Debug.Log("OnTriggerEnterCalled Called: "+collision.gameObject.name+"");
         Destroy(transform.parent.gameObject);
+        CameraShake.Instance.InduceStress(FailStress);
     }
 }
