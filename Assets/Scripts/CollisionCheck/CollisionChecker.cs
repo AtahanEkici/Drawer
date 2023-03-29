@@ -5,7 +5,7 @@ public class CollisionChecker : MonoBehaviour
     [SerializeField] private float counter = 0f;
     [SerializeField] private float Reach = 0f;
 
-    private static Vector3 FailStress = new(50,90f,0.15f);// frequency,angle,stress amount //
+    private static Vector3 FailStress = new(25,90f,0.15f);// frequency,angle,stress amount //
 
     [Header("Collider2D")]
     [SerializeField] public Collider2D col;

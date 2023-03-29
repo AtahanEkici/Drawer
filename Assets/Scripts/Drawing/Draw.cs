@@ -15,7 +15,7 @@ public class Draw : MonoBehaviour
     [Header("New Object")]
     [SerializeField] private GameObject Drawings;
     [SerializeField] private GameObject NewDrawing;
-    [SerializeField] private int i = 1;
+    [SerializeField] private int TotalCount = 1;
 
     [Header("Camera Info")]
     [SerializeField] private Camera MainCamera;
@@ -29,6 +29,7 @@ public class Draw : MonoBehaviour
     {
         LineMaterial = GetLineMaterial();
         Drawings = new("Drawings");
+        Drawings.AddComponent<DrawingContainer>();
     }
     private void OnEnable()
     {
@@ -77,7 +78,7 @@ public class Draw : MonoBehaviour
     {
         //if (HasAnyObjectOnMouse()) { DisposeLineRenderer(); return; }
 
-        NewDrawing = new("Drawing"+i.ToString());
+        NewDrawing = new("Drawing"+ TotalCount.ToString());
 
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
@@ -86,7 +87,7 @@ public class Draw : MonoBehaviour
         Line_Renderer.positionCount = 1;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
         NewDrawing.transform.SetParent(Drawings.transform);
-        i++;
+        TotalCount++;
     }
     private void WhileDrawing()
     {

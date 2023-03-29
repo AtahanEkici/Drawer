@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class CameraShake : MonoBehaviour
 {
-    [Header("Do Not Destroy On Load")]
+    [Header("Do Not Destroy On Load ?")]
     [SerializeField] private bool Do_Not_Destroy = true;
 
     [SerializeField]
