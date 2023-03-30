@@ -1,6 +1,8 @@
 using UnityEngine;
 public class Draw : MonoBehaviour
 {
+    public const string DrawingTag = "Drawing";
+
     private const string LineMaterialResourcePath = "Materials/LineMaterial/LineMaterial";
     private const string DrawPhysicsMaterialResourcePath = "Materials/LineMaterial/DrawMaterial";
 
@@ -72,7 +74,8 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        NewDrawing = new("Drawing"+ TotalCount.ToString());
+        NewDrawing = new("Drawing" + TotalCount.ToString());
+        NewDrawing.tag = DrawingTag;
 
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
@@ -80,7 +83,9 @@ public class Draw : MonoBehaviour
         Line_Renderer.endWidth = LineRendererWidth;
         Line_Renderer.positionCount = 1;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+
         NewDrawing.transform.SetParent(Drawings.transform);
+
         TotalCount++;
     }
     private void WhileDrawing()
@@ -106,14 +111,17 @@ public class Draw : MonoBehaviour
         Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
         rb.sharedMaterial = physicMaterial2D;
         //rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
-        rb.useAutoMass = true;
+        //rb.useAutoMass = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing, true);
 
-        AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing, true);
+        //Debug.Log("Desired Mass: "+ rb.mass + "");
     }
-    private void AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go, bool isBox)
+    private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go, bool isBox) // returns total density for configuring drawing mass //
     {
+        float totaldensity = 0f;
+
         try
         {
             int posCount = lr.positionCount;
@@ -141,6 +149,7 @@ public class Draw : MonoBehaviour
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     collider.transform.rotation = Quaternion.Euler(0, 0, angle);
                     box.transform.SetParent(go.transform);
+                    totaldensity += collider.density;
                 }
                 else
                 {
@@ -156,13 +165,16 @@ public class Draw : MonoBehaviour
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     collider.transform.rotation = Quaternion.Euler(0, 0, angle);
                     capsule.transform.SetParent(go.transform);
+                    totaldensity += collider.density;
                 }
             }
+            
         }
         catch (System.Exception e)
         {
             Debug.LogException(e);
         }
+        return totaldensity;
     }
     private void GetResources()
     {
