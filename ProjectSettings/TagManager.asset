@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DrawingSprite
   - Wall
+  - Ball
   layers:
   - Default
   - TransparentFX
