@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Ball
   - Drawing
+  - UI
   layers:
   - Default
   - TransparentFX

@@ -109,19 +109,31 @@ public class Draw : MonoBehaviour
         DisposeLineRenderer();
 
         Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
+
+        int isDynamic = PlayerPrefs.GetInt(UI_Controller.LinephysicsType, 1);
+
+        if(isDynamic == 1)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+        else
+        {
+            rb.bodyType = RigidbodyType2D.Static;
+        }
+
         rb.sharedMaterial = physicMaterial2D;
         //rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
         //rb.useAutoMass = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-        rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing, true);
+        rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
 
         //Debug.Log("Desired Mass: "+ rb.mass + "");
     }
-    private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go, bool isBox) // returns total density for configuring drawing mass //
+    private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {
-        float totaldensity = 0f;
-
+        float totaldensity = 1f;
+        
         try
         {
             int posCount = lr.positionCount;
@@ -135,9 +147,7 @@ public class Draw : MonoBehaviour
 
             for (int i = 0; i < positions.Length - 1; i++)
             {
-                if (isBox)
-                {
-                    GameObject box = new ("Box Collider " + i);
+                    GameObject box = new("Box Collider_" + i);
                     BoxCollider2D collider = box.AddComponent<BoxCollider2D>();
                     collider.isTrigger = true;
                     collider.sharedMaterial = physicMaterial2D;
@@ -150,25 +160,8 @@ public class Draw : MonoBehaviour
                     collider.transform.rotation = Quaternion.Euler(0, 0, angle);
                     box.transform.SetParent(go.transform);
                     totaldensity += collider.density;
-                }
-                else
-                {
-                    GameObject capsule = new GameObject("Capsule Collider " + i);
-                    CapsuleCollider2D collider = capsule.AddComponent<CapsuleCollider2D>();
-                    collider.isTrigger = true;
-                    capsule.AddComponent<CollisionChecker>().col = collider;
-                    collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
-                    float distance = Vector2.Distance(positions[i], positions[i + 1]);
-                    collider.size = new Vector2(distance, LineRendererWidth);
-                    collider.direction = CapsuleDirection2D.Horizontal;
-                    Vector2 direction = positions[i + 1] - positions[i];
-                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                    collider.transform.rotation = Quaternion.Euler(0, 0, angle);
-                    capsule.transform.SetParent(go.transform);
-                    totaldensity += collider.density;
-                }
-            }
-            
+               
+            } 
         }
         catch (System.Exception e)
         {

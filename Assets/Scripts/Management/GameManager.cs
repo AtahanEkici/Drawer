@@ -28,4 +28,12 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = Screen.currentResolution.refreshRate;
     }
+    public static void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+    public static void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
 }
