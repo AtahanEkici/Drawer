@@ -1,4 +1,5 @@
 using UnityEngine;
+[DefaultExecutionOrder(-900)]
 public class DrawingContainer : MonoBehaviour
 {
     public static DrawingContainer Instance { get; private set; }

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+[DefaultExecutionOrder(-200)]
 public class UI_Controller : MonoBehaviour
 {
     private const string ToggleLabelString = "Line Physics: ";
@@ -21,6 +21,7 @@ public class UI_Controller : MonoBehaviour
 
     [Header("Overlay")]
     [SerializeField] private Button MenuOpenButton;
+    [SerializeField] public Slider OnTargetSlider;
 
     private void Awake()
     {
@@ -94,6 +95,10 @@ public class UI_Controller : MonoBehaviour
         if(MenuOpenButton == null)
         {
             MenuOpenButton = OverlayPanel.transform.GetChild(0).GetComponent<Button>();
+        }
+        if(OnTargetSlider == null)
+        {
+            OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
         }
 
         // Delegations //
