@@ -45,7 +45,6 @@ public class BasketController : MonoBehaviour
         {
             Slider_Material = slider.transform.GetChild(0).GetComponent<Image>().material;
             slider.gameObject.SetActive(false);
-            //SetMaterialTransparency(0f); // Transparent on Startup //
         }
     }
     private float GetMaterialTransparency()
@@ -58,15 +57,14 @@ public class BasketController : MonoBehaviour
     }
     private void SliderOperations()
     {
-        float slider_value = slider.value;
-        //float slider_transparency = GetMaterialTransparency();
-        //if (!isBallOnBasket) { return; }
+        if (isBallOnBasket && slider.value >= slider.maxValue) { return; }
+        else if(!isBallOnBasket && slider.value <= slider.minValue) { return; }
 
         if(isBallOnBasket)
         {
             slider.gameObject.SetActive(true);
 
-            slider.value += (Time.deltaTime * SliderSpeed);
+            slider.value += (Time.smoothDeltaTime * SliderSpeed);
 
             if(slider.value >= slider.maxValue)
             {
@@ -75,15 +73,13 @@ public class BasketController : MonoBehaviour
         }
         else
         {
-            if(slider_value <= slider.minValue)
+            slider.value -= (Time.smoothDeltaTime * SliderSpeed);
+
+            if (slider.value <= slider.minValue)
             {
                 slider.gameObject.SetActive(false);
                 Debug.Log("Min Value reached");
             }
-            else
-            { 
-                slider.value -= (Time.deltaTime * SliderSpeed);
-            } 
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)

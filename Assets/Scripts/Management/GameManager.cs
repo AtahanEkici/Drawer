@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-1000)]
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +8,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
+    {
+        Debug.Log("Scene Loaded: "+scene.name+"");
     }
     private void Start()
     {
@@ -26,7 +32,14 @@ public class GameManager : MonoBehaviour
     }
     private void StartUpOperations()
     {
-        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        try
+        {
+            Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
     public static void PauseGame()
     {

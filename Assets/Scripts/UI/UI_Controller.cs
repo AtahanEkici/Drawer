@@ -147,14 +147,13 @@ public class UI_Controller : MonoBehaviour
     }
     private void OpenSettings()
     {
-        Debug.Log("Opened Settings");
         GameManager.PauseGame();
         OverlayPanel.SetActive(false);
         SettingsPanel.SetActive(true);
     }
     private void CloseSettings()
     {
-        Debug.Log("Closed Settings");
+        SaveSettings();
         GameManager.ResumeGame();
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
