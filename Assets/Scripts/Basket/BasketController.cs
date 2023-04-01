@@ -68,7 +68,7 @@ public class BasketController : MonoBehaviour
 
             if(slider.value >= slider.maxValue)
             {
-                Debug.Log("Max Value Reached");
+                //Debug.Log("Max Value Reached");
             }
         }
         else
@@ -78,7 +78,7 @@ public class BasketController : MonoBehaviour
             if (slider.value <= slider.minValue)
             {
                 slider.gameObject.SetActive(false);
-                Debug.Log("Min Value reached");
+                //Debug.Log("Min Value reached");
             }
         }
     }

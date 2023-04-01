@@ -27,6 +27,9 @@ public class Draw : MonoBehaviour
     [Header("Line Material")]
     [SerializeField] private Material LineMaterial;
     [SerializeField] private PhysicsMaterial2D physicMaterial2D;
+
+    [Header("minimum Distance")]
+    [SerializeField] private float MinDistance = 1f;
     private void Awake()
     {
         StartUp();
@@ -74,8 +77,12 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        NewDrawing = new("Drawing" + TotalCount.ToString());
-        NewDrawing.tag = DrawingTag;
+        if (GameManager.IsGamePaused()) { return; }
+
+        NewDrawing = new("Drawing" + TotalCount.ToString())
+        {
+            tag = DrawingTag
+        };
 
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
@@ -90,12 +97,22 @@ public class Draw : MonoBehaviour
     }
     private void WhileDrawing()
     {
+        if(Line_Renderer == null) { return; }
+
         Line_Renderer.positionCount++;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
     }
     private void EndDrawing()
     {
+        if (Line_Renderer == null) { return; }
+
         Line_Renderer.Simplify(SimplificationCoefficient);
+
+        if (Line_Renderer.positionCount <= 1)
+        {
+            Destroy(NewDrawing);
+            return;
+        }
 
         Mesh LineMesh = new();
         Line_Renderer.BakeMesh(LineMesh, MainCamera, true);
@@ -122,27 +139,32 @@ public class Draw : MonoBehaviour
         }
 
         rb.sharedMaterial = physicMaterial2D;
-        //rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
-        //rb.useAutoMass = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
-
-        //Debug.Log("Desired Mass: "+ rb.mass + "");
     }
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {
         float totaldensity = 1f;
-        
+        float totalDistance = 0f;
         try
         {
             int posCount = lr.positionCount;
-
             Vector2[] positions = new Vector2[posCount];
 
             for (int i = 0; i < posCount; i++)
             {
-                positions[i] = (Vector2)lr.GetPosition(i);
+                positions[i] = (Vector2)(lr.GetPosition(i));
+            }
+
+            totalDistance = GetLineRendererLengthRelativeToCamera();
+
+            //Debug.Log("Total Distance: " + totalDistance);
+
+            if (totalDistance < MinDistance)
+            {
+                Destroy(go);
+                return 0f;
             }
 
             for (int i = 0; i < positions.Length - 1; i++)
@@ -174,4 +196,25 @@ public class Draw : MonoBehaviour
         LineMaterial =  Resources.Load(LineMaterialResourcePath) as Material;
         physicMaterial2D = Resources.Load(LineMaterialResourcePath) as PhysicsMaterial2D;
     }
+    float GetLineRendererLengthRelativeToCamera()
+    {
+        Vector3[] positions = new Vector3[Line_Renderer.positionCount];
+        Line_Renderer.GetPositions(positions);
+
+        float length = 0f;
+
+        for (int i = 1; i < positions.Length; i++)
+        {
+            Vector3 viewportPos1 = MainCamera.WorldToViewportPoint(positions[i - 1]);
+            Vector3 viewportPos2 = MainCamera.WorldToViewportPoint(positions[i]);
+            length += Vector3.Distance(viewportPos1, viewportPos2);
+        }
+
+        float screenWidth = MainCamera.pixelWidth;
+        float screenHeight = MainCamera.pixelHeight;
+        float screenDiagonal = Mathf.Sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
+
+        return length * screenDiagonal;
+    }
+
 }

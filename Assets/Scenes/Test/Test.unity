@@ -1592,12 +1592,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
+      propertyPath: MinVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
+      propertyPath: MinDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: LineRendererWidth
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: SimplificationCoefficient
-      value: 0.05
+      value: 0.025
       objectReference: {fileID: 0}
     - target: {fileID: 50365862520302849, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: m_Name

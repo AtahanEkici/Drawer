@@ -49,4 +49,15 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
+    public static bool IsGamePaused()
+    {
+        if(Time.timeScale <= 0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
