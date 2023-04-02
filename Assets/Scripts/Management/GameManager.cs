@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        Debug.Log("Scene Loaded: "+scene.name+"");
+        //Debug.Log("Scene Loaded: "+scene.name+"");
+        PauseGame(); // Pause the game on scene load // 
     }
     private void Start()
     {

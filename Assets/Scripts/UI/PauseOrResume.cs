@@ -19,6 +19,10 @@ public class PauseOrResume : MonoBehaviour
     {
         DelegateButton();
     }
+    private void Start()
+    {
+        OnStart();
+    }
     private void GetLocalReferences()
     {
         if(PauseOrResumeButton == null)
@@ -37,7 +41,7 @@ public class PauseOrResume : MonoBehaviour
     }
     private void OnButtonPressed()
     {
-        if(Time.timeScale >= 1)
+        if(!GameManager.IsGamePaused())
         {
             GameManager.PauseGame();
             ChangeImage(Play_Image);
@@ -45,6 +49,17 @@ public class PauseOrResume : MonoBehaviour
         else
         {
             GameManager.ResumeGame();
+            ChangeImage(Pause_Image);
+        }
+    }
+    private void OnStart()
+    {
+        if(GameManager.IsGamePaused())
+        {
+            ChangeImage(Play_Image);
+        }
+        else
+        {
             ChangeImage(Pause_Image);
         }
     }
