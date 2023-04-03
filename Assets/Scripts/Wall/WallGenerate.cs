@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 [DefaultExecutionOrder(-200)]
 public class WallGenerate : MonoBehaviour
 {

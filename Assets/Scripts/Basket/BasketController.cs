@@ -20,7 +20,7 @@ public class BasketController : MonoBehaviour
     {
         GetLocalReferences();
     }
-    private void OnEnable()
+    private void Start()
     {
         GetForeignReferences();
     }
@@ -39,7 +39,7 @@ public class BasketController : MonoBehaviour
     {
         if(slider == null)
         {
-            slider = UI_Controller.Instance.OnTargetSlider;
+            slider = UI_Controller.instance.OnTargetSlider;
         }
         if(Slider_Material == null)
         {

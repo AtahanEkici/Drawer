@@ -1,6 +1,12 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 public class Draw : MonoBehaviour
 {
+    public static Draw Instance { get; private set; }
+    private Draw() { }
+
     public const string DrawingTag = "Drawing";
 
     private const string LineMaterialResourcePath = "Materials/LineMaterial/LineMaterial";
@@ -32,9 +38,19 @@ public class Draw : MonoBehaviour
     [SerializeField] private float MinDistance = 1f;
     private void Awake()
     {
+        CheckInstance();
         StartUp();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void OnEnable()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
+    {
+        if(Drawings == null)
+        {
+            Drawings = new("Drawings");
+            Drawings.AddComponent<DrawingContainer>();
+        }
+    }
+    private void Start()
     {
         MainCamera = Camera.main;
     }
@@ -43,11 +59,22 @@ public class Draw : MonoBehaviour
         GetMousePosition();
         GetMouseInputs();
     }
+    private void CheckInstance()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void StartUp()
     {
         GetResources();
-        Drawings = new("Drawings");
-        Drawings.AddComponent<DrawingContainer>();
+        
     }
     private void GetMouseInputs()
     {
@@ -77,7 +104,7 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        if (GameManager.IsGamePaused()) { return; }
+        if (GameManager.IsGamePaused() && IsLineDynamic()) { return; }
 
         NewDrawing = new("Drawing" + TotalCount.ToString())
         {
@@ -127,9 +154,7 @@ public class Draw : MonoBehaviour
 
         Rigidbody2D rb = NewDrawing.AddComponent<Rigidbody2D>();
 
-        int isDynamic = PlayerPrefs.GetInt(UI_Controller.LinephysicsType, 1);
-
-        if(isDynamic == 1)
+        if(IsLineDynamic())
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
         }
@@ -171,10 +196,15 @@ public class Draw : MonoBehaviour
             {
                     GameObject box = new("Box Collider_" + i);
                     BoxCollider2D collider = box.AddComponent<BoxCollider2D>();
+
+                if(IsLineDynamic())
+                {
                     collider.isTrigger = true;
-                    collider.sharedMaterial = physicMaterial2D;
                     box.AddComponent<CollisionChecker>().col = collider;
+                }
+                    collider.sharedMaterial = physicMaterial2D;
                     collider.transform.position = (positions[i] + positions[i + 1]) / 2f;
+
                     float distance = Vector2.Distance(positions[i], positions[i + 1]);
                     collider.size = new Vector2(distance, LineRendererWidth);
                     Vector2 direction = positions[i + 1] - positions[i];
@@ -196,7 +226,7 @@ public class Draw : MonoBehaviour
         LineMaterial =  Resources.Load(LineMaterialResourcePath) as Material;
         physicMaterial2D = Resources.Load(LineMaterialResourcePath) as PhysicsMaterial2D;
     }
-    float GetLineRendererLengthRelativeToCamera()
+    private float GetLineRendererLengthRelativeToCamera()
     {
         Vector3[] positions = new Vector3[Line_Renderer.positionCount];
         Line_Renderer.GetPositions(positions);
@@ -216,5 +246,17 @@ public class Draw : MonoBehaviour
 
         return length * screenDiagonal;
     }
+    private bool IsLineDynamic()
+    {
+        int type = PlayerPrefs.GetInt(UI_Controller.LinephysicsType, 1);
 
+        if(type == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

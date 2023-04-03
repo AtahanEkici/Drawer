@@ -1,7 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+[DefaultExecutionOrder(-90)]
 public class PauseOrResume : MonoBehaviour
 {
+    public static PauseOrResume Instance { get; private set; }
+    private PauseOrResume() { }
+
     [Header("Pause-Resume Button")]
     [SerializeField] private Button PauseOrResumeButton;
 
@@ -13,15 +19,26 @@ public class PauseOrResume : MonoBehaviour
     [SerializeField] private Sprite Play_Image;
     private void Awake()
     {
+        CheckInstance();
         GetLocalReferences();
-    }
-    private void OnEnable()
-    {
         DelegateButton();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void Start()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode SceneLoadMode)
     {
         OnStart();
+    }
+    private void CheckInstance()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            //DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     private void GetLocalReferences()
     {
@@ -41,6 +58,8 @@ public class PauseOrResume : MonoBehaviour
     }
     private void OnButtonPressed()
     {
+        //Debug.Log("Pause button Pressed");
+
         if(!GameManager.IsGamePaused())
         {
             GameManager.PauseGame();
@@ -52,7 +71,7 @@ public class PauseOrResume : MonoBehaviour
             ChangeImage(Pause_Image);
         }
     }
-    private void OnStart()
+    public void OnStart()
     {
         if(GameManager.IsGamePaused())
         {
@@ -66,5 +85,9 @@ public class PauseOrResume : MonoBehaviour
     private void ChangeImage(Sprite sprite)
     {
         image.overrideSprite = sprite;
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

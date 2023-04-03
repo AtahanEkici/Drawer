@@ -7,8 +7,8 @@ public class UI_Controller : MonoBehaviour
 {
     private const string ToggleLabelString = "Line Physics: ";
     public const string LinephysicsType = "LinePhysicsType";
-    public static UI_Controller Instance { get; private set; }
-    private UI_Controller() { }
+
+    public static UI_Controller instance = null;
 
     [Header("Panels")]
     [SerializeField] private GameObject SettingsPanel;
@@ -23,25 +23,32 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Button MenuOpenButton;
     [SerializeField] public Slider OnTargetSlider;
 
+    [Header("Last State")]
+    [SerializeField] private bool LastState;
+
     private void Awake()
     {
         CheckInstance();
         GetLocalReferences();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void OnEnable()
+    private void Start()
     {
         GetForeignReferences();
+        DelegateToggles();
+        DelegateButtons();
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
+        //GetForeignReferences();
         Startup();
     }
     private void CheckInstance()
     {
-        if(Instance == null)
+        if(instance == null)
         {
-            Instance = this;
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -77,9 +84,9 @@ public class UI_Controller : MonoBehaviour
             {
                 PhysicsType = false;
             }
-
             PhysicsToggle.isOn = PhysicsType;
         }
+
         if(PhysicsToggleText == null)
         {
             PhysicsToggleText = PhysicsToggle.GetComponentInChildren<TextMeshProUGUI>();
@@ -99,16 +106,24 @@ public class UI_Controller : MonoBehaviour
         if(OnTargetSlider == null)
         {
             OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
-        }
-
-        // Delegations //
-        DelegateToggles();
-        DelegateButtons();
+        }    
     }
     private void Startup()
     {
-        OverlayPanel.SetActive(true);
-        SettingsPanel.SetActive(false);
+        try
+        {
+            if(OverlayPanel == null || SettingsPanel == null)
+            {
+                GetLocalReferences();
+            }
+
+            OverlayPanel.SetActive(true);
+            SettingsPanel.SetActive(false);
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
     private void DelegateButtons()
     {
@@ -147,19 +162,27 @@ public class UI_Controller : MonoBehaviour
     }
     private void OpenSettings()
     {
-        GameManager.PauseGame();
+        LastState = GameManager.IsGamePaused();
+        Debug.Log("Menu Opened at State: "+LastState+"");
+        if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
+
         OverlayPanel.SetActive(false);
         SettingsPanel.SetActive(true);
     }
     private void CloseSettings()
     {
         SaveSettings();
-        GameManager.ResumeGame();
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
+        Debug.Log("Menu closed at State: "+LastState);
+        GameManager.SetGameState(LastState);
     }
     private void SaveSettings()
     {
         PlayerPrefs.Save();
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

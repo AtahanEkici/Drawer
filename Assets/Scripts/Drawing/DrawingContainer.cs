@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 [DefaultExecutionOrder(-900)]
 public class DrawingContainer : MonoBehaviour
 {
@@ -10,6 +13,11 @@ public class DrawingContainer : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+    private void OnSceneUnloaded(Scene scene)
+    {
+        DeleteAllChildren(); // When scene unloads delete all the drawings //
     }
     private void Update()
     {
@@ -20,6 +28,7 @@ public class DrawingContainer : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -34,6 +43,16 @@ public class DrawingContainer : MonoBehaviour
                 Destroy(this);
             }
         }
+    }
+    private void DeleteAllChildren()
+    {
+        if(this == null) { return; }
+
+        for(int i=0;i<transform.childCount;i++)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+        ChildCount = 0;
     }
     private void ChildListener()
     {
@@ -50,5 +69,9 @@ public class DrawingContainer : MonoBehaviour
         {
             //Debug.Log("Child removed");
             ChildCount--;        }
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 }

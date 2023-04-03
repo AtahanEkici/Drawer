@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-1000)]
 public class GameManager : MonoBehaviour
@@ -50,6 +51,17 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
+    public static void SetGameState(bool state)
+    {
+        if(state)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+    }
     public static bool IsGamePaused()
     {
         if(Time.timeScale <= 0f)
@@ -60,5 +72,13 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
+    }
+    public static void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
