@@ -68,7 +68,9 @@ public class BasketController : MonoBehaviour
 
             if(slider.value >= slider.maxValue)
             {
-                //Debug.Log("Max Value Reached");
+                Debug.Log("Max Value Reached");
+
+                // Call New Level transaction //
             }
         }
         else

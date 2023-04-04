@@ -75,7 +75,11 @@ public class GameManager : MonoBehaviour
     }
     public static void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name,LoadSceneMode.Single);
+    }
+    public static void LoadScene(string name)
+    {
+        SceneManager.LoadScene(name,LoadSceneMode.Single);
     }
     private void OnDestroy()
     {

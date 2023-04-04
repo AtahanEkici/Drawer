@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 [DefaultExecutionOrder(-200)]
 public class WallGenerate : MonoBehaviour
 {
@@ -68,8 +66,9 @@ public class WallGenerate : MonoBehaviour
     private void CalculateBounds() // Draw Debugging Rays //
     {
         Vector2 topleft = top + left;
-        TopDistance = Vector2.Distance(topleft, top) * 2;
-        LeftDistance = Vector2.Distance(topleft, left) * 2;
+        TopDistance = Vector2.Distance(topleft, top);
+        LeftDistance = Vector2.Distance(topleft, left);
+
         if (DebugMode)
         {
             Vector2 center = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f));

@@ -163,7 +163,7 @@ public class UI_Controller : MonoBehaviour
     private void OpenSettings()
     {
         LastState = GameManager.IsGamePaused();
-        Debug.Log("Menu Opened at State: "+LastState+"");
+        //Debug.Log("Menu Opened at State: "+LastState+"");
         if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
 
         OverlayPanel.SetActive(false);
@@ -174,7 +174,7 @@ public class UI_Controller : MonoBehaviour
         SaveSettings();
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
-        Debug.Log("Menu closed at State: "+LastState);
+        //Debug.Log("Menu closed at State: "+LastState);
         GameManager.SetGameState(LastState);
     }
     private void SaveSettings()
