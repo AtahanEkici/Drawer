@@ -13,7 +13,7 @@ public class Draw : MonoBehaviour
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
     [SerializeField] private float LineRendererWidth = 0.1f;
-    [SerializeField] private float LineLenght = 0f;
+    //[SerializeField] private float LineLenght = 0f;
 
     [Header("Mouse Options")]
     [SerializeField] private Vector2 mousePos;
@@ -134,15 +134,15 @@ public class Draw : MonoBehaviour
     }
     private void EndDrawing()
     {
-        LineLenght = 0;
+        //LineLenght = 0;
 
         if (Line_Renderer == null) { return; }
 
-        Debug.Log("Before End-Start Simplify: " + CalculateLineRendererEndTOStart());
-        Debug.Log("Before Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
+        //Debug.Log("Before End-Start Simplify: " + CalculateLineRendererEndTOStart());
+        //Debug.Log("Before Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
         Line_Renderer.Simplify(SimplificationCoefficient);
-        Debug.Log("After  End-Start Simplify: " + CalculateLineRendererEndTOStart());
-        Debug.Log("After  Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
+        //Debug.Log("After  End-Start Simplify: " + CalculateLineRendererEndTOStart());
+        //Debug.Log("After  Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
 
         if (Line_Renderer.positionCount <= 1)
         {

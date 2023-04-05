@@ -59,6 +59,7 @@ public class TimeController : MonoBehaviour
     {
         Timer = 0f;
         UpdateTimerUI();
+        isTimerStopped = false;
         Debug.Log("Timer Reset");
     }
     private static void UpdateTimerUI()
