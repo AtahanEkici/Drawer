@@ -9,7 +9,7 @@ public class NewlyOpened : MonoBehaviour
     {
         try
         {
-            PlayerSettings.SplashScreen.backgroundColor = Random.ColorHSV();
+            //PlayerSettings.SplashScreen.backgroundColor = Random.ColorHSV();
         }
         catch(System.Exception e)
         {

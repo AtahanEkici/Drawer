@@ -66,8 +66,9 @@ public class WallGenerate : MonoBehaviour
     private void CalculateBounds() // Draw Debugging Rays //
     {
         Vector2 topleft = top + left;
-        TopDistance = Vector2.Distance(topleft, top);
-        LeftDistance = Vector2.Distance(topleft, left);
+
+        TopDistance = Vector2.Distance(topleft, top) * 2;
+        LeftDistance = Vector2.Distance(topleft, left) * 2;
 
         if (DebugMode)
         {

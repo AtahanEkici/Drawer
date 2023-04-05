@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class Draw : MonoBehaviour
 {
     public static Draw Instance { get; private set; }
@@ -15,6 +13,7 @@ public class Draw : MonoBehaviour
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
     [SerializeField] private float LineRendererWidth = 0.1f;
+    [SerializeField] private float LineLenght = 0f;
 
     [Header("Mouse Options")]
     [SerializeField] private Vector2 mousePos;
@@ -28,7 +27,7 @@ public class Draw : MonoBehaviour
     [SerializeField] private Camera MainCamera;
 
     [Header("Simplification Coefficient")]
-    [SerializeField] private float SimplificationCoefficient = 0.05f;
+    [SerializeField] private float SimplificationCoefficient = 0.025f;
 
     [Header("Line Material")]
     [SerializeField] private Material LineMaterial;
@@ -44,7 +43,9 @@ public class Draw : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        if(Drawings == null)
+        TotalCount = 0;
+
+        if (Drawings == null)
         {
             Drawings = new("Drawings");
             Drawings.AddComponent<DrawingContainer>();
@@ -128,12 +129,20 @@ public class Draw : MonoBehaviour
 
         Line_Renderer.positionCount++;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
+
+        //LineLenght = CalculateLineRendererTotalLenght();
     }
     private void EndDrawing()
     {
+        LineLenght = 0;
+
         if (Line_Renderer == null) { return; }
 
+        Debug.Log("Before End-Start Simplify: " + CalculateLineRendererEndTOStart());
+        Debug.Log("Before Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
         Line_Renderer.Simplify(SimplificationCoefficient);
+        Debug.Log("After  End-Start Simplify: " + CalculateLineRendererEndTOStart());
+        Debug.Log("After  Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
 
         if (Line_Renderer.positionCount <= 1)
         {
@@ -167,6 +176,21 @@ public class Draw : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
+    }
+    private float CalculateLineRendererEndTOStart()
+    {
+        return Vector2.Distance(Line_Renderer.GetPosition(0), Line_Renderer.GetPosition(Line_Renderer.positionCount - 1));
+    }
+    private float CalculateTotalLenghtOfLineRenderer()
+    {
+        float totalLength = 0f;
+
+        for (int i = 0; i < Line_Renderer.positionCount - 1; i++)
+        {
+            totalLength += Vector2.Distance(Line_Renderer.GetPosition(i), Line_Renderer.GetPosition(i + 1));
+        }
+
+        return totalLength;
     }
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {
@@ -224,7 +248,7 @@ public class Draw : MonoBehaviour
     private void GetResources()
     {
         LineMaterial =  Resources.Load(LineMaterialResourcePath) as Material;
-        physicMaterial2D = Resources.Load(LineMaterialResourcePath) as PhysicsMaterial2D;
+        physicMaterial2D = Resources.Load(DrawPhysicsMaterialResourcePath) as PhysicsMaterial2D;
     }
     private float GetLineRendererLengthRelativeToCamera()
     {

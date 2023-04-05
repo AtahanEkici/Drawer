@@ -69,7 +69,7 @@ public class BasketController : MonoBehaviour
             if(slider.value >= slider.maxValue)
             {
                 Debug.Log("Max Value Reached");
-
+                TimeController.StopTimer();
                 // Call New Level transaction //
             }
         }

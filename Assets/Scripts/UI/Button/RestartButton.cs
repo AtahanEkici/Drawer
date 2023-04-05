@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+[DefaultExecutionOrder(-70)]
 public class RestartButton : MonoBehaviour
 {
     [Header("Pause-Resume Button")]
@@ -24,5 +25,6 @@ public class RestartButton : MonoBehaviour
     {
         //Debug.Log("Restart button Pressed");
         GameManager.RestartGame();
+        TimeController.ResetTimer();
     }
 }
