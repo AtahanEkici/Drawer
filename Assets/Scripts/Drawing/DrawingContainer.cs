@@ -1,11 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 [DefaultExecutionOrder(-900)]
 public class DrawingContainer : MonoBehaviour
 {
-    public static DrawingContainer Instance { get; private set; }
+    public static DrawingContainer instance = null;
     private DrawingContainer() { }
 
     [Header("Child Operations")]
@@ -25,9 +23,9 @@ public class DrawingContainer : MonoBehaviour
     }
     private void CheckInstance()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
             //DontDestroyOnLoad(gameObject);
         }
         else
@@ -69,6 +67,10 @@ public class DrawingContainer : MonoBehaviour
         {
             //Debug.Log("Child removed");
             ChildCount--;        }
+    }
+    public GameObject[] GetAllDrawings()
+    {
+        return GetComponentsInChildren<GameObject>();
     }
     private void OnDestroy()
     {

@@ -13,6 +13,7 @@ public class UI_Controller : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject OverlayPanel;
+    [SerializeField] private GameObject ListPanel;
 
     [Header("Settings")]
     [SerializeField] private Toggle PhysicsToggle;
@@ -57,68 +58,87 @@ public class UI_Controller : MonoBehaviour
     }
     private void GetLocalReferences()
     {
-        if(SettingsPanel == null)
+        try
         {
-            SettingsPanel = transform.GetChild(0).gameObject;
+            if (SettingsPanel == null)
+            {
+                SettingsPanel = transform.GetChild(0).gameObject;
+            }
+            if (OverlayPanel == null)
+            {
+                OverlayPanel = transform.GetChild(1).gameObject;
+            }
+            if (ListPanel == null)
+            {
+                ListPanel = transform.GetChild(2).gameObject;
+            }
         }
-        if (OverlayPanel == null)
+        catch(System.Exception e)
         {
-            OverlayPanel = transform.GetChild(1).gameObject;
-        }
+            Debug.LogException(e);
+        }  
     }
     private void GetForeignReferences()
     {
-        // variables //
-        bool PhysicsType = true;
-
-        // Settings //
-        if (PhysicsToggle == null)
+        try
         {
-            PhysicsToggle = SettingsPanel.transform.GetChild(0).GetComponent<Toggle>();
+            // variables //
+            bool PhysicsType = true;
 
-            if (PlayerPrefs.GetInt(LinephysicsType, 1) == 1)
+            // Settings //
+            if (PhysicsToggle == null)
             {
-                PhysicsType = true;
+                PhysicsToggle = SettingsPanel.transform.GetChild(0).GetComponent<Toggle>();
+
+                if (PlayerPrefs.GetInt(LinephysicsType, 1) == 1)
+                {
+                    PhysicsType = true;
+                }
+                else
+                {
+                    PhysicsType = false;
+                }
+                PhysicsToggle.isOn = PhysicsType;
             }
-            else
+
+            if (PhysicsToggleText == null)
             {
-                PhysicsType = false;
+                PhysicsToggleText = PhysicsToggle.GetComponentInChildren<TextMeshProUGUI>();
+
+                PhysicsToggleTextChange(PhysicsType);
             }
-            PhysicsToggle.isOn = PhysicsType;
-        }
+            if (MenuCloseButton == null)
+            {
+                MenuCloseButton = SettingsPanel.transform.GetChild(1).GetComponent<Button>();
+            }
 
-        if(PhysicsToggleText == null)
-        {
-            PhysicsToggleText = PhysicsToggle.GetComponentInChildren<TextMeshProUGUI>();
-
-            PhysicsToggleTextChange(PhysicsType);
+            // Overlay //
+            if (MenuOpenButton == null)
+            {
+                MenuOpenButton = OverlayPanel.transform.GetChild(0).GetComponent<Button>();
+            }
+            if (OnTargetSlider == null)
+            {
+                OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
+            }
         }
-        if(MenuCloseButton == null)
+        catch(System.Exception e)
         {
-            MenuCloseButton = SettingsPanel.transform.GetChild(1).GetComponent<Button>();
+            Debug.LogException(e);
         }
-
-        // Overlay //
-        if(MenuOpenButton == null)
-        {
-            MenuOpenButton = OverlayPanel.transform.GetChild(0).GetComponent<Button>();
-        }
-        if(OnTargetSlider == null)
-        {
-            OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
-        }    
     }
     private void Startup()
     {
         try
         {
-            if(OverlayPanel == null || SettingsPanel == null)
+            if(OverlayPanel == null || SettingsPanel == null || ListPanel == null)
             {
                 GetLocalReferences();
             }
 
             OverlayPanel.SetActive(true);
             SettingsPanel.SetActive(false);
+            //ListPanel.SetActive(false);
         }
         catch(System.Exception e)
         {
@@ -127,8 +147,15 @@ public class UI_Controller : MonoBehaviour
     }
     private void DelegateButtons()
     {
-        MenuOpenButton.onClick.AddListener(OpenSettings);
-        MenuCloseButton.onClick.AddListener(CloseSettings);
+        try
+        {
+            MenuOpenButton.onClick.AddListener(OpenSettings);
+            MenuCloseButton.onClick.AddListener(CloseSettings);
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
     private void DelegateToggles()
     {
@@ -146,8 +173,7 @@ public class UI_Controller : MonoBehaviour
         else
         {
             PlayerPrefs.SetInt(LinephysicsType, 0);
-        }
-        
+        } 
     }
     private void PhysicsToggleTextChange(bool value)
     {
@@ -167,6 +193,7 @@ public class UI_Controller : MonoBehaviour
         if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
 
         OverlayPanel.SetActive(false);
+        ListPanel.SetActive(false);
         SettingsPanel.SetActive(true);
     }
     private void CloseSettings()
@@ -174,6 +201,7 @@ public class UI_Controller : MonoBehaviour
         SaveSettings();
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
         //Debug.Log("Menu closed at State: "+LastState);
         GameManager.SetGameState(LastState);
     }
