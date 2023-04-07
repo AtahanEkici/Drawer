@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-[DefaultExecutionOrder(-200)]
+[DefaultExecutionOrder(-500)]
 public class UI_Controller : MonoBehaviour
 {
     private const string ToggleLabelString = "Line Physics: ";
@@ -23,6 +23,9 @@ public class UI_Controller : MonoBehaviour
     [Header("Overlay")]
     [SerializeField] private Button MenuOpenButton;
     [SerializeField] public Slider OnTargetSlider;
+
+    [Header("List View")]
+    [SerializeField] private Button ListViewButton;
 
     [Header("Last State")]
     [SerializeField] private bool LastState;
@@ -121,6 +124,12 @@ public class UI_Controller : MonoBehaviour
             {
                 OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
             }
+
+            //ListView //
+            if(ListViewButton == null)
+            {
+                ListViewButton = OverlayPanel.transform.GetChild(5).GetComponent<Button>();
+            }
         }
         catch(System.Exception e)
         {
@@ -138,7 +147,7 @@ public class UI_Controller : MonoBehaviour
 
             OverlayPanel.SetActive(true);
             SettingsPanel.SetActive(false);
-            //ListPanel.SetActive(false);
+            ListPanel.SetActive(false);
         }
         catch(System.Exception e)
         {
@@ -151,6 +160,7 @@ public class UI_Controller : MonoBehaviour
         {
             MenuOpenButton.onClick.AddListener(OpenSettings);
             MenuCloseButton.onClick.AddListener(CloseSettings);
+            ListViewButton.onClick.AddListener(OpenList);
         }
         catch(System.Exception e)
         {
@@ -202,6 +212,24 @@ public class UI_Controller : MonoBehaviour
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
         ListPanel.SetActive(false);
+        //Debug.Log("Menu closed at State: "+LastState);
+        GameManager.SetGameState(LastState);
+    }
+    public void OpenList()
+    {
+        LastState = GameManager.IsGamePaused();
+        //Debug.Log("Menu Opened at State: "+LastState+"");
+        if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
+
+        OverlayPanel.SetActive(false);
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(true);
+    }
+    public void CloseList()
+    {
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        OverlayPanel.SetActive(true);
         //Debug.Log("Menu closed at State: "+LastState);
         GameManager.SetGameState(LastState);
     }

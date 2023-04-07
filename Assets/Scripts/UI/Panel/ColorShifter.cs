@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-[DefaultExecutionOrder(-70)]
 public class ColorShifter : MonoBehaviour
 {
     [Header("Local References")]

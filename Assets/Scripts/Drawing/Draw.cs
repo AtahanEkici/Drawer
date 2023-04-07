@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+[DefaultExecutionOrder(-1000)]
 public class Draw : MonoBehaviour
 {
-    public static Draw Instance { get; private set; }
+    public static Draw instance = null;
     private Draw() { }
 
     public const string DrawingTag = "Drawing";
@@ -10,10 +13,12 @@ public class Draw : MonoBehaviour
     private const string LineMaterialResourcePath = "Materials/LineMaterial/LineMaterial";
     private const string DrawPhysicsMaterialResourcePath = "Materials/LineMaterial/DrawMaterial";
 
+    [Header("Is Drawing Disabled")]
+    [SerializeField] public bool isDrawingDisabled = false;
+
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
     [SerializeField] private float LineRendererWidth = 0.1f;
-    //[SerializeField] private float LineLenght = 0f;
 
     [Header("Mouse Options")]
     [SerializeField] private Vector2 mousePos;
@@ -62,9 +67,9 @@ public class Draw : MonoBehaviour
     }
     private void CheckInstance()
     {
-        if(Instance == null)
+        if(instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -79,6 +84,8 @@ public class Draw : MonoBehaviour
     }
     private void GetMouseInputs()
     {
+        if (isDrawingDisabled) { return; }
+
         if (Input.GetMouseButtonDown(0))
         {
             StartDrawing();
@@ -107,7 +114,7 @@ public class Draw : MonoBehaviour
     {
         if (GameManager.IsGamePaused() && IsLineDynamic()) { return; }
 
-        NewDrawing = new("Drawing" + TotalCount.ToString())
+        NewDrawing = new("Drawing_" + TotalCount.ToString())
         {
             tag = DrawingTag
         };
@@ -119,8 +126,6 @@ public class Draw : MonoBehaviour
         Line_Renderer.positionCount = 1;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
 
-        NewDrawing.transform.SetParent(Drawings.transform);
-
         TotalCount++;
     }
     private void WhileDrawing()
@@ -129,24 +134,17 @@ public class Draw : MonoBehaviour
 
         Line_Renderer.positionCount++;
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
-
-        //LineLenght = CalculateLineRendererTotalLenght();
     }
     private void EndDrawing()
     {
-        //LineLenght = 0;
-
         if (Line_Renderer == null) { return; }
 
-        //Debug.Log("Before End-Start Simplify: " + CalculateLineRendererEndTOStart());
-        //Debug.Log("Before Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
         Line_Renderer.Simplify(SimplificationCoefficient);
-        //Debug.Log("After  End-Start Simplify: " + CalculateLineRendererEndTOStart());
-        //Debug.Log("After  Total Simplify: " + CalculateTotalLenghtOfLineRenderer());
 
         if (Line_Renderer.positionCount <= 1)
         {
             Destroy(NewDrawing);
+            TotalCount--;
             return;
         }
 
@@ -176,21 +174,11 @@ public class Draw : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         rb.mass = AttachCapsuleCollidersToPoints(Line_Renderer, NewDrawing);
-    }
-    private float CalculateLineRendererEndTOStart()
-    {
-        return Vector2.Distance(Line_Renderer.GetPosition(0), Line_Renderer.GetPosition(Line_Renderer.positionCount - 1));
-    }
-    private float CalculateTotalLenghtOfLineRenderer()
-    {
-        float totalLength = 0f;
 
-        for (int i = 0; i < Line_Renderer.positionCount - 1; i++)
+        if(NewDrawing != null)
         {
-            totalLength += Vector2.Distance(Line_Renderer.GetPosition(i), Line_Renderer.GetPosition(i + 1));
-        }
-
-        return totalLength;
+            NewDrawing.transform.SetParent(Drawings.transform);
+        } 
     }
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {

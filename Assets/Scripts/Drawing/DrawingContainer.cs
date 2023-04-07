@@ -72,6 +72,16 @@ public class DrawingContainer : MonoBehaviour
     {
         return GetComponentsInChildren<GameObject>();
     }
+    public void DeleteAllGlowing()
+    {
+        for(int i=0;i<transform.childCount;i++)
+        {
+            if(transform.GetChild(i).gameObject.GetComponent<Glow>() != null)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+    }
     private void OnDestroy()
     {
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
