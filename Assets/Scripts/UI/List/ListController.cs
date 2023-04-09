@@ -43,13 +43,27 @@ public class ListController : MonoBehaviour
     }
     private void OnEnable()
     {
-        Draw.instance.isDrawingDisabled = true;
-        PopulateContainer();
+        try
+        {
+            Draw.instance.DisableDrawing();
+            PopulateContainer();
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
     private void OnDisable()
     {
-        Draw.instance.isDrawingDisabled = false;
-        DispopulateContainer();
+        try
+        {
+            Draw.instance.EnableDrawing();
+            DispopulateContainer();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
     private void GetResources()
     {

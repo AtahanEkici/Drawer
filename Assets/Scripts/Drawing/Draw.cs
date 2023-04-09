@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-
 [DefaultExecutionOrder(-1000)]
 public class Draw : MonoBehaviour
 {
@@ -14,7 +12,7 @@ public class Draw : MonoBehaviour
     private const string DrawPhysicsMaterialResourcePath = "Materials/LineMaterial/DrawMaterial";
 
     [Header("Is Drawing Disabled")]
-    [SerializeField] public bool isDrawingDisabled = false;
+    [SerializeField] private bool isDrawingDisabled = false;
 
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
@@ -43,18 +41,12 @@ public class Draw : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
-        StartUp();
+        GetResources();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        TotalCount = 0;
-
-        if (Drawings == null)
-        {
-            Drawings = new("Drawings");
-            Drawings.AddComponent<DrawingContainer>();
-        }
+        StartUp(scene);
     }
     private void Start()
     {
@@ -77,10 +69,18 @@ public class Draw : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void StartUp()
+    private void StartUp(Scene scene)
     {
-        GetResources();
-        
+        if(scene.name == GameManager.StartMenuScene) { Debug.Log("Drawing is Disabled on Start Menu"); DisableDrawing(); }
+        else { Debug.Log("Drawing is Enabled"); EnableDrawing(); }
+
+        TotalCount = 0;
+
+        if (Drawings == null)
+        {
+            Drawings = new("DrawingContainer");
+            Drawings.AddComponent<DrawingContainer>();
+        }
     }
     private void GetMouseInputs()
     {
@@ -112,7 +112,9 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        if (GameManager.IsGamePaused() && IsLineDynamic()) { return; }
+        if (GameManager.IsGamePaused() && IsLineDynamic()) { Debug.Log("Can not Place Dynamic Line on Game Paused"); return; }
+        if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
+        if (isDrawingDisabled) { return; }
 
         NewDrawing = new("Drawing_" + TotalCount.ToString())
         {
@@ -127,6 +129,16 @@ public class Draw : MonoBehaviour
         Line_Renderer.SetPosition(Line_Renderer.positionCount - 1, mousePos);
 
         TotalCount++;
+    }
+    public void DisableDrawing()
+    {
+        Debug.Log("Drawing Disabled");
+        isDrawingDisabled = true;
+    }
+    public void EnableDrawing()
+    {
+        Debug.Log("Drawing Enabled");
+        isDrawingDisabled = false;
     }
     private void WhileDrawing()
     {

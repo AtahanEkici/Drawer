@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-[DefaultExecutionOrder(-1000)]
+[DefaultExecutionOrder(-5000)]
 public class GameManager : MonoBehaviour
 {
+    public const string StartMenuScene = "StartMenu";
     public static GameManager Instance { get; private set; }
     private GameManager() { }
     private void Awake()

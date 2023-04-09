@@ -272,6 +272,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelManager
       objectReference: {fileID: 0}
+    - target: {fileID: 543986241837149084, guid: 858f8a3eb55f0d243b2c54cf82ae8817, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 543986241837149085, guid: 858f8a3eb55f0d243b2c54cf82ae8817, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1198,10 +1202,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9010093592395511908, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

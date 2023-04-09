@@ -45,7 +45,7 @@ public class UI_Controller : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         //GetForeignReferences();
-        Startup();
+        Startup(scene);
     }
     private void CheckInstance()
     {
@@ -136,7 +136,7 @@ public class UI_Controller : MonoBehaviour
             Debug.LogException(e);
         }
     }
-    private void Startup()
+    private void Startup(Scene scene)
     {
         try
         {
@@ -145,9 +145,19 @@ public class UI_Controller : MonoBehaviour
                 GetLocalReferences();
             }
 
-            OverlayPanel.SetActive(true);
-            SettingsPanel.SetActive(false);
-            ListPanel.SetActive(false);
+            if (scene.name == GameManager.StartMenuScene)
+            {
+                OverlayPanel.SetActive(false);
+                SettingsPanel.SetActive(false);
+                ListPanel.SetActive(false);
+            }
+
+            else
+            {
+                OverlayPanel.SetActive(true);
+                SettingsPanel.SetActive(false);
+                ListPanel.SetActive(false);
+            } 
         }
         catch(System.Exception e)
         {

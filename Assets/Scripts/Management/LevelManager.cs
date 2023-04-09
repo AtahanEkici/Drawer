@@ -13,28 +13,15 @@ public class LevelManager : MonoBehaviour
     {
         
     }
-    private void Start()
-    {
-        
-    }
     private void CheckInstance()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
         else
         {
-            try 
-            {
-                Destroy(gameObject);
-            }
-            catch(System.Exception e)
-            {
-                Debug.LogException(e);
-                Debug.Log("Could not destroy "+gameObject.name+"");
-                Destroy(this);
-            }
+            Destroy(gameObject);
         }
     }
     private void OnDestroy()
