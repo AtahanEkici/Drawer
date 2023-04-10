@@ -1,20 +1,27 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-5000)]
 public class GameManager : MonoBehaviour
 {
     public const string StartMenuScene = "StartMenu";
+    public const string EventSystemResource = "Management/Event_System/EventSystem";
     public static GameManager Instance { get; private set; }
     private GameManager() { }
+
+    [Header("Event System")]
+    [SerializeField] private GameObject Event_System_GameObject;
+
     private void Awake()
     {
         CheckInstance();
+        GetResources();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        //Debug.Log("Scene Loaded: "+scene.name+"");
         PauseGame(); // Pause the game on scene load // 
+        InstantiateEventSystemIfNoneFound();
     }
     private void Start()
     {
@@ -30,6 +37,24 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+    private void GetResources()
+    {
+        Event_System_GameObject = Resources.Load<GameObject>(EventSystemResource) as GameObject;
+    }
+    private void InstantiateEventSystemIfNoneFound()
+    {
+        EventSystem EventSystem = FindAnyObjectByType<EventSystem>();
+
+        if(EventSystem == null)
+        {
+            Instantiate(Event_System_GameObject);
+            Debug.Log("Event System Minted");
+        }
+        else
+        {
+            Debug.Log("Event System was already existed");
         }
     }
     private void StartUpOperations()

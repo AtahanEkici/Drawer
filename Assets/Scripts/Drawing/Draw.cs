@@ -71,8 +71,8 @@ public class Draw : MonoBehaviour
     }
     private void StartUp(Scene scene)
     {
-        if(scene.name == GameManager.StartMenuScene) { Debug.Log("Drawing is Disabled on Start Menu"); DisableDrawing(); }
-        else { Debug.Log("Drawing is Enabled"); EnableDrawing(); }
+        if(scene.name == GameManager.StartMenuScene) { DisableDrawing(); }
+        else { EnableDrawing(); }
 
         TotalCount = 0;
 

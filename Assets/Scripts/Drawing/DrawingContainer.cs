@@ -1,13 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-[DefaultExecutionOrder(-900)]
+[DefaultExecutionOrder(-500)]
 public class DrawingContainer : MonoBehaviour
 {
     public static DrawingContainer instance = null;
     private DrawingContainer() { }
-
-    [Header("Child Operations")]
-    [SerializeField] private int ChildCount = 0;
     private void Awake()
     {
         CheckInstance();
@@ -16,10 +13,6 @@ public class DrawingContainer : MonoBehaviour
     private void OnSceneUnloaded(Scene scene)
     {
         DeleteAllChildren(); // When scene unloads delete all the drawings //
-    }
-    private void Update()
-    {
-        ChildListener();
     }
     private void CheckInstance()
     {
@@ -50,23 +43,6 @@ public class DrawingContainer : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
-        ChildCount = 0;
-    }
-    private void ChildListener()
-    {
-        int currentChildCount = transform.childCount;
-
-        if (ChildCount == currentChildCount) { return; }
-
-        if (transform.childCount > ChildCount)
-        {
-            //Debug.Log("Child Added");
-            ChildCount++;
-        }
-        else // if(transform.childCount < ChildCount)
-        {
-            //Debug.Log("Child removed");
-            ChildCount--;        }
     }
     public GameObject[] GetAllDrawings()
     {

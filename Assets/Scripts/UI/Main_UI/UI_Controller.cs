@@ -2,18 +2,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-[DefaultExecutionOrder(-500)]
+[DefaultExecutionOrder(-1200)]
 public class UI_Controller : MonoBehaviour
 {
-    private const string ToggleLabelString = "Line Physics: ";
+    public const string ToggleLabelString = "Line Physics: ";
     public const string LinephysicsType = "LinePhysicsType";
 
     public static UI_Controller instance = null;
+    private UI_Controller() { }
 
     [Header("Panels")]
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject OverlayPanel;
     [SerializeField] private GameObject ListPanel;
+    [SerializeField] private GameObject ErrorPanel;
 
     [Header("Settings")]
     [SerializeField] private Toggle PhysicsToggle;
@@ -21,6 +23,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Button MenuCloseButton;
 
     [Header("Overlay")]
+    [SerializeField] public TextMeshProUGUI ScoreBoard;
     [SerializeField] private Button MenuOpenButton;
     [SerializeField] public Slider OnTargetSlider;
 
@@ -75,6 +78,10 @@ public class UI_Controller : MonoBehaviour
             {
                 ListPanel = transform.GetChild(2).gameObject;
             }
+            if(ErrorPanel == null)
+            {
+                ErrorPanel = transform.GetChild(3).gameObject;
+            }
         }
         catch(System.Exception e)
         {
@@ -124,11 +131,15 @@ public class UI_Controller : MonoBehaviour
             {
                 OnTargetSlider = OverlayPanel.transform.GetChild(1).GetComponent<Slider>();
             }
+            if(ScoreBoard == null)
+            {
+                ScoreBoard = OverlayPanel.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+            }
 
             //ListView //
             if(ListViewButton == null)
             {
-                ListViewButton = OverlayPanel.transform.GetChild(5).GetComponent<Button>();
+                ListViewButton = OverlayPanel.transform.GetChild(6).GetComponent<Button>();
             }
         }
         catch(System.Exception e)

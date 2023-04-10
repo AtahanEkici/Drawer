@@ -9,6 +9,7 @@ TagManager:
   - Ball
   - Drawing
   - UI
+  - ScoreBoard
   layers:
   - Default
   - TransparentFX
