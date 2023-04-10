@@ -3,6 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ErrorSystem : MonoBehaviour
 {
+    // Fixed Error Messages //
+    public static string DynamicLineWhileGamePaused = "Can not Place Dynamic Line while Game is Paused!";
+    public static string ObjectCollidedThenDestroyed = "Can not draw colliding dynamic objects!";
+
     public static ErrorSystem instance = null;
     private ErrorSystem() { }
 
@@ -13,12 +17,12 @@ public class ErrorSystem : MonoBehaviour
     [SerializeField] private bool ErrorReceived = false;
 
     [Header("Retraction Controlls")]
-    [SerializeField] private bool WaitForMessage = false;
+    private bool WaitForMessage = false;
     [SerializeField] private float RetractionPoint = 200f;
 
     [Header("Animation Controls")]
-    [SerializeField] private bool isUpward = true;
-    [SerializeField] private float Speed = 250f;
+    private bool isUpward = true;
+    [SerializeField] private float Speed = 400f;
     [SerializeField] private float TimeCounter = 1f;
 
     [Header("Slider Controlls")]

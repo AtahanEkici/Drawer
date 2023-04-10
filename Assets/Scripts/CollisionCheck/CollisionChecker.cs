@@ -32,6 +32,7 @@ public class CollisionChecker : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //Debug.Log("OnTriggerEnterCalled Called: "+collision.gameObject.name+"");
+        ErrorSystem.instance.SetErrorMessage(ErrorSystem.ObjectCollidedThenDestroyed);
         Destroy(transform.parent.gameObject);
         CameraShake.Instance.InduceStress(FailStress);
     }

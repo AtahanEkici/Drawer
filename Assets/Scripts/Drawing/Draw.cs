@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-1000)]
 public class Draw : MonoBehaviour
@@ -36,8 +37,8 @@ public class Draw : MonoBehaviour
     [SerializeField] private Material LineMaterial;
     [SerializeField] private PhysicsMaterial2D physicMaterial2D;
 
-    [Header("minimum Distance")]
-    [SerializeField] private float MinDistance = 1f;
+    [Header("Minimum Distance")]
+    [SerializeField] private float MinDistance = 10f;
     private void Awake()
     {
         CheckInstance();
@@ -112,9 +113,10 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        if (GameManager.IsGamePaused() && IsLineDynamic()) { Debug.Log("Can not Place Dynamic Line on Game Paused"); return; }
         if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
-        if (isDrawingDisabled) { return; }
+        else if (MouseOverUI()) { Debug.Log("Mouse Over UI Object"); return; }
+        else if (isDrawingDisabled) { Debug.Log("Drawing Disabled"); return; }
+        else if (GameManager.IsGamePaused() && IsLineDynamic()) { Debug.Log("Can not Place Dynamic Line while Game is Paused"); ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
 
         NewDrawing = new("Drawing_" + TotalCount.ToString())
         {
@@ -282,5 +284,9 @@ public class Draw : MonoBehaviour
         {
             return false;
         }
+    }
+    private bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }

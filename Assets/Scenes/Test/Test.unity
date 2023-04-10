@@ -201,9 +201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectrans: {fileID: 0}
   ErrorReceived: 0
-  WaitForMessage: 0
   RetractionPoint: 200
-  isUpward: 1
   Speed: 400
   TimeCounter: 1
   TimerSlider: {fileID: 0}
@@ -764,6 +762,14 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9010093590280756961, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093590280756961, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9010093590589238274, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -931,6 +937,18 @@ PrefabInstance:
     - target: {fileID: 9010093591150436797, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093591201821506, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_Transition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093591201821517, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093591201821517, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9010093591221381189, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1090,6 +1108,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9010093591627218722, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093591627218722, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093591627218722, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9010093591652598956, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
@@ -1278,6 +1304,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9010093592395511908, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093592395511908, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_Maskable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010093592395511908, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
