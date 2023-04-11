@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 [DefaultExecutionOrder(-1000)]
 public class Draw : MonoBehaviour
 {
@@ -39,6 +41,9 @@ public class Draw : MonoBehaviour
 
     [Header("Minimum Distance")]
     [SerializeField] private float MinDistance = 10f;
+
+    [Header("Is On UI Element")]
+    [SerializeField] private bool IsOnUI = false;
     private void Awake()
     {
         CheckInstance();
@@ -56,6 +61,7 @@ public class Draw : MonoBehaviour
     private void Update()
     {
         GetMousePosition();
+        MouseOverUI();
         GetMouseInputs();
     }
     private void CheckInstance()
@@ -114,7 +120,7 @@ public class Draw : MonoBehaviour
     private void StartDrawing()
     {
         if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
-        else if (MouseOverUI()) { Debug.Log("Mouse Over UI Object"); return; }
+        else if (IsOnUI) { Debug.Log("Mouse Over UI Object"); return; }
         else if (isDrawingDisabled) { Debug.Log("Drawing Disabled"); return; }
         else if (GameManager.IsGamePaused() && IsLineDynamic()) { Debug.Log("Can not Place Dynamic Line while Game is Paused"); ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
 
@@ -193,6 +199,27 @@ public class Draw : MonoBehaviour
         {
             NewDrawing.transform.SetParent(Drawings.transform);
         } 
+    }
+    public void RaycastUIElement()
+    {
+        PointerEventData eventData = new(EventSystem.current)
+        {
+            position = mousePos
+        };
+
+        GraphicRaycaster[] raycasters = FindObjectsOfType<GraphicRaycaster>();
+
+        for (int i = 0; i < raycasters.Length; i++)
+        {
+            List<RaycastResult> results = new();
+            raycasters[i].Raycast(eventData, results);
+            if (results.Count > 0)
+            {
+                Debug.Log("UI element detected: " + results[0].gameObject.name);
+                IsOnUI = true;
+            }
+        }
+        IsOnUI =  false;
     }
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {
@@ -285,8 +312,8 @@ public class Draw : MonoBehaviour
             return false;
         }
     }
-    private bool MouseOverUI()
+    private void MouseOverUI()
     {
-        return EventSystem.current.IsPointerOverGameObject();
+        IsOnUI = EventSystem.current.IsPointerOverGameObject();
     }
 }

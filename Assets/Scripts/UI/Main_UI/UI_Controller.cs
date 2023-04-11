@@ -219,8 +219,10 @@ public class UI_Controller : MonoBehaviour
     }
     private void OpenSettings()
     {
+        Draw.instance.DisableDrawing();
+
         LastState = GameManager.IsGamePaused();
-        //Debug.Log("Menu Opened at State: "+LastState+"");
+
         if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
 
         OverlayPanel.SetActive(false);
@@ -230,11 +232,14 @@ public class UI_Controller : MonoBehaviour
     private void CloseSettings()
     {
         SaveSettings();
+
         OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
         ListPanel.SetActive(false);
-        //Debug.Log("Menu closed at State: "+LastState);
+
         GameManager.SetGameState(LastState);
+
+        Draw.instance.EnableDrawing();
     }
     public void OpenList()
     {

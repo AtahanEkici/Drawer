@@ -67,12 +67,16 @@ public class ScoreManager : MonoBehaviour
     }
     private int GetScore()
     {
-        return PlayerPrefs.GetInt((Score_PlayerPrefs + SceneName), 0);
+        int score = PlayerPrefs.GetInt((Score_PlayerPrefs + SceneName), 0);
+
+        return score < 0 ? 0 : score;
     }
     public void SetScore(int score)
     {
-        PlayerPrefs.SetInt((Score_PlayerPrefs + SceneName), (GetScore()+score));
-        Score = GetScore();
+        int updatedScore = GetScore() + score;
+        updatedScore  = updatedScore < 0 ? updatedScore : 0;
+        PlayerPrefs.SetInt(Score_PlayerPrefs + SceneName, updatedScore);
+        Score = updatedScore;
     }
     private void UpdateSceneName(Scene scene)
     {
