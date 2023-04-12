@@ -1,9 +1,12 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
+using TMPro;
 [DefaultExecutionOrder(-80)]
 public class TimeController : MonoBehaviour
 {
+    public static TimeController instance = null;
+    private TimeController() { }
+
     [Header("Timer Text")]
     [SerializeField] private static TextMeshProUGUI TimerUI;
     [SerializeField] private const string StandaloneText = "Time: ";
@@ -13,6 +16,7 @@ public class TimeController : MonoBehaviour
     [SerializeField] private static float Timer = 0f;
     private void Awake()
     {
+        CheckInstance();
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
     private void OnSceneUnloaded(Scene scene)
@@ -27,6 +31,17 @@ public class TimeController : MonoBehaviour
     private void Update()
     {
         CountTime();
+    }
+    private void CheckInstance()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     private void GetForeignReferences()
     {
@@ -61,6 +76,10 @@ public class TimeController : MonoBehaviour
         UpdateTimerUI();
         isTimerStopped = false;
         Debug.Log("Timer Reset");
+    }
+    public float GetCurrentTimer()
+    {
+        return Timer;
     }
     private static void UpdateTimerUI()
     {

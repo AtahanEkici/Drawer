@@ -103,6 +103,12 @@ public class ErrorSystem : MonoBehaviour
         ErrorMessage.text = Message;
         ErrorReceived = true;
     }
+    public void SetErrorMessage(string Message, string Baþlýk)
+    {
+        ErrorMessage.text = Message;
+        ErrorBaþlýk.text = Baþlýk;
+        ErrorReceived = true;
+    }
     private void AnimateTable()
     {
         if (!ErrorReceived) { return; }

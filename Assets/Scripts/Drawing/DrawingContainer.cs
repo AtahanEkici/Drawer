@@ -5,6 +5,9 @@ public class DrawingContainer : MonoBehaviour
 {
     public static DrawingContainer instance = null;
     private DrawingContainer() { }
+
+    [Header("Children Info")]
+    [SerializeField] private int ChildAmount = 0;
     private void Awake()
     {
         CheckInstance();
@@ -13,6 +16,28 @@ public class DrawingContainer : MonoBehaviour
     private void OnSceneUnloaded(Scene scene)
     {
         DeleteAllChildren(); // When scene unloads delete all the drawings //
+    }
+    private void Update()
+    {
+        //ListenChildren();
+    }
+    private void ListenChildren() // ? Do i need this idk  //
+    {
+        int currentchildcount = transform.childCount;
+
+        if (currentchildcount == ChildAmount) { return; } // No changes made //
+
+        if(currentchildcount > ChildAmount)
+        {
+            Debug.Log("New Child Added");
+            ChildAmount++;
+        }
+        else // currentchildcount < ChildAmount
+        {
+            Debug.Log("Child Subtracted");
+            ChildAmount--;
+        }
+        
     }
     private void CheckInstance()
     {
@@ -43,6 +68,12 @@ public class DrawingContainer : MonoBehaviour
         {
             Destroy(transform.GetChild(i).gameObject);
         }
+
+        ChildAmount = 0;
+    }
+    public int GetTotalDrawingCount()
+    {
+        return transform.childCount;
     }
     public GameObject[] GetAllDrawings()
     {
