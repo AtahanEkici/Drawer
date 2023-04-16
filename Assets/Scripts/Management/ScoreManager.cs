@@ -6,7 +6,7 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager instance = null;
     private ScoreManager() { }
 
-    public const string Score_PlayerPrefs = "Score:";
+    public const string Score_PlayerPrefs = "Score: ";
     public const string ScoreTag = "ScoreBoard";
 
     [Header("Score")]

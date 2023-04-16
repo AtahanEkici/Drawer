@@ -34,6 +34,6 @@ public class CollisionChecker : MonoBehaviour
         //Debug.Log("OnTriggerEnterCalled Called: "+collision.gameObject.name+"");
         ErrorSystem.instance.SetErrorMessage(ErrorSystem.ObjectCollidedThenDestroyed);
         Destroy(transform.parent.gameObject);
-        CameraShake.Instance.InduceStress(FailStress);
+        CameraShake._instance.InduceStress(FailStress);
     }
 }
