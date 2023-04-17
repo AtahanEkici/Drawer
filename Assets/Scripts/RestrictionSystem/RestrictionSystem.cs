@@ -5,6 +5,8 @@ public class RestrictionSystem : MonoBehaviour
     public static RestrictionSystem instance = null;
     private RestrictionSystem() {}
 
+    public const string RestrictionTag = "Restriction";
+
     [Header("Drawing Lenght Restriction")]
     [SerializeField] private float MinDrawingLenght = 10f;
 
@@ -15,7 +17,6 @@ public class RestrictionSystem : MonoBehaviour
     {
         CheckInstance();
     }
-
     private void CheckInstance()
     {
         if(instance == null)

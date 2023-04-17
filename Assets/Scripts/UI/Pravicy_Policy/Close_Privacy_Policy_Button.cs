@@ -13,6 +13,14 @@ public class Close_Privacy_Policy_Button : MonoBehaviour
         GetReferences();
         DelegateButton();
     }
+    private void OnEnable()
+    {
+        Draw.instance.DisableDrawing();
+    }
+    private void OnDisable()
+    {
+        Draw.instance.EnableDrawing();
+    }
     private void CheckInstance()
     {
         if(instance == null)

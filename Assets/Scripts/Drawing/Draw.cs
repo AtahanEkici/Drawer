@@ -52,6 +52,7 @@ public class Draw : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         StartUp(scene);
+        GetRestrictions();
     }
     private void Start()
     {
@@ -74,6 +75,10 @@ public class Draw : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    private void GetRestrictions()
+    {
+
     }
     private void StartUp(Scene scene)
     {
@@ -138,12 +143,12 @@ public class Draw : MonoBehaviour
     }
     public void DisableDrawing()
     {
-        Debug.Log("Drawing Disabled");
+        //Debug.Log("Drawing Disabled");
         isDrawingDisabled = true;
     }
     public void EnableDrawing()
     {
-        Debug.Log("Drawing Enabled");
+        //Debug.Log("Drawing Enabled");
         isDrawingDisabled = false;
     }
     private void WhileDrawing()

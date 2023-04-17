@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-5000)]
 public class GameManager : MonoBehaviour
 {
+    public const string UITag = "UI";
     public const string StartMenuScene = "StartMenu";
     public const string EventSystemResource = "Management/Event_System/EventSystem";
     public static GameManager Instance { get; private set; }
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Event System")]
     [SerializeField] private GameObject Event_System_GameObject;
+
+    [Header("Main UI")]
+    [SerializeField] private static GameObject mainUI;
 
     private void Awake()
     {
@@ -21,11 +25,19 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         PauseGame(); // Pause the game on scene load // 
+        GetReferences();
         InstantiateEventSystemIfNoneFound();
     }
     private void Start()
     {
         StartUpOperations();
+    }
+    private void GetReferences()
+    {
+        if(mainUI == null)
+        {
+            mainUI = GameObject.FindGameObjectWithTag(UITag);
+        }
     }
     private void CheckInstance()
     {

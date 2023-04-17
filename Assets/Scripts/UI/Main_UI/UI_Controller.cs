@@ -30,6 +30,9 @@ public class UI_Controller : MonoBehaviour
     [Header("List View")]
     [SerializeField] private Button ListViewButton;
 
+    [Header("Privacy Policy")]
+    [SerializeField] private GameObject PrivacyPolicyUI;
+
     [Header("Last State")]
     [SerializeField] private bool LastState;
 
@@ -81,6 +84,10 @@ public class UI_Controller : MonoBehaviour
             if(ErrorPanel == null)
             {
                 ErrorPanel = transform.GetChild(3).gameObject;
+            }
+            if(PrivacyPolicyUI == null)
+            {
+                PrivacyPolicyUI = transform.GetChild(4).gameObject;
             }
         }
         catch(System.Exception e)
@@ -151,7 +158,7 @@ public class UI_Controller : MonoBehaviour
     {
         try
         {
-            if(OverlayPanel == null || SettingsPanel == null || ListPanel == null)
+            if(OverlayPanel == null || SettingsPanel == null || ListPanel == null || PrivacyPolicyUI == null)
             {
                 GetLocalReferences();
             }
@@ -161,6 +168,7 @@ public class UI_Controller : MonoBehaviour
                 OverlayPanel.SetActive(false);
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
+                PrivacyPolicyUI.SetActive(false);
             }
 
             else
@@ -168,6 +176,7 @@ public class UI_Controller : MonoBehaviour
                 OverlayPanel.SetActive(true);
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
+                PrivacyPolicyUI.SetActive(false);
             } 
         }
         catch(System.Exception e)
@@ -257,6 +266,24 @@ public class UI_Controller : MonoBehaviour
         ListPanel.SetActive(false);
         OverlayPanel.SetActive(true);
         //Debug.Log("Menu closed at State: "+LastState);
+        GameManager.SetGameState(LastState);
+    }
+    public void OpenPrivacyPolicyUI()
+    {
+        LastState = GameManager.IsGamePaused();
+        if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
+
+        OverlayPanel.SetActive(false);
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        PrivacyPolicyUI.SetActive(true);
+    }
+    public void ClosePrivacyPolicyUI()
+    {
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        PrivacyPolicyUI.SetActive(false);
+        OverlayPanel.SetActive(true);
         GameManager.SetGameState(LastState);
     }
     private void SaveSettings()
