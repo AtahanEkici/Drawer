@@ -23,7 +23,7 @@ public class Draw : MonoBehaviour
     [Header("Mouse Options")]
     [SerializeField] private Vector2 mousePos;
 
-    [Header("New Object")]
+    [Header("New Drawings")]
     [SerializeField] private GameObject Drawings; 
     [SerializeField] private GameObject NewDrawing;
     [SerializeField] private int TotalCount = 1;

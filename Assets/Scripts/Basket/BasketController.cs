@@ -37,26 +37,26 @@ public class BasketController : MonoBehaviour
     }
     private void GetForeignReferences()
     {
-        if(slider == null)
+        try
         {
-            slider = UI_Controller.instance.OnTargetSlider;
+            if (slider == null)
+            {
+                slider = UI_Controller.instance.OnTargetSlider;
+            }
+            if (Slider_Material == null)
+            {
+                Slider_Material = slider.transform.GetChild(0).GetComponent<Image>().material;
+                slider.gameObject.SetActive(false);
+            }
         }
-        if(Slider_Material == null)
+        catch(System.Exception e)
         {
-            Slider_Material = slider.transform.GetChild(0).GetComponent<Image>().material;
-            slider.gameObject.SetActive(false);
+            Debug.LogException(e);
         }
-    }
-    private float GetMaterialTransparency()
-    {
-        return Slider_Material.GetFloat("_Transparency");
-    }
-    private void SetMaterialTransparency(float value)
-    {
-        Slider_Material.SetFloat("_Transparency",value);
     }
     private void SliderOperations()
     {
+        if(slider == null) { return; }
         if (isBallOnBasket && slider.value >= slider.maxValue) { return; }
         else if(!isBallOnBasket && slider.value <= slider.minValue) { return; }
 

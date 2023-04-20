@@ -38,6 +38,17 @@ public class RestrictionSystem : MonoBehaviour
             
         }
     }
+    public object[] GetRestrictions()
+    {
+        object[] restrictions = new object[2];
+
+        // Restrictions //
+        restrictions[0] = MinDrawingLenght;
+        restrictions[1] = MaxDrawingAmount;
+        // Restrictions //
+
+        return restrictions;
+    }
     public int GetMaxDrawingCount()
     {
         return MaxDrawingAmount;
