@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RestrictionTag: Restriction
-  MaxDrawingLenght: 600
+  MaxDrawingLenght: 6
   MaxDrawingCount: 10
 --- !u!1 &2069576409 stripped
 GameObject:
@@ -267,7 +267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: MinDistance
-      value: 10
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 50365862520302848, guid: edec86362d56b8e4ea8b28f31c4e13ae, type: 3}
       propertyPath: LineRendererWidth
@@ -799,11 +799,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1820284017008540037, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -467.00134
+      value: -467.0016
       objectReference: {fileID: 0}
     - target: {fileID: 1820284017008540037, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -450.00143
+      value: -450.00174
       objectReference: {fileID: 0}
     - target: {fileID: 2296007183616440833, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_Transition

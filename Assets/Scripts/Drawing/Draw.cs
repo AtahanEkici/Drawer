@@ -216,9 +216,12 @@ public class Draw : MonoBehaviour
             for (int i = 0; i < posCount; i++)
             {
                 positions[i] = (Vector2)(lr.GetPosition(i));
-            }
 
-            totalDistance = GetLineRendererLengthRelativeToCamera();
+                if(i>0)
+                {
+                    totalDistance += Vector2.Distance(positions[i], positions[i - 1]); 
+                }
+            }
 
             Debug.Log("Total Distance: " + totalDistance);
 
