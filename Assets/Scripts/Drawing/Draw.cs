@@ -43,6 +43,11 @@ public class Draw : MonoBehaviour
 
     [Header("Is On UI Element")]
     [SerializeField] private bool IsOnUI = false;
+
+    [Header("Restrictions")]
+    [SerializeField] private int MaxDrawingCount = 0;
+    [SerializeField] private float MaxInkAmount = 0f;
+    [SerializeField] private float MaxDrawingLenght = 0f;
     private void Awake()
     {
         CheckInstance();
@@ -78,7 +83,13 @@ public class Draw : MonoBehaviour
     }
     private void GetRestrictions()
     {
+        object[] restrictions = RestrictionSystem.instance.GetRestrictions();
 
+        MaxDrawingLenght = (float)restrictions[0];
+        MaxDrawingCount  = (int)restrictions[1];
+        MaxInkAmount  = (float)restrictions[2];
+
+        Debug.Log(restrictions.ToString());
     }
     private void StartUp(Scene scene)
     {
@@ -119,13 +130,14 @@ public class Draw : MonoBehaviour
         if(Line_Renderer != null)
         {
             Destroy(Line_Renderer);
+            TotalCount--;
         }
     }
     private void StartDrawing()
     {
         if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
         else if (IsOnUI) { Debug.Log("Mouse Over UI Object"); return; }
-        else if (GameManager.IsGamePaused() && IsLineDynamic()) { Debug.Log("Can not Place Dynamic Line while Game is Paused"); ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
+        else if (GameManager.IsGamePaused() && IsLineDynamic()) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
 
         NewDrawing = new("Drawing_" + TotalCount.ToString())
         {
@@ -224,6 +236,7 @@ public class Draw : MonoBehaviour
             if (totalDistance < MinDistance)
             {
                 Destroy(go);
+                TotalCount--;
                 return 0f;
             }
 

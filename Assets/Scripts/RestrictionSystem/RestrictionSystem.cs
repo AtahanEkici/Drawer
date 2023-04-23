@@ -5,17 +5,24 @@ public class RestrictionSystem : MonoBehaviour
     public static RestrictionSystem instance = null;
     private RestrictionSystem() {}
 
-    public const string RestrictionTag = "Restriction";
+    public string RestrictionTag = "Restriction";
 
     [Header("Drawing Lenght Restriction")]
-    [SerializeField] private float MinDrawingLenght = 10f;
+    [SerializeField] private float MaxDrawingLenght = 50f;
 
     [Header("Max Amount Of Drawings")]
-    [SerializeField] private int MaxDrawingAmount = 10;
+    [SerializeField] private int MaxDrawingCount = 10;
+
+    [Header("Max Ink Amount")]
+    [SerializeField] private float MaxInkAmount = 50f;
 
     private void Awake()
     {
-        CheckInstance();
+        CheckInstance();  
+    }
+    private void OnEnable()
+    {
+        GetTag();
     }
     private void CheckInstance()
     {
@@ -35,26 +42,25 @@ public class RestrictionSystem : MonoBehaviour
                 Destroy(this);
                 Debug.LogException(e);
             }
-            
         }
     }
+    /// <summary>
+    /// returns the drawing restrictions
+    /// </summary>
     public object[] GetRestrictions()
     {
-        object[] restrictions = new object[2];
+        object[] restrictions = new object[4];
 
         // Restrictions //
-        restrictions[0] = MinDrawingLenght;
-        restrictions[1] = MaxDrawingAmount;
+        restrictions[0] = MaxDrawingLenght;
+        restrictions[1] = MaxDrawingCount;
+        restrictions[2] = MaxInkAmount;
         // Restrictions //
 
         return restrictions;
     }
-    public int GetMaxDrawingCount()
+    private void GetTag()
     {
-        return MaxDrawingAmount;
-    }
-    public float GetMinDrawinglenght()
-    {
-        return MinDrawingLenght;
+        RestrictionTag = gameObject.tag;
     }
 }
