@@ -13,9 +13,6 @@ public class RestrictionSystem : MonoBehaviour
     [Header("Max Amount Of Drawings")]
     [SerializeField] private int MaxDrawingCount = 10;
 
-    [Header("Max Ink Amount")]
-    [SerializeField] private float MaxInkAmount = 50f;
-
     private void Awake()
     {
         CheckInstance();  
@@ -54,7 +51,6 @@ public class RestrictionSystem : MonoBehaviour
         // Restrictions //
         restrictions[0] = MaxDrawingLenght;
         restrictions[1] = MaxDrawingCount;
-        restrictions[2] = MaxInkAmount;
         // Restrictions //
 
         return restrictions;

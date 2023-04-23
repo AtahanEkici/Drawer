@@ -46,7 +46,6 @@ public class Draw : MonoBehaviour
 
     [Header("Restrictions")]
     [SerializeField] private int MaxDrawingCount = 0;
-    [SerializeField] private float MaxInkAmount = 0f;
     [SerializeField] private float MaxDrawingLenght = 0f;
     private void Awake()
     {
@@ -87,9 +86,6 @@ public class Draw : MonoBehaviour
 
         MaxDrawingLenght = (float)restrictions[0];
         MaxDrawingCount  = (int)restrictions[1];
-        MaxInkAmount  = (float)restrictions[2];
-
-        Debug.Log(restrictions.ToString());
     }
     private void StartUp(Scene scene)
     {
@@ -130,7 +126,6 @@ public class Draw : MonoBehaviour
         if(Line_Renderer != null)
         {
             Destroy(Line_Renderer);
-            TotalCount--;
         }
     }
     private void StartDrawing()
@@ -138,6 +133,7 @@ public class Draw : MonoBehaviour
         if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
         else if (IsOnUI) { Debug.Log("Mouse Over UI Object"); return; }
         else if (GameManager.IsGamePaused() && IsLineDynamic()) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
+        else if(TotalCount >= MaxDrawingCount) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.ReachedMaxDrawingCount); return; }
 
         NewDrawing = new("Drawing_" + TotalCount.ToString())
         {
@@ -175,13 +171,6 @@ public class Draw : MonoBehaviour
         if (Line_Renderer == null) { return; }
 
         Line_Renderer.Simplify(SimplificationCoefficient);
-
-        if (Line_Renderer.positionCount <= 1)
-        {
-            Destroy(NewDrawing);
-            TotalCount--;
-            return;
-        }
 
         Mesh LineMesh = new();
         Line_Renderer.BakeMesh(LineMesh, MainCamera, true);
@@ -231,12 +220,20 @@ public class Draw : MonoBehaviour
 
             totalDistance = GetLineRendererLengthRelativeToCamera();
 
-            //Debug.Log("Total Distance: " + totalDistance);
+            Debug.Log("Total Distance: " + totalDistance);
 
             if (totalDistance < MinDistance)
             {
                 Destroy(go);
                 TotalCount--;
+                ErrorSystem.instance.SetErrorMessage(ErrorSystem.DrawingTooSmall);
+                return 0f;
+            }
+            else if(totalDistance > MaxDrawingLenght)
+            {
+                Destroy(go);
+                TotalCount--;
+                ErrorSystem.instance.SetErrorMessage(ErrorSystem.DrawingTooLarge);
                 return 0f;
             }
 
