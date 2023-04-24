@@ -1,5 +1,5 @@
 using UnityEngine;
-[DefaultExecutionOrder(-3000)]
+[DefaultExecutionOrder(-10000)]
 public class RestrictionSystem : MonoBehaviour
 {
     public static RestrictionSystem instance = null;
@@ -12,6 +12,9 @@ public class RestrictionSystem : MonoBehaviour
 
     [Header("Max Amount Of Drawings")]
     [SerializeField] private int MaxDrawingCount = 10;
+
+    [Header("Hide Scores On This Level")]
+    [SerializeField] private bool Show_Score_On_This_Level = false;
 
     private void Awake()
     {
@@ -58,5 +61,9 @@ public class RestrictionSystem : MonoBehaviour
     private void GetTag()
     {
         RestrictionTag = gameObject.tag;
+    }
+    public bool ShowScore()
+    {
+        return Show_Score_On_This_Level;
     }
 }

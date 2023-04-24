@@ -30,6 +30,7 @@ public class ScoreManager : MonoBehaviour
             GetReferences();
             UpdateSceneName(scene);
             UpdateScoreBoard();
+            CheckScoreBoard();
         }
         catch(System.Exception e)
         {
@@ -54,6 +55,11 @@ public class ScoreManager : MonoBehaviour
                 tmpro = GameObject.FindGameObjectWithTag(ScoreTag).GetComponent<TextMeshProUGUI>();
             }
         }
+    }
+    private void CheckScoreBoard()
+    {
+        bool showScoreBoard = RestrictionSystem.instance.ShowScore();
+        tmpro.gameObject.SetActive(showScoreBoard);
     }
     private void UpdateScoreBoard()
     {

@@ -133,7 +133,7 @@ public class Draw : MonoBehaviour
         if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { Debug.Log("Can not draw on start menu"); return; }
         else if (IsOnUI) { Debug.Log("Mouse Over UI Object"); return; }
         else if (GameManager.IsGamePaused() && IsLineDynamic()) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
-        else if(TotalCount >= MaxDrawingCount) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.ReachedMaxDrawingCount); return; }
+        else if(DrawingContainer.instance.GetTotalDrawingCount() >= MaxDrawingCount) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.ReachedMaxDrawingCount); return; }
 
         NewDrawing = new("Drawing_" + TotalCount.ToString())
         {

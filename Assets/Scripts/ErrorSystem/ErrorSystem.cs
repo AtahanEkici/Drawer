@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ErrorSystem : MonoBehaviour
 {
-    // Fixed Error Messages //
+    // Fixed Error Messages - Start //
     public const string DynamicLineWhileGamePaused = "Can not Place Dynamic Line while Game is Paused!";
     public const string ObjectCollidedThenDestroyed = "Can not draw colliding dynamic objects!";
     public const string ReachedMaxDrawingCount = "You have reached max drawing count!";
     public const string DrawingTooSmall = "The Drawing is too small!";
     public const string DrawingTooLarge = "The Drawing is too LARGE!";
+    // Fixed Error Messages - END //
 
     public static ErrorSystem instance = null;
     private ErrorSystem() { }
