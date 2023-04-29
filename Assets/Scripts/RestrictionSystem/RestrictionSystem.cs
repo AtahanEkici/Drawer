@@ -45,7 +45,7 @@ public class RestrictionSystem : MonoBehaviour
         }
     }
     /// <summary>
-    /// returns the drawing restrictions
+    /// Returns the drawing restrictions as an object array
     /// </summary>
     public object[] GetRestrictions()
     {
