@@ -41,7 +41,7 @@ public class RestrictionSystem : MonoBehaviour
             {
                 Destroy(this);
                 Debug.LogException(e);
-            }
+            } 
         }
     }
     /// <summary>
@@ -58,7 +58,7 @@ public class RestrictionSystem : MonoBehaviour
 
         return restrictions;
     }
-    private void GetTag()
+    public void GetTag()
     {
         RestrictionTag = gameObject.tag;
     }

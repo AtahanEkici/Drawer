@@ -9,7 +9,7 @@ public class Glow : MonoBehaviour
 
     [Header("Color Options")]
     [SerializeField] private Color InitialColor;
-    [SerializeField] private Color TargetColor = Color.red;
+    [SerializeField] private static Color TargetColor = Color.red;
 
     [Header("Glow Options")]
     [SerializeField] private float GlowTimer = 0.5f;
