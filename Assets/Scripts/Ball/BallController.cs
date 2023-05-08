@@ -1,67 +1,88 @@
-using System.Collections;
 using UnityEngine;
 public class BallController : MonoBehaviour
 {
-    public static BallController instance = null;
-    private BallController() { }
+    public const string BallTag = "Ball";
 
-    [Header("Coroutine Names")]
-    [SerializeField] public const string CoolDown_Coroutine = "CoolDown";
-    [SerializeField] public const string FireUp_Coroutine = "FireUp";
+    [Header("Burning Controlls")]
+    [SerializeField] private bool isBurning = false;
+    [SerializeField] private float BurnSpeed = 2f;
 
     [Header("Color Operations")]
     [SerializeField] private Color InitialColor = Color.black;
+    [SerializeField] private Color MaxBurnColor = Color.red;
 
-    [Header("Material")]
-    [SerializeField] private Material BallMaterial;
+    [Header("Renderer")]
+    [SerializeField] private Renderer BallRenderer;
 
     private void Awake()
     {
-        CheckInstance();
         GetLocalReferences();
     }
-    private void CheckInstance()
+    private void Start()
     {
-        if(instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            try
-            {
-                Destroy(gameObject);
-            }
-            catch(System.Exception e)
-            {
-                Debug.LogException(e);
-                Destroy(this);
-            }
-            
-        }
+        StartUp();
+    }
+    private void Update()
+    {
+        CoolDown();
+        FireUp();
     }
     private void GetLocalReferences()
     {
         try
         {
-            BallMaterial = GetComponent<Renderer>().material;
-            InitialColor = BallMaterial.color;
+            BallRenderer = GetComponent<Renderer>();
+            BallRenderer.material.color = InitialColor;
         }
         catch(System.Exception e)
         {
             Debug.LogException(e);
         }
     }
-    public void FireUp(Color targetColor,float lerpSpeed)
+    private void StartUp()
     {
-        BallMaterial.color = Color.Lerp(BallMaterial.color, targetColor, Time.smoothDeltaTime * lerpSpeed);
+        //BallRenderer.material.color = Random.ColorHSV();
     }
-    public void CoolDown(float lerpSpeed)
+    private void FireUp()
     {
-        BallMaterial.color = Color.Lerp(BallMaterial.color, InitialColor, Time.smoothDeltaTime * lerpSpeed);
+        if (!isBurning) { return; }
+
+        BallRenderer.material.color = Color.Lerp(BallRenderer.material.color, MaxBurnColor, Time.deltaTime * BurnSpeed);
+        
+        if(BallRenderer.material.color == MaxBurnColor)
+        {
+            DestroyBall();
+        }
     }
+    public void BurnBall(float speed)
+    {
+        isBurning = true;
+        BurnSpeed = speed;
+    }
+    public void BurnBall()
+    {
+        isBurning = true;
+    }
+    private void CoolDown()
+    {
+        if(isBurning || BallRenderer.material.color == InitialColor) { return; }
+
+        BallRenderer.material.color = Color.Lerp(BallRenderer.material.color, InitialColor, Time.deltaTime * BurnSpeed);
+    }
+    public void CoolBall()
+    {
+        isBurning = false;
+    }
+    public void CoolBall(float speed)
+    {
+        isBurning = false;
+        BurnSpeed = speed;
+    }
+
     public void DestroyBall()
     {
+        // Game Over  // 
+        // Spawn Destruction Particle //
         Destroy(gameObject);
     }
 }

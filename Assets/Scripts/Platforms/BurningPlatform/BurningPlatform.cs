@@ -1,14 +1,10 @@
-using System.Collections;
 using UnityEngine;
 public class BurningPlatform : MonoBehaviour
 {
-    private string BallTag;
-
-    [Header("Burn Color")]
-    [SerializeField] private Color WantedColor = Color.red;
+    private string BallTag = "Ball";
 
     [Header("Burn Speed")]
-    [SerializeField] private float BurnSpeed = 2f;
+    [SerializeField] private float BurnSpeed = 8f;
 
     private void Start()
     {
@@ -16,40 +12,30 @@ public class BurningPlatform : MonoBehaviour
     }
     private void GetReferences()
     {
-        BallTag = BallController.instance.tag;
+        BallTag = BallController.BallTag;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject EnteredObject = collision.gameObject;
 
-        Debug.Log("Entered: "+ EnteredObject.name);
+        if (EnteredObject.CompareTag(BallTag))
+        {
+            if (EnteredObject.TryGetComponent<BallController>(out var bc))
+            {
+                bc.BurnBall(BurnSpeed);
+            }
+        }
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
         GameObject ExitedObject = collision.gameObject;
 
-        Debug.Log("Exited: "+ ExitedObject.name);
-    }
-
-    public IEnumerator FireUp(GameObject CollidedObject)
-    {
-        Material mat = CollidedObject.GetComponent<Renderer>().material;
-
-        while(mat.color != WantedColor)
+        if(ExitedObject.CompareTag(BallTag))
         {
-            mat.color = Color.Lerp(mat.color, WantedColor, Time.smoothDeltaTime * BurnSpeed);
-            yield return null;
-        }
-        
-        if(mat.color == WantedColor)
-        {
-            Destroy(CollidedObject);
-        }
+            if (ExitedObject.TryGetComponent<BallController>(out var bc))
+            {
+                bc.CoolBall(BurnSpeed);
+            }
+        }  
     }
-    /*
-    public void CoolDown(float lerpSpeed)
-    {
-        BallMaterial.color = Color.Lerp(BallMaterial.color, InitialColor, Time.smoothDeltaTime * lerpSpeed);
-    }
-    */
 }

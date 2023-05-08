@@ -8,7 +8,8 @@ public class Glow : MonoBehaviour
     [SerializeField] private Material Color_Material;
 
     [Header("Color Options")]
-    [SerializeField] private Color InitialColor;
+    [SerializeField] private bool UseInitialColor = true;
+    [SerializeField] private Color InitialColor = Color.white;
     [SerializeField] private static Color TargetColor = Color.red;
 
     [Header("Glow Options")]
@@ -28,7 +29,11 @@ public class Glow : MonoBehaviour
     {
         InitialTimer = GlowTimer;
         Color_Material = GetComponent<Renderer>().material;
-        InitialColor = Color_Material.color;
+
+        if(UseInitialColor)
+        {
+            InitialColor = Color_Material.color;
+        } 
     }
     private void CountTime()
     {
