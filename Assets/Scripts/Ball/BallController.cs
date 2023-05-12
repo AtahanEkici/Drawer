@@ -2,23 +2,13 @@ using UnityEngine;
 public class BallController : MonoBehaviour
 {
     public const string BallTag = "Ball";
-
     public const string DestroyParticle_Location = "Particles/BallDestroy";
-
-    [Header("Burning Controlls")]
-    [SerializeField] private bool isBurning = false;
-    [SerializeField] private float BurnSpeed = 2f;
-
-    [Header("Color Operations")]
-    [SerializeField] private Color InitialColor = Color.black;
-    [SerializeField] private Color MaxBurnColor = Color.red;
 
     [Header("Renderer")]
     [SerializeField] private Renderer BallRenderer;
 
     [Header("Particles")]
-    [SerializeField] private GameObject DestroyParticle;
-    [SerializeField] private GameObject FlameParticle;
+    [SerializeField] private static GameObject DestroyParticle;
 
     private void Awake()
     {
@@ -27,12 +17,6 @@ public class BallController : MonoBehaviour
     private void Start()
     {
         GetResources();
-        StartUp();
-    }
-    private void Update()
-    {
-        CoolDown();
-        FireUp();
     }
     private void GetResources()
     {
@@ -43,68 +27,42 @@ public class BallController : MonoBehaviour
         try
         {
             BallRenderer = GetComponent<Renderer>();
-            BallRenderer.material.color = InitialColor;
         }
         catch(System.Exception e)
         {
             Debug.LogException(e);
         }
     }
-    private void StartUp()
-    {
-        //BallRenderer.material.color = Random.ColorHSV();
-    }
-    private void FireUp()
-    {
-        if (!isBurning) { return; }
-
-        BallRenderer.material.color = Color.Lerp(BallRenderer.material.color, MaxBurnColor, Time.deltaTime * BurnSpeed);
-        
-        if(BallRenderer.material.color == MaxBurnColor)
-        {
-            DestroyBall();
-        }
-    }
-    public void BurnBall(float speed)
-    {
-        isBurning = true;
-        BurnSpeed = speed;
-    }
-    public void BurnBall()
-    {
-        isBurning = true;
-    }
-    private void CoolDown()
-    {
-        if(isBurning || BallRenderer.material.color == InitialColor) { return; }
-
-        BallRenderer.material.color = Color.Lerp(BallRenderer.material.color, InitialColor, Time.deltaTime * BurnSpeed);
-    }
-    public void CoolBall()
-    {
-        isBurning = false;
-    }
-    public void CoolBall(float speed)
-    {
-        isBurning = false;
-        BurnSpeed = speed;
-    }
-    private void SpawnDestroyedBallParticle()
+    private void SpawnDestroyedParticle()
     {
         try
         {
             GameObject DestructionParticle = Instantiate(DestroyParticle,transform.position,Quaternion.identity);
+            DestructionParticle.transform.localScale = transform.localScale;
 
             ParticleSystem Particle = DestructionParticle.GetComponent<ParticleSystem>();
             ParticleSystem.MainModule mainModule = Particle.main;
 
             ParticleSystemRenderer renderer = DestructionParticle.GetComponent<ParticleSystemRenderer>();
-            Material ParticleMaterial = renderer.material;
-            
+            Material ParticleMaterial = renderer.sharedMaterial;
+            MeshFilter meshfilter = GetComponentInParent<MeshFilter>();
 
-            float newSize = 0.2f;
+            Shader shader = BallRenderer.material.shader;
+            Material particleMaterial = new Material(shader);
+
+            if (meshfilter == null)
+            {
+                particleMaterial.SetTexture("_BaseMap", renderer.material.mainTexture);
+                renderer.material = particleMaterial;
+            }
+            else
+            {
+                Mesh[] mesh = { meshfilter.sharedMesh };
+                renderer.SetMeshes(mesh);
+            }
+
+            float newSize = (transform.localScale.z == 0 ? (transform.localScale.x + transform.localScale.y) / 4 : (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 6);
             mainModule.startSize = newSize;
-            Debug.Log(newSize);
 
             ParticleMaterial.SetColor("_Color", BallRenderer.material.color);
         }
@@ -112,15 +70,17 @@ public class BallController : MonoBehaviour
         {
             Debug.LogException(e);
         }
-        finally
+    }
+    private void OnDestroy()
+    {
+        if (gameObject.scene.isLoaded) //Was Deleted
         {
-            //Debug.Log("Destruction Particle could be FAILED!");
+            DestroyBall();
         }
     }
-    public void DestroyBall()
+    private void DestroyBall()
     {
         // Game Over  // 
-        SpawnDestroyedBallParticle();// Spawn Destruction Particle //
-        Destroy(gameObject);
+        SpawnDestroyedParticle(); // Spawn Destruction Particle //
     }
 }

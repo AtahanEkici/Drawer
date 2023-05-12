@@ -44,11 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5193b799903a74c8a6ea97f388e5b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDrawingDisabled: 0
   Line_Renderer: {fileID: 0}
   LineRendererWidth: 0.1
-  mousePos: {x: 0, y: 0, z: 0}
+  mousePos: {x: 0, y: 0}
+  Drawings: {fileID: 0}
   NewDrawing: {fileID: 0}
+  TotalCount: 1
   MainCamera: {fileID: 0}
-  Drawings: []
-  SimplificationCoefficient: 0.01
+  SimplificationCoefficient: 0.025
   LineMaterial: {fileID: 0}
+  physicMaterial2D: {fileID: 0}
+  MinDistance: 0.05
+  IsOnUI: 0
+  MaxDrawingCount: 0
+  MaxDrawingLenght: 0

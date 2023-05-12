@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82fe76fc499147b46a707fe77e26d56e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BurnSpeed: 8
+  BurnSpeed: 10
 --- !u!114 &5707760102877016350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +163,7 @@ MonoBehaviour:
   isReturning: 0
   Color_Material: {fileID: 0}
   UseInitialColor: 0
-  InitialColor: {r: 1, g: 0.5613208, b: 0.5613208, a: 1}
+  InitialColor: {r: 1, g: 0.4481132, b: 0.4481132, a: 1}
   GlowTimer: 0.5
   InitialTimer: 0
   GlowSpeed: 4

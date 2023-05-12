@@ -1,41 +1,37 @@
 using UnityEngine;
 public class BurningPlatform : MonoBehaviour
 {
-    private string BallTag = "Ball";
-
     [Header("Burn Speed")]
-    [SerializeField] private float BurnSpeed = 8f;
+    [SerializeField] private float BurnSpeed = 5f;
 
-    private void Start()
-    {
-        GetReferences();
-    }
-    private void GetReferences()
-    {
-        BallTag = BallController.BallTag;
-    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GameObject EnteredObject = collision.gameObject;
+        GameObject go = collision.gameObject;
 
-        if (EnteredObject.CompareTag(BallTag))
+        if (go.GetComponent<Burn>() == null)
         {
-            if (EnteredObject.TryGetComponent<BallController>(out var bc))
-            {
-                bc.BurnBall(BurnSpeed);
-            }
+            go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
+        }
+    }
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        GameObject go = collision.gameObject;
+
+        if (go.GetComponent<Burn>() == null)
+        {
+            go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
+            
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        GameObject ExitedObject = collision.gameObject;
+        GameObject go = collision.gameObject;
 
-        if(ExitedObject.CompareTag(BallTag))
+        Burn burn = go.GetComponentInParent<Burn>();
+
+        if(burn != null)
         {
-            if (ExitedObject.TryGetComponent<BallController>(out var bc))
-            {
-                bc.CoolBall(BurnSpeed);
-            }
-        }  
+            burn.BeginCooling();
+        }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 375434190034807062}
   - component: {fileID: 375434191230369585}
   - component: {fileID: 375434191230369584}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: BallDestroy
   m_TagString: Particle
   m_Icon: {fileID: 0}
@@ -4809,7 +4809,7 @@ ParticleSystemRenderer:
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
   m_UseCustomVertexStreams: 0
-  m_EnableGPUInstancing: 1
+  m_EnableGPUInstancing: 0
   m_ApplyActiveColorSpace: 0
   m_AllowRoll: 1
   m_FreeformStretching: 0
