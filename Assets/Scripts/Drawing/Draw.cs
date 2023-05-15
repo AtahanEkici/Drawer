@@ -201,8 +201,10 @@ public class Draw : MonoBehaviour
 
         if(NewDrawing != null)
         {
-            NewDrawing.transform.SetParent(Drawings.transform);
-        } 
+            NewDrawing.transform.SetParent(Drawings.transform); 
+        }
+
+        NewDrawing.AddComponent<Drawing>();
     }
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {

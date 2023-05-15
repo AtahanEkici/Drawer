@@ -8,7 +8,7 @@ public class BurningPlatform : MonoBehaviour
     {
         GameObject go = collision.gameObject;
 
-        if (go.GetComponent<Burn>() == null)
+        if (go.GetComponentInParent<Burn>() == null)
         {
             go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
         }
@@ -17,7 +17,7 @@ public class BurningPlatform : MonoBehaviour
     {
         GameObject go = collision.gameObject;
 
-        if (go.GetComponent<Burn>() == null)
+        if (go.GetComponentInParent<Burn>() == null)
         {
             go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
             
