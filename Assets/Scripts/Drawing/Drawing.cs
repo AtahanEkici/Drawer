@@ -26,6 +26,7 @@ public class Drawing : MonoBehaviour
 
         CenterOfObject = render.bounds.center;
 
-       Debug.DrawLine(gameObject.transform.position,CenterOfObject,Color.magenta,Time.deltaTime);
+       //Debug.DrawLine(transform.position,CenterOfObject,Color.magenta,Time.deltaTime);
+       Debug.DrawLine(transform.position, transform.localPosition, Color.yellow, Time.deltaTime);
     }
 }

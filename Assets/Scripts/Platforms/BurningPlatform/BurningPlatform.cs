@@ -4,24 +4,27 @@ public class BurningPlatform : MonoBehaviour
     [Header("Burn Speed")]
     [SerializeField] private float BurnSpeed = 5f;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void AddBurn(GameObject go)
     {
-        GameObject go = collision.gameObject;
-
         if (go.GetComponentInParent<Burn>() == null)
         {
             go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
         }
+
+        Debug.Log("Added Burn to " + go.name + "");
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject go = collision.gameObject;
+
+        AddBurn(go);
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
         GameObject go = collision.gameObject;
 
-        if (go.GetComponentInParent<Burn>() == null)
-        {
-            go.AddComponent<Burn>().AdjustBurnSpeed(BurnSpeed);
-            
-        }
+        AddBurn(go);
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -31,7 +34,7 @@ public class BurningPlatform : MonoBehaviour
 
         if(burn != null)
         {
-            burn.BeginCooling();
+            burn.BeginCooling(BurnSpeed);
         }
     }
 }

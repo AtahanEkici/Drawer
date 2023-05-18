@@ -38,8 +38,9 @@ public class Burn : MonoBehaviour
     {
         LerpSpeed = adjustedSpeed;
     }
-    public void BeginCooling()
+    public void BeginCooling(float Speed)
     {
+        LerpSpeed = Speed;
         isOnBurningPlatform = false;
     }
     private void FireUp()
@@ -65,12 +66,31 @@ public class Burn : MonoBehaviour
             Destroy(this);
         }
     }
+    public Vector3 CalculateCenter(GameObject parent)
+    {
+        Vector3 center = Vector3.zero;
+        int childCount = parent.transform.childCount;
 
+        if (childCount == 0)
+        {
+            Debug.Log(parent.gameObject.name + " has no children.");
+            return parent.transform.position;
+        }
+
+        for (int i = 0; i < childCount; i++)
+        {
+            Transform child = parent.transform.GetChild(i);
+            center += child.position;
+        }
+
+        center /= childCount;
+        return center;
+    }
     private void SpawnDestroyedParticle()
     {
         try
         {
-            GameObject DestructionParticle = Instantiate(DestroyParticle, gameObject.transform.position, transform.rotation);
+            GameObject DestructionParticle = Instantiate(DestroyParticle, transform.parent != null ? CalculateCenter(transform.parent.gameObject) : transform.position, transform.rotation) as GameObject;
             DestructionParticle.transform.localScale = transform.localScale;
 
             ParticleSystem Particle = DestructionParticle.GetComponent<ParticleSystem>();
@@ -98,6 +118,8 @@ public class Burn : MonoBehaviour
             mainModule.startSize = newSize;
 
             ParticleMaterial.SetColor("_Color", render.material.color);
+
+            Debug.Log(gameObject.name + " burned");
         }
         catch (System.Exception e)
         {
