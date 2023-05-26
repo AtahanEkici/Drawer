@@ -1,8 +1,8 @@
 using UnityEngine;
 public class BurningPlatform : MonoBehaviour
 {
-    [Header("Burn Speed")]
-    [SerializeField] private float BurnSpeed = 5f;
+    //[Header("Burn Speed")]
+    //[SerializeField] private float Speed = 5f;
 
     private void OnCollisionStay2D(Collision2D collision)
     {
