@@ -7,6 +7,7 @@ public class UI_Controller : MonoBehaviour
 {
     public const string ToggleLabelString = "Line Physics: ";
     public const string LinephysicsType = "LinePhysicsType";
+    public const string ShowFPS = "ShowFPS";
 
     public static UI_Controller instance = null;
     private UI_Controller() { }
@@ -21,6 +22,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Toggle PhysicsToggle;
     [SerializeField] private TextMeshProUGUI PhysicsToggleText;
     [SerializeField] private Button MenuCloseButton;
+    [SerializeField] private Toggle ShowFPSToggle;
 
     [Header("Overlay")]
     [SerializeField] public TextMeshProUGUI ScoreBoard;
@@ -101,20 +103,15 @@ public class UI_Controller : MonoBehaviour
         {
             // variables //
             bool PhysicsType = true;
+            bool ShowFPSPref = false;
 
             // Settings //
             if (PhysicsToggle == null)
             {
                 PhysicsToggle = SettingsPanel.transform.GetChild(0).GetComponent<Toggle>();
 
-                if (PlayerPrefs.GetInt(LinephysicsType, 1) == 1)
-                {
-                    PhysicsType = true;
-                }
-                else
-                {
-                    PhysicsType = false;
-                }
+                PhysicsType = PlayerPrefs.GetInt(LinephysicsType, 1) == 1;
+
                 PhysicsToggle.isOn = PhysicsType;
             }
 
@@ -127,6 +124,15 @@ public class UI_Controller : MonoBehaviour
             if (MenuCloseButton == null)
             {
                 MenuCloseButton = SettingsPanel.transform.GetChild(1).GetComponent<Button>();
+            }
+
+            if (ShowFPSToggle == null)
+            {
+                ShowFPSToggle = SettingsPanel.transform.GetChild(2).GetComponent<Toggle>();
+
+                ShowFPSPref = PlayerPrefs.GetInt(ShowFPS, 0) == 1;
+
+                ShowFPSToggle.isOn = ShowFPSPref;
             }
 
             // Overlay //
@@ -200,6 +206,7 @@ public class UI_Controller : MonoBehaviour
     private void DelegateToggles()
     {
         PhysicsToggle.onValueChanged.AddListener(delegate{PhysicsToggleValueChanged(PhysicsToggle);});
+        ShowFPSToggle.onValueChanged.AddListener(delegate{ShowFPSToggleValueChanged(ShowFPSToggle);});
     }
     private void PhysicsToggleValueChanged(Toggle toggle_value)
     {
@@ -214,6 +221,19 @@ public class UI_Controller : MonoBehaviour
         {
             PlayerPrefs.SetInt(LinephysicsType, 0);
         } 
+    }
+    private void ShowFPSToggleValueChanged(Toggle toggle_value)
+    {
+        bool value = toggle_value.isOn;
+
+        if (value)
+        {
+            PlayerPrefs.SetInt(ShowFPS, 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(ShowFPS, 0);
+        }
     }
     private void PhysicsToggleTextChange(bool value)
     {

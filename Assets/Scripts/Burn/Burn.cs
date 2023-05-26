@@ -38,9 +38,9 @@ public class Burn : MonoBehaviour
     {
         LerpSpeed = adjustedSpeed;
     }
-    public void BeginCooling(float Speed)
+    public void BeginCooling(float adjustedSpeed)
     {
-        LerpSpeed = Speed;
+        LerpSpeed = adjustedSpeed;
         isOnBurningPlatform = false;
     }
     private void FireUp()
@@ -49,7 +49,7 @@ public class Burn : MonoBehaviour
 
         render.material.color = Color.Lerp(render.material.color, WantedColor, LerpSpeed * Time.smoothDeltaTime);
 
-        if(render.material.color == WantedColor)
+        if (render.material.color == WantedColor)
         {
             Destroy(gameObject);
             SpawnDestroyedParticle();
@@ -59,38 +59,31 @@ public class Burn : MonoBehaviour
     {
         if (isOnBurningPlatform) { return; }
 
-        render.material.color = Color.Lerp(render.material.color, InitialColor, LerpSpeed * Time.smoothDeltaTime);
+        render.material.color = Color.Lerp(render.material.color, InitialColor, (LerpSpeed / 2) * Time.smoothDeltaTime);
 
         if (render.material.color == InitialColor && !isOnBurningPlatform)
         {
             Destroy(this);
         }
     }
-    public Vector3 CalculateCenter(GameObject parent)
+    public Vector3 CalculateCenter(GameObject go)
     {
-        Vector3 center = Vector3.zero;
-        int childCount = parent.transform.childCount;
+        Renderer renderer = go.GetComponent<Renderer>();
+        Bounds bounds = renderer.bounds;
+        Vector3 center = bounds.center;
 
-        if (childCount == 0)
+        if (!renderer.gameObject.transform.IsChildOf(transform))
         {
-            Debug.Log(parent.gameObject.name + " has no children.");
-            return parent.transform.position;
+            center = renderer.transform.TransformPoint(center);
         }
 
-        for (int i = 0; i < childCount; i++)
-        {
-            Transform child = parent.transform.GetChild(i);
-            center += child.position;
-        }
-
-        center /= childCount;
         return center;
     }
     private void SpawnDestroyedParticle()
     {
         try
         {
-            GameObject DestructionParticle = Instantiate(DestroyParticle, transform.parent != null ? CalculateCenter(transform.parent.gameObject) : transform.position, transform.rotation) as GameObject;
+            GameObject DestructionParticle = Instantiate(DestroyParticle, CalculateCenter(gameObject), transform.rotation) as GameObject;
             DestructionParticle.transform.localScale = transform.localScale;
 
             ParticleSystem Particle = DestructionParticle.GetComponent<ParticleSystem>();

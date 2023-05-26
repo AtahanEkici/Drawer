@@ -8,13 +8,24 @@ public class Drawing : MonoBehaviour
     [SerializeField] private bool DebugMode = true;
     [SerializeField] private Vector3 CenterOfObject = Vector3.zero;
 
+    [Header("Initial Color")]
+    [SerializeField] private Color InitialColor;
+
     private void Awake()
     {
         GetComponents();
     }
+    private void Start()
+    {
+        StartUpTasks();
+    }
     private void Update()
     {
         Debugging();
+    }
+    private void StartUpTasks()
+    {
+        InitialColor = GetComponent<Renderer>().material.color;
     }
     private void GetComponents()
     {
@@ -28,5 +39,9 @@ public class Drawing : MonoBehaviour
 
        //Debug.DrawLine(transform.position,CenterOfObject,Color.magenta,Time.deltaTime);
        Debug.DrawLine(transform.position, transform.localPosition, Color.yellow, Time.deltaTime);
+    }
+    public Color GetInitialColor()
+    {
+        return InitialColor;
     }
 }
