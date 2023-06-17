@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            Application.targetFrameRate = Screen.currentResolution.refreshRate;
+            Application.targetFrameRate = ((int)Screen.currentResolution.refreshRateRatio.value);
         }
         catch(System.Exception e)
         {
