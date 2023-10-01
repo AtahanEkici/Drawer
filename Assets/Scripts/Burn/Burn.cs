@@ -5,13 +5,13 @@ public class Burn : MonoBehaviour
 
     [Header("Color Operations")]
     [SerializeField] private Color InitialColor = Color.white;
-    [SerializeField] private Color WantedColor = Color.red;
+    [SerializeField] private static Color WantedColor = Color.red;
 
     [Header("Local References")]
     [SerializeField] private Renderer render;
 
     [Header("Lerp Speed")]
-    [SerializeField] private float LerpSpeed = 1f;
+    [SerializeField] private float LerpSpeed = 5f;
 
     [Header("Is On Burning Platform ?")]
     [SerializeField] private bool isOnBurningPlatform = true;
@@ -66,24 +66,22 @@ public class Burn : MonoBehaviour
             Destroy(this);
         }
     }
-    public Vector3 CalculateCenter(GameObject go)
+    public Transform GetTopParent(Transform child)
     {
-        Renderer renderer = go.GetComponent<Renderer>();
-        Bounds bounds = renderer.bounds;
-        Vector3 center = bounds.center;
-
-        if (!renderer.gameObject.transform.IsChildOf(transform))
+        if (child.parent == null)
         {
-            center = renderer.transform.TransformPoint(center);
+            return child;
         }
-
-        return center;
+        else
+        {
+            return GetTopParent(child.parent);
+        }
     }
     private void SpawnDestroyedParticle()
     {
         try
         {
-            GameObject DestructionParticle = Instantiate(DestroyParticle, CalculateCenter(gameObject), transform.rotation) as GameObject;
+            GameObject DestructionParticle = Instantiate(DestroyParticle, GetTopParent(transform).position, Quaternion.identity) as GameObject;
             DestructionParticle.transform.localScale = transform.localScale;
 
             ParticleSystem Particle = DestructionParticle.GetComponent<ParticleSystem>();
@@ -119,4 +117,19 @@ public class Burn : MonoBehaviour
             Debug.LogException(e);
         }
     }
+    /*
+    public Vector3 CalculateCenter(GameObject go)
+    {
+        Renderer renderer = go.GetComponent<Renderer>();
+        Bounds bounds = renderer.bounds;
+        Vector3 center = bounds.center;
+
+        if (!renderer.gameObject.transform.IsChildOf(transform))
+        {
+            center = renderer.transform.TransformPoint(center);
+        }
+
+        return center;
+    }
+    */
 }
