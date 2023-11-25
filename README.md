@@ -1,4 +1,4 @@
 # Drawer
- ## A Simple Touch Input Drawn Object Game
- 
-### ![](https://github.com/AtahanEkici/Drawer/blob/main/Early_Alpha.gif)
+## A Simple Touch Input Drawn Object Game
+
+![Drawer GIF](https://raw.githubusercontent.com/AtahanEkici/Drawer/main/Early_Alpha.gif)
