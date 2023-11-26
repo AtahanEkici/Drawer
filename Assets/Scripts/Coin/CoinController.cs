@@ -11,7 +11,7 @@ public class CoinController : MonoBehaviour
     [Header("Animation Options")]
     [SerializeField] private float RotationSpeed = 500f;
     [SerializeField] private float LevitationSpeed = 1f;
-    [SerializeField] private float ShrinkSpeed = 0.015f;
+    [SerializeField] private float ShrinkSpeed = 2f;
     [SerializeField] private float ShrinkThreshold = 0.0001f;
     [SerializeField] private Vector3 ShrinkVector = new(0.1f, 0.1f, 0.1f);
 
@@ -42,7 +42,6 @@ public class CoinController : MonoBehaviour
     private void RotateCoin()
     {
         if (!isPickedUp) { return; }
-        Debug.Log("geçti");
         transform.Rotate(Vector3.up, Time.smoothDeltaTime * RotationSpeed);
     }
     private void LevitateCoin()
@@ -53,7 +52,7 @@ public class CoinController : MonoBehaviour
     private void ShrinkCoin()
     {
         if (!isPickedUp) { return; }
-        transform.localScale -= ShrinkVector * ShrinkSpeed;
+        transform.localScale -= ShrinkSpeed * Time.smoothDeltaTime * ShrinkVector;
 
         if(transform.localScale.x < ShrinkThreshold) // after a certain threshold has been met destroy the coin //
         {

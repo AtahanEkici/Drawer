@@ -71,7 +71,7 @@ public class Burn : MonoBehaviour
     {
         if (!isOnBurningPlatform) { return; }
 
-        Debug.Log(gameObject.name + " is burning up");
+        //Debug.Log(gameObject.name + " is burning up");
 
         render.material.color = Color.Lerp(render.material.color, WantedColor, LerpSpeed * Time.deltaTime);
 
@@ -87,7 +87,7 @@ public class Burn : MonoBehaviour
     {
         if (isOnBurningPlatform) { return; }
 
-        Debug.Log(gameObject.name + " is cooling down");
+        //Debug.Log(gameObject.name + " is cooling down");
 
         render.material.color = Color.Lerp(render.material.color, InitialColor, LerpSpeed * Time.deltaTime);
 
