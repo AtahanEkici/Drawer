@@ -14,7 +14,6 @@ public class ShowFPS : MonoBehaviour
     {
         FPSText = GetComponent<TextMeshProUGUI>();
     }
-
     private bool CheckFPSShow()
     {
         return PlayerPrefs.GetInt(UI_Controller.ShowFPS, 0) == 1;
@@ -29,7 +28,6 @@ public class ShowFPS : MonoBehaviour
             FPSText.text = FPSSign + (1f / Time.unscaledDeltaTime).ToString("F2") + "";
         }   
     }
-
     private void Update()
     {
         ShowFPSOnUI();

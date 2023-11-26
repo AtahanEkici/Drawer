@@ -64,10 +64,6 @@ public class GameManager : MonoBehaviour
             Instantiate(Event_System_GameObject);
             //Debug.Log("Event System Minted");
         }
-        else
-        {
-            //Debug.Log("Event System was already existed");
-        }
     }
     private void StartUpOperations()
     {
