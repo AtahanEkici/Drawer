@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class BallController : MonoBehaviour
 {
     public const string BallTag = "Ball";
@@ -29,8 +30,10 @@ public class BallController : MonoBehaviour
             Debug.LogException(e);
         }
     }
-    private void OnDestroy() // Play an audioclip after the p
+    private void OnDestroy() // Play an audioclip after the destruction of the ball //
     {
+        if (!SceneManager.GetActiveScene().isLoaded) { return; }
+
         AudioSource audioSource_External = new GameObject("DestroyedBallSound").AddComponent<AudioSource>();
 
         // Play the AudioClip as a one-shot
@@ -48,26 +51,25 @@ public class BallController : MonoBehaviour
             {
                 Audio_Source.PlayOneShot(SoundManager.Hit_Sound);
             }
-            else if (go.CompareTag(StarTag))
-            {
-                Audio_Source.PlayOneShot(SoundManager.Pickup_Sound);
-            }
             else
             {
                 Audio_Source.PlayOneShot(SoundManager.Touch_Sound);
             }
-            Audio_Source.Play();
         }
         catch(System.Exception e)
         {
             Debug.LogException(e);
         }
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag(StarTag))
+        {
+            Audio_Source.PlayOneShot(SoundManager.Pickup_Sound);
+        }
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        CollidedObject = collision.gameObject;
-
-        HandleCollisionSounds(CollidedObject);
+        HandleCollisionSounds(collision.gameObject);
     }
 }

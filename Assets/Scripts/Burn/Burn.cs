@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 public class Burn : MonoBehaviour
 {
     public const string DestroyParticle_Location = "Particles/BallDestroy";
@@ -19,9 +20,23 @@ public class Burn : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private static GameObject DestroyParticle;
 
+    [Header("IsDrawing")]
+    [SerializeField] private bool isDrawing = false;
+    [SerializeField] private Drawing drawing_reference = null;
+
     private void Awake()
     {
         GetReferences();
+        CheckIsDrawing();
+    }
+    private void CheckIsDrawing()
+    {
+        drawing_reference = GetComponent<Drawing>();
+
+        if (drawing_reference != null)
+        {
+            isDrawing = true;
+        }
     }
     private void Update()
     {
@@ -37,10 +52,19 @@ public class Burn : MonoBehaviour
     public void AdjustBurnSpeed(float adjustedSpeed)
     {
         LerpSpeed = adjustedSpeed;
+        isOnBurningPlatform = true;
+    }
+    public void BeginBurning()
+    {
+        isOnBurningPlatform = true;
     }
     public void BeginCooling(float adjustedSpeed)
     {
         LerpSpeed = adjustedSpeed;
+        isOnBurningPlatform = false;
+    }
+    public void BeginCooling()
+    {
         isOnBurningPlatform = false;
     }
     private void FireUp()
@@ -49,91 +73,84 @@ public class Burn : MonoBehaviour
 
         Debug.Log(gameObject.name + " is burning up");
 
-        render.material.color = Color.Lerp(render.material.color, WantedColor, LerpSpeed * Time.smoothDeltaTime);
+        render.material.color = Color.Lerp(render.material.color, WantedColor, LerpSpeed * Time.deltaTime);
 
-        if (render.material.color == WantedColor)
+        // Check the approximate color difference instead of direct comparison
+        if (ColorDifference(render.material.color, WantedColor) < 0.001f)
         {
-            Destroy(gameObject);
             SpawnDestroyedParticle();
+            Destroy(gameObject);
         }
     }
+
     private void CoolDown()
     {
         if (isOnBurningPlatform) { return; }
 
-        Debug.Log(gameObject.name+ " is cooling down");
+        Debug.Log(gameObject.name + " is cooling down");
 
-        render.material.color = Color.Lerp(render.material.color, InitialColor, (LerpSpeed / 2) * Time.smoothDeltaTime);
+        render.material.color = Color.Lerp(render.material.color, InitialColor, LerpSpeed * Time.deltaTime);
 
-        if (render.material.color == InitialColor && !isOnBurningPlatform)
+        // Check the approximate color difference instead of direct comparison
+        if (ColorDifference(render.material.color, InitialColor) < 0.001f)
         {
             Destroy(this);
         }
     }
-    public Transform GetTopParent(Transform child)
+    private float ColorDifference(Color colorA, Color colorB)
     {
-        if (child.parent == null)
-        {
-            return child;
-        }
-        else
-        {
-            return GetTopParent(child.parent);
-        }
+        return Mathf.Abs(colorA.r - colorB.r) + Mathf.Abs(colorA.g - colorB.g) + Mathf.Abs(colorA.b - colorB.b) + Mathf.Abs(colorA.a - colorB.a);
     }
     private void SpawnDestroyedParticle()
     {
         try
         {
-            GameObject DestructionParticle = Instantiate(DestroyParticle, GetTopParent(transform).position, Quaternion.identity) as GameObject;
-            DestructionParticle.transform.localScale = transform.localScale;
+                GameObject destructionParticle;
 
-            ParticleSystem Particle = DestructionParticle.GetComponent<ParticleSystem>();
-            ParticleSystem.MainModule mainModule = Particle.main;
+                if (isDrawing)
+                {
+                    destructionParticle = Instantiate(DestroyParticle, GetComponent<Drawing>().GetCenter(), transform.rotation);
+                }
+                else
+                {
+                    destructionParticle = Instantiate(DestroyParticle, transform.position, transform.rotation);
+                }
 
-            ParticleSystemRenderer renderer = DestructionParticle.GetComponent<ParticleSystemRenderer>();
-            Material ParticleMaterial = renderer.sharedMaterial;
-            MeshFilter meshfilter = GetComponentInParent<MeshFilter>();
+                ParticleSystem particle = destructionParticle.GetComponent<ParticleSystem>();
+                ParticleSystem.MainModule mainModule = particle.main;
 
-            Shader shader = render.material.shader;
-            Material particleMaterial = new(shader);
+                ParticleSystemRenderer renderer = destructionParticle.GetComponent<ParticleSystemRenderer>();
+                Material particleMaterial = renderer.material;
 
-            if (meshfilter == null)
-            {
-                particleMaterial.SetTexture("_BaseMap", renderer.material.mainTexture);
-                renderer.material = particleMaterial;
-            }
-            else
-            {
-                Mesh[] mesh = { meshfilter.sharedMesh };
-                renderer.SetMeshes(mesh);
-            }
+                if (isDrawing)
+                {
+                    mainModule.startSize = transform.localScale.x / 3;
 
-            float newSize = (transform.localScale.z == 0 ? (transform.localScale.x + transform.localScale.y) / 4 : (transform.localScale.x + transform.localScale.y + transform.localScale.z) / 6);
-            mainModule.startSize = newSize;
+                    if (TryGetComponent<MeshFilter>(out var meshfilter))
+                    {
+                        Mesh[] meshes = { meshfilter.sharedMesh };
+                        renderer.SetMeshes(meshes);
 
-            ParticleMaterial.SetColor("_Color", render.material.color);
+                        // Set the rotation of the destruction particle to match the original object
+                        destructionParticle.transform.rotation = transform.rotation;
+                    }
+                }
+                else
+                {
+                    mainModule.startSize = transform.localScale.x / 2;
+                }
 
-            Debug.Log(gameObject.name + " burned");
+                if (TryGetComponent<Renderer>(out var render))
+                {
+                    particleMaterial.SetColor("_Color", render.material.color);
+                    renderer.material.shader = render.material.shader;
+                }   
         }
         catch (System.Exception e)
         {
             Debug.LogException(e);
         }
     }
-    /*
-    public Vector3 CalculateCenter(GameObject go)
-    {
-        Renderer renderer = go.GetComponent<Renderer>();
-        Bounds bounds = renderer.bounds;
-        Vector3 center = bounds.center;
 
-        if (!renderer.gameObject.transform.IsChildOf(transform))
-        {
-            center = renderer.transform.TransformPoint(center);
-        }
 
-        return center;
-    }
-    */
 }

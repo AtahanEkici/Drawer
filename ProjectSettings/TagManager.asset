@@ -12,6 +12,7 @@ TagManager:
   - ScoreBoard
   - Restriction
   - Platform
+  - Star
   layers:
   - Default
   - TransparentFX

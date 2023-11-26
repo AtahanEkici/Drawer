@@ -1,12 +1,14 @@
 using UnityEngine;
 public class Drawing : MonoBehaviour
 {
+    public const string DrawingTag = "Drawing";
+
     [Header("Local Components")]
     [SerializeField] private MeshRenderer render;
 
     [Header("Debugging")]
-    [SerializeField] private bool DebugMode = true;
-    [SerializeField] private Vector3 CenterOfObject = Vector3.zero;
+    [SerializeField] private bool DebugMode = false;
+    [SerializeField] public Vector3 CenterOfObject = Vector3.zero;
 
     [Header("Initial Color")]
     [SerializeField] private Color InitialColor;
@@ -31,13 +33,19 @@ public class Drawing : MonoBehaviour
     {
         render = GetComponent<MeshRenderer>();
     }
+    public Vector3 GetWorldPosition()
+    {
+        Vector3 local_Position = transform.localPosition;
+        return transform.parent.TransformPoint(local_Position);
+    }
+    public Vector3 GetCenter()
+    {
+        return render.bounds.center;
+    }
     private void Debugging()
     {
         if (!DebugMode) { return; }
-
-        CenterOfObject = render.bounds.center;
-
-       //Debug.DrawLine(transform.position,CenterOfObject,Color.magenta,Time.deltaTime);
+       Debug.DrawLine(transform.position,CenterOfObject,Color.magenta,Time.deltaTime);
        Debug.DrawLine(transform.position, transform.localPosition, Color.yellow, Time.deltaTime);
     }
     public Color GetInitialColor()
