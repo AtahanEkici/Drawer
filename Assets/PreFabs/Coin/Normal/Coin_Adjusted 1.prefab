@@ -104,7 +104,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Star
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3451118302482216456, guid: 1c2718f69330f204695d1838e7f14ed6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -197,3 +198,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b61d7edcc58a1a34ab3a4a66647f492e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPickedUp: 0
+  col: {fileID: 0}
+  rb: {fileID: 0}
+  RotationSpeed: 500
+  LevitationSpeed: 1
+  ShrinkSpeed: 2
+  ShrinkThreshold: 0.0001
+  ShrinkVector: {x: 0.1, y: 0.1, z: 0.1}

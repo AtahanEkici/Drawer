@@ -13,6 +13,7 @@ TagManager:
   - Restriction
   - Platform
   - Star
+  - Light
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Post_Processing
   - 
   - 
   - 
