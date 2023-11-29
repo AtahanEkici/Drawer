@@ -225,7 +225,7 @@ public class Draw : MonoBehaviour
                 }
             }
 
-            Debug.Log("Total Distance: " + totalDistance);
+            //Debug.Log("Total Distance of the Drawing: " + totalDistance);
 
             if (totalDistance < MinDistance)
             {

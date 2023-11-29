@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,9 @@ public class GameManager : MonoBehaviour
     [Header("Main UI")]
     [SerializeField] private static GameObject mainUI;
 
+    [Header("ScreenShot Options")]
+    [SerializeField] private string screenshotDirectory = "";
+
     private void Awake()
     {
         CheckInstance();
@@ -32,11 +36,35 @@ public class GameManager : MonoBehaviour
     {
         StartUpOperations();
     }
+    private void Update()
+    {
+        ScreenShot();
+    }
     private void GetReferences()
     {
         if(mainUI == null)
         {
             mainUI = GameObject.FindGameObjectWithTag(UITag);
+        }
+    }
+    private void ScreenShot()
+    {
+        #if UNITY_EDITOR
+            screenshotDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Screenshots";
+#elif ANDROID
+            screenshotDirectory = Application.persistentDataPath + "/Screenshots";
+#endif
+
+        if (!Directory.Exists(screenshotDirectory))
+        {
+            Directory.CreateDirectory(screenshotDirectory);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Print))
+        {
+            string screenshotPath = screenshotDirectory + "/screenshot_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".png";
+            ScreenCapture.CaptureScreenshot(screenshotPath,4);
+            Debug.Log("ScreenShot saved on "+ screenshotPath + "");
         }
     }
     private void CheckInstance()
@@ -69,7 +97,7 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            Application.targetFrameRate = ((int)Screen.currentResolution.refreshRateRatio.value);
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
         }
         catch(System.Exception e)
         {

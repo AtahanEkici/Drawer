@@ -69,6 +69,7 @@ public class BasketController : MonoBehaviour
             if(slider.value >= slider.maxValue)
             {
                 Debug.Log("Max Value Reached");
+                Debug.LogWarning("Level Should End After this prompt!!");
                 TimeController.StopTimer();
                 // Call New Level transaction //
             }

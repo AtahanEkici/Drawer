@@ -1,5 +1,5 @@
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
+using UnityEngine.SceneManagement;
 public class Burn : MonoBehaviour
 {
     public const string DestroyParticle_Location = "Particles/BallDestroy";
@@ -79,10 +79,16 @@ public class Burn : MonoBehaviour
         if (ColorDifference(render.material.color, WantedColor) < 0.001f)
         {
             SpawnDestroyedParticle();
+            PlayExplosionSound();
             Destroy(gameObject);
         }
     }
-
+    private void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
+    {
+        AudioSource audioSource_External = new GameObject("DestroyedBallSound").AddComponent<AudioSource>();
+        audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
+        Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 2);
+    }
     private void CoolDown()
     {
         if (isOnBurningPlatform) { return; }

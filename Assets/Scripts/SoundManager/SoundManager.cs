@@ -16,6 +16,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private string Touch_Audio_File = "Touch";
     [SerializeField] private string Pickup_Audio_File = "Pickup";
     [SerializeField] private string Hit_Audio_File = "Hit";
+    [SerializeField] private string Click_Audio_File = "Click";
 
 
     [Header("Pre-Build Sounds")]
@@ -23,6 +24,7 @@ public class SoundManager : MonoBehaviour
     public static AudioClip Touch_Sound;
     public static AudioClip Pickup_Sound;
     public static AudioClip Hit_Sound;
+    public static AudioClip Click_Sound;
 
     // Main Functions Start //
     private void Awake()
@@ -77,9 +79,13 @@ public class SoundManager : MonoBehaviour
             {
                 Hit_Sound = current_clip;
             }
+            else if (file_name == Click_Audio_File)
+            {
+                Click_Sound = current_clip;
+            }
             else
             {
-                Debug.LogError("Wrong File on Audio - Not Captured: "+ file_name + "");
+                Debug.LogError("Wrong File on Audio - Not Captured: "+ file_name +"");
             }
         }
     }

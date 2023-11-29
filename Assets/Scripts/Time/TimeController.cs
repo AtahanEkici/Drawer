@@ -63,19 +63,19 @@ public class TimeController : MonoBehaviour
     public static void StopTimer()
     {
         isTimerStopped = true;
-        Debug.Log("Timer Stopped");
+        //Debug.Log("Timer Stopped");
     }
     public static void StartTimer()
     {
         isTimerStopped = false;
-        Debug.Log("Timer Started");
+        //Debug.Log("Timer Started");
     }
     public static void ResetTimer()
     {
         Timer = 0f;
         UpdateTimerUI();
         isTimerStopped = false;
-        Debug.Log("Timer Reset");
+        //Debug.Log("Timer Reset");
     }
     public float GetCurrentTimer()
     {
