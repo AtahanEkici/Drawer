@@ -1,22 +1,24 @@
 using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
+    public static readonly string Audio_Path = "Sounds";
+
     [Header("Dont Destroy On Load ? ")]
     [SerializeField] private bool Dont_DestroyOnLoad = true;
 
     [Header("Instance Variables")]
     public static SoundManager instance = null;
-    public static readonly string Audio_Path = "Sounds";
 
     [Header("Data Containers")]
     public static AudioClip[] AllSoundFiles;
 
     [Header("Pre-Built File Names")]
-    [SerializeField] private string Explosion_Audio_File = "Explosion";
-    [SerializeField] private string Touch_Audio_File = "Touch";
-    [SerializeField] private string Pickup_Audio_File = "Pickup";
-    [SerializeField] private string Hit_Audio_File = "Hit";
-    [SerializeField] private string Click_Audio_File = "Click";
+    private readonly string Explosion_Audio_File = "Explosion";
+    private readonly string Touch_Audio_File = "Touch";
+    private readonly string Pickup_Audio_File = "Pickup";
+    private readonly string Hit_Audio_File = "Hit";
+    private readonly string Click_Audio_File = "Click";
+    private readonly string Destruction_Audio_File = "Destruction";
 
 
     [Header("Pre-Build Sounds")]
@@ -25,6 +27,7 @@ public class SoundManager : MonoBehaviour
     public static AudioClip Pickup_Sound;
     public static AudioClip Hit_Sound;
     public static AudioClip Click_Sound;
+    public static AudioClip Destruction_Sound;
 
     // Main Functions Start //
     private void Awake()
@@ -82,6 +85,10 @@ public class SoundManager : MonoBehaviour
             else if (file_name == Click_Audio_File)
             {
                 Click_Sound = current_clip;
+            }
+            else if (file_name == Destruction_Audio_File)
+            {
+                Destruction_Sound = current_clip;
             }
             else
             {

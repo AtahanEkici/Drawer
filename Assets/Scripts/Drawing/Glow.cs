@@ -15,7 +15,7 @@ public class Glow : MonoBehaviour
     [Header("Glow Options")]
     [SerializeField] private float GlowTimer = 0.5f;
     [SerializeField] private float InitialTimer;
-    [SerializeField] private float GlowSpeed = 2f;
+    [SerializeField] private float GlowSpeed = 4f;
 
     private void Awake()
     {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-200)]
 public class WallGenerate : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class WallGenerate : MonoBehaviour
 
     [Header("Draw Debugging Rays")]
     [SerializeField] private bool DebugMode = false;
+
+    [Header("Is Bottom Wall Death Switch")]
+    [SerializeField] private bool isDeathSwitch = true;
 
     [Header("Foreign References")]
     [SerializeField] private Camera cam;
@@ -28,7 +32,12 @@ public class WallGenerate : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
+        SceneManager.sceneLoaded += OnSceneLoaded;
         GetLocalReferences();
+    }
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        DeathSwitch();
     }
     private void OnEnable()
     {
@@ -36,6 +45,22 @@ public class WallGenerate : MonoBehaviour
         GetOrthographicBounds(); // Get Camera Boundaries //
         CalculateBounds();
         GenerateWalls();
+    }
+    private void DeathSwitch()
+    {
+        if (!isDeathSwitch) 
+        {
+            if (TryGetComponent(out DeathWall dw) && TryGetComponent(out Glow gl))
+            {
+                Destroy(dw);
+                Destroy(gl);
+            }
+        }
+        else
+        {
+            Walls[3].AddComponent<DeathWall>();
+            Walls[3].AddComponent<Glow>();
+        }
     }
     private void CheckInstance()
     {
@@ -132,5 +157,9 @@ public class WallGenerate : MonoBehaviour
         right = bounds.center + new Vector3(bounds.extents.x, 0, 0);
         top = bounds.center + new Vector3(0, bounds.extents.y, 0);
         bottom = bounds.center - new Vector3(0, bounds.extents.y, 0);
+    }
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
