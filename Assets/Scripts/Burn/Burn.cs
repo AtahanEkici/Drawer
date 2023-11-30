@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 public class Burn : MonoBehaviour
 {
     public const string DestroyParticle_Location = "Particles/BallDestroy";
@@ -20,28 +19,19 @@ public class Burn : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private static GameObject DestroyParticle;
 
-    [Header("IsDrawing")]
-    [SerializeField] private bool isDrawing = false;
-    [SerializeField] private Drawing drawing_reference = null;
-
     private void Awake()
     {
         GetReferences();
-        CheckIsDrawing();
     }
-    private void CheckIsDrawing()
+    public static bool CheckIsDrawing(GameObject go)
     {
-        drawing_reference = GetComponent<Drawing>();
-
-        if (drawing_reference != null)
-        {
-            isDrawing = true;
-        }
+       return go.TryGetComponent(out Drawing drawing_reference);
     }
     private void Update()
     {
         FireUp();
         CoolDown();
+        CheckCollision(gameObject);
     }
     private void GetReferences()
     {
@@ -78,9 +68,9 @@ public class Burn : MonoBehaviour
         // Check the approximate color difference instead of direct comparison
         if (ColorDifference(render.material.color, WantedColor) < 0.001f)
         {
-            SpawnDestroyedParticle();
             PlayExplosionSound();
             Destroy(gameObject);
+            SpawnDestroyedParticle(gameObject, CheckCollision(gameObject));
         }
     }
     private void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
@@ -107,56 +97,86 @@ public class Burn : MonoBehaviour
     {
         return Mathf.Abs(colorA.r - colorB.r) + Mathf.Abs(colorA.g - colorB.g) + Mathf.Abs(colorA.b - colorB.b) + Mathf.Abs(colorA.a - colorB.a);
     }
-    private void SpawnDestroyedParticle()
+    public Vector3? CheckCollision(GameObject go)
+    {
+        float raycastLength = go.transform.localScale.magnitude;
+        
+        if (go.TryGetComponent<Collider2D>(out var originCollider))
+        {
+            Ray2D hitRay = new(transform.position, -transform.up * raycastLength);
+
+            Debug.DrawRay(hitRay.origin, hitRay.direction, Color.red);
+
+            RaycastHit2D hit = Physics2D.Raycast(hitRay.origin, hitRay.direction, raycastLength);
+
+            //Debug.Log("Hit: " + hit.collider.gameObject);
+
+            if (hit.collider != originCollider)
+            {
+                return hit.point;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
     {
         try
         {
-                GameObject destructionParticle;
+            bool isDrawing = go.TryGetComponent<Drawing>(out Drawing drawing_ref);
+            GameObject destructionParticle;
 
-                if (isDrawing)
+            //Debug.Log("Touch Point: "+touch_point);
+
+            if (isDrawing)
+            {
+                destructionParticle = Instantiate(DestroyParticle, touch_point ?? drawing_ref.GetMeshCenter(), drawing_ref.transform.rotation);
+            }
+            else
+            {
+                destructionParticle = Instantiate(DestroyParticle, go.transform.position, go.transform.rotation);
+            }
+
+            ParticleSystem particle = destructionParticle.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule mainModule = particle.main;
+
+            ParticleSystemRenderer renderer = destructionParticle.GetComponent<ParticleSystemRenderer>();
+            Material particleMaterial = renderer.material;
+
+            if (isDrawing)
+            {
+                mainModule.startSize = (go.transform.localScale.x) / 3;
+
+                if (go.TryGetComponent<MeshFilter>(out var meshfilter))
                 {
-                    destructionParticle = Instantiate(DestroyParticle, GetComponent<Drawing>().GetCenter(), transform.rotation);
+                    Mesh[] meshes = { meshfilter.sharedMesh };
+                    renderer.SetMeshes(meshes);
+
+                    // Set the rotation of the destruction particle to match the original object
+                    destructionParticle.transform.rotation = go.transform.rotation;
                 }
-                else
-                {
-                    destructionParticle = Instantiate(DestroyParticle, transform.position, transform.rotation);
-                }
+            }
+            else
+            {
+                mainModule.startSize = go.transform.localScale.x / 2;
+            }
 
-                ParticleSystem particle = destructionParticle.GetComponent<ParticleSystem>();
-                ParticleSystem.MainModule mainModule = particle.main;
-
-                ParticleSystemRenderer renderer = destructionParticle.GetComponent<ParticleSystemRenderer>();
-                Material particleMaterial = renderer.material;
-
-                if (isDrawing)
-                {
-                    mainModule.startSize = transform.localScale.x / 3;
-
-                    if (TryGetComponent<MeshFilter>(out var meshfilter))
-                    {
-                        Mesh[] meshes = { meshfilter.sharedMesh };
-                        renderer.SetMeshes(meshes);
-
-                        // Set the rotation of the destruction particle to match the original object
-                        destructionParticle.transform.rotation = transform.rotation;
-                    }
-                }
-                else
-                {
-                    mainModule.startSize = transform.localScale.x / 2;
-                }
-
-                if (TryGetComponent<Renderer>(out var render))
-                {
-                    particleMaterial.SetColor("_Color", render.material.color);
-                    renderer.material.shader = render.material.shader;
-                }   
+            if (go.TryGetComponent<Renderer>(out var render))
+            {
+                particleMaterial.SetColor("_Color", render.material.color);
+                renderer.material.shader = render.material.shader;
+            }
         }
         catch (System.Exception e)
         {
             Debug.LogException(e);
         }
     }
+
 
 
 }

@@ -48,18 +48,22 @@ public class WallGenerate : MonoBehaviour
     }
     private void DeathSwitch()
     {
-        if (!isDeathSwitch) 
+        try
         {
-            if (TryGetComponent(out DeathWall dw) && TryGetComponent(out Glow gl))
+            if (!isDeathSwitch && TryGetComponent(out DeathWall dw) && TryGetComponent(out Glow gl))
             {
                 Destroy(dw);
                 Destroy(gl);
+            }    
+            else
+            {
+                Walls[3].AddComponent<DeathWall>();
+                Walls[3].AddComponent<Glow>();
             }
         }
-        else
+        catch(System.Exception e)
         {
-            Walls[3].AddComponent<DeathWall>();
-            Walls[3].AddComponent<Glow>();
+            Debug.LogException(e);
         }
     }
     private void CheckInstance()
@@ -92,8 +96,8 @@ public class WallGenerate : MonoBehaviour
     {
         Vector2 topleft = top + left;
 
-        TopDistance = Vector2.Distance(topleft, top) * 2;
-        LeftDistance = Vector2.Distance(topleft, left) * 2;
+        TopDistance = Vector2.Distance(topleft, top) * 1.1f;
+        LeftDistance = Vector2.Distance(topleft, left) * 1.1f;
 
         if (DebugMode)
         {
@@ -104,8 +108,6 @@ public class WallGenerate : MonoBehaviour
 
             Ray TopRay = new(topleft, top - topleft);
             Ray LeftRay = new(topleft, left - topleft);
-            Ray BottomRay = new(topleft, top - topleft);
-            Ray RightRay = new(topleft, left - topleft);
 
             Debug.DrawRay(center, top, Color.blue);
             Debug.DrawRay(center, bottom, Color.red);

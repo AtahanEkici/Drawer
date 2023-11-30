@@ -8,7 +8,7 @@ public class Drawing : MonoBehaviour
 
     [Header("Debugging")]
     [SerializeField] private bool DebugMode = false;
-    [SerializeField] public Vector3 CenterOfObject = Vector3.zero;
+    [SerializeField] private Vector3 CenterOfObject = Vector3.zero;
 
     [Header("Initial Color")]
     [SerializeField] private Color InitialColor;
@@ -39,6 +39,10 @@ public class Drawing : MonoBehaviour
         return transform.parent.TransformPoint(local_Position);
     }
     public Vector3 GetCenter()
+    {
+        return render.bounds.center;
+    }
+    public Vector3 GetMeshCenter()
     {
         return render.bounds.center;
     }

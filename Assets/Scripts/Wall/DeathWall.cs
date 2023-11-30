@@ -12,15 +12,15 @@ public class DeathWall : MonoBehaviour
     {
         Audio_Source = gameObject.AddComponent<AudioSource>();
     }
-    private void HandleDestruction(GameObject go)
+    private void HandleDestruction(GameObject go, Vector3 Touch_Point)
     {
-        Debug.Log("Geçti");
         Audio_Source.PlayOneShot(SoundManager.Destruction_Sound);
         Destroy(go);
+        Burn.SpawnDestroyedParticle(go, Touch_Point);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        HandleDestruction(collision.gameObject);
+        HandleDestruction(collision.gameObject, collision.contacts[0].point);
     }
 }

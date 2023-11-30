@@ -51,29 +51,30 @@ public class BallController : MonoBehaviour
     {
         try
         {
-            if(go.CompareTag(DrawingTag))
+            switch (go.tag)
             {
-                PlaySoundsBasedOnMomentum(SoundManager.Click_Sound);
-            }
-            else if(go.CompareTag(PlatformTag))
-            {
-                PlaySoundsBasedOnMomentum(SoundManager.Hit_Sound);
-            }
-            else
-            {
-                PlaySoundsBasedOnMomentum(SoundManager.Touch_Sound);
+                case DrawingTag:
+                    PlaySoundsBasedOnMomentum(SoundManager.Click_Sound);
+                    break;
+                case PlatformTag:
+                    PlaySoundsBasedOnMomentum(SoundManager.Hit_Sound);
+                    break;
+                default:
+                    PlaySoundsBasedOnMomentum(SoundManager.Touch_Sound);
+                    break;
             }
         }
-        catch(System.Exception e)
+        catch (System.Exception e)
         {
             Debug.LogException(e);
         }
+
     }
     private void PlaySoundsBasedOnMomentum(AudioClip clip)
     {
         if(Momentum < SoundThreshold) { return; }
 
-        else
+        else if(Audio_Source.isActiveAndEnabled)
         {
             Audio_Source.PlayOneShot(clip);
         }
