@@ -22,11 +22,30 @@ public class RestrictionSystem : MonoBehaviour
 
     private void Awake()
     {
-        CheckInstance();  
+        CheckInstance();
+        CheckForDynamics();
     }
     private void OnEnable()
     {
-        GetTag();
+        GetTag(); 
+    }
+    private void CheckForDynamics()
+    {
+        if(OnlyDynamicDrawingsAllowed && OnlyStaticDrawingsAllowed) // If Both are restricted choose one of them randomly//
+        {
+            int pick = Random.Range(0, 1);
+
+            if(pick == 0)
+            {
+                OnlyDynamicDrawingsAllowed = true;
+                OnlyStaticDrawingsAllowed = false;
+            }
+            else
+            {
+                OnlyDynamicDrawingsAllowed = false;
+                OnlyStaticDrawingsAllowed = true;
+            }
+        }
     }
     private void CheckInstance()
     {
