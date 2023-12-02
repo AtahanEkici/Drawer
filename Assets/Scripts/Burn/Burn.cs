@@ -1,8 +1,6 @@
 using UnityEngine;
 public class Burn : MonoBehaviour
-{
-    public const string DestroyParticle_Location = "Particles/BallDestroy";
-
+{ 
     [Header("Color Operations")]
     [SerializeField] private Color InitialColor = Color.white;
     [SerializeField] private static Color WantedColor = Color.red;
@@ -15,9 +13,6 @@ public class Burn : MonoBehaviour
 
     [Header("Is On Burning Platform ?")]
     [SerializeField] private bool isOnBurningPlatform = true;
-
-    [Header("Particles")]
-    [SerializeField] private static GameObject DestroyParticle;
 
     private void Awake()
     {
@@ -37,7 +32,7 @@ public class Burn : MonoBehaviour
     {
         render = GetComponentInParent<Renderer>();
         InitialColor = render.material.color;
-        DestroyParticle = Resources.Load<GameObject>(DestroyParticle_Location) as GameObject;
+        
     }
     public void AdjustBurnSpeed(float adjustedSpeed)
     {
@@ -70,7 +65,7 @@ public class Burn : MonoBehaviour
         {
             PlayExplosionSound();
             Destroy(gameObject);
-            SpawnDestroyedParticle(gameObject, CheckCollision(gameObject));
+            ParticleManager.SpawnDestroyedParticle(gameObject, CheckCollision(gameObject));
         }
     }
     private void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
@@ -122,61 +117,4 @@ public class Burn : MonoBehaviour
         }
         return null;
     }
-
-    public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
-    {
-        try
-        {
-            bool isDrawing = go.TryGetComponent<Drawing>(out Drawing drawing_ref);
-            GameObject destructionParticle;
-
-            //Debug.Log("Touch Point: "+touch_point);
-
-            if (isDrawing)
-            {
-                destructionParticle = Instantiate(DestroyParticle, touch_point ?? drawing_ref.GetCenter(), drawing_ref.transform.rotation);
-            }
-            else
-            {
-                destructionParticle = Instantiate(DestroyParticle, go.transform.position, go.transform.rotation);
-            }
-
-            ParticleSystem particle = destructionParticle.GetComponent<ParticleSystem>();
-            ParticleSystem.MainModule mainModule = particle.main;
-
-            ParticleSystemRenderer renderer = destructionParticle.GetComponent<ParticleSystemRenderer>();
-            Material particleMaterial = renderer.material;
-
-            if (isDrawing)
-            {
-                mainModule.startSize = (go.transform.localScale.x) / 3;
-
-                if (go.TryGetComponent<MeshFilter>(out var meshfilter))
-                {
-                    Mesh[] meshes = { meshfilter.sharedMesh };
-                    renderer.SetMeshes(meshes);
-
-                    // Set the rotation of the destruction particle to match the original object
-                    destructionParticle.transform.rotation = go.transform.rotation;
-                }
-            }
-            else
-            {
-                mainModule.startSize = go.transform.localScale.x / 2;
-            }
-
-            if (go.TryGetComponent<Renderer>(out var render))
-            {
-                particleMaterial.SetColor("_Color", render.material.color);
-                renderer.material.shader = render.material.shader;
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogException(e);
-        }
-    }
-
-
-
 }

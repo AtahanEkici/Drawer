@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,7 +20,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject ErrorPanel;
 
     [Header("Settings")]
-    [SerializeField] private Toggle PhysicsToggle;
+    [SerializeField] public Toggle PhysicsToggle;
     [SerializeField] private TextMeshProUGUI PhysicsToggleText;
     [SerializeField] private Button MenuCloseButton;
     [SerializeField] private Toggle ShowFPSToggle;
@@ -43,10 +44,6 @@ public class UI_Controller : MonoBehaviour
         CheckInstance();
         GetLocalReferences();
         SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-    private void Start()
-    {
-        
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
@@ -112,24 +109,20 @@ public class UI_Controller : MonoBehaviour
 
                 RestrictionSystem restrictions = RestrictionSystem.instance;
 
-                if(restrictions.OnlyDynamicDrawingsAllowed) // Dynamic is the true static is false //
+                if(restrictions.OnlyStaticDrawingsAllowed)
                 {
-                    PhysicsType = true;
-                    PhysicsToggle.isOn = true;
-                }
-                else if(restrictions.OnlyStaticDrawingsAllowed)
-                {
+                    //Debug.Log("Static Allowed");
                     PhysicsType = false;
-                    PhysicsToggle.isOn = false;
                 }
                 else
                 {
-                    PhysicsType = PlayerPrefs.GetInt(LinephysicsType, 1) == 1; // Call Restrictions here instead of this in the future //
-
-                    PhysicsToggle.isOn = PhysicsType;
+                    //Debug.Log("Dynamic Allowed");
+                    PhysicsType = true;
+                    PlayerPrefs.SetInt(LinephysicsType, 0);
                 }
-
-               
+                PhysicsToggle.isOn = PhysicsType;
+                PlayerPrefs.SetInt(LinephysicsType, Convert.ToInt32(PhysicsType));
+                //Debug.Log("Physics Type: " + PhysicsType);
             }
 
             if (PhysicsToggleText == null)

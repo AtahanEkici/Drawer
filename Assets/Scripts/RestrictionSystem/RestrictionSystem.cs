@@ -33,17 +33,26 @@ public class RestrictionSystem : MonoBehaviour
     {
         if(OnlyDynamicDrawingsAllowed && OnlyStaticDrawingsAllowed) // If Both are restricted choose one of them randomly//
         {
-            int pick = Random.Range(0, 1);
+            Debug.LogWarning("Wrong Restriction Parameters");
+            int pick = Random.Range(0, 2);
 
             if(pick == 0)
             {
+                Debug.LogWarning("Picked Dynamic");
                 OnlyDynamicDrawingsAllowed = true;
                 OnlyStaticDrawingsAllowed = false;
             }
-            else
+            else if(pick == 1)
             {
+                Debug.LogWarning("Picked Static");
                 OnlyDynamicDrawingsAllowed = false;
                 OnlyStaticDrawingsAllowed = true;
+            }
+            else
+            {
+                Debug.LogWarning("Picked None");
+                OnlyDynamicDrawingsAllowed = false;
+                OnlyStaticDrawingsAllowed = false;
             }
         }
     }
@@ -62,8 +71,8 @@ public class RestrictionSystem : MonoBehaviour
             }
             catch(System.Exception e)
             {
-                Destroy(this);
                 Debug.LogException(e);
+                Destroy(this);
             } 
         }
     }

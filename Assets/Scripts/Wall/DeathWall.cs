@@ -16,7 +16,7 @@ public class DeathWall : MonoBehaviour
     {
         Audio_Source.PlayOneShot(SoundManager.Destruction_Sound);
         Destroy(go);
-        Burn.SpawnDestroyedParticle(go, Touch_Point);
+        ParticleManager.SpawnDestroyedParticle(go, Touch_Point);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

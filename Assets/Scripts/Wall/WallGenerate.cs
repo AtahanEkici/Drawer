@@ -37,7 +37,7 @@ public class WallGenerate : MonoBehaviour
     }
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        DeathSwitch();
+        
     }
     private void OnEnable()
     {
@@ -45,6 +45,7 @@ public class WallGenerate : MonoBehaviour
         GetOrthographicBounds(); // Get Camera Boundaries //
         CalculateBounds();
         GenerateWalls();
+        DeathSwitch();
     }
     private void DeathSwitch()
     {
@@ -57,8 +58,15 @@ public class WallGenerate : MonoBehaviour
             }    
             else
             {
-                Walls[3].AddComponent<DeathWall>();
-                Walls[3].AddComponent<Glow>();
+                if(!Walls[3].TryGetComponent(out DeathWall deatwall_ref))
+                {
+                    Walls[3].AddComponent<DeathWall>();
+                }
+
+                if (!Walls[3].TryGetComponent(out Glow glow_ref))
+                {
+                    Walls[3].AddComponent<Glow>();
+                }
             }
         }
         catch(System.Exception e)

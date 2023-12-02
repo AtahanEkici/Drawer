@@ -85,7 +85,9 @@ public class DrawingContainer : MonoBehaviour
         {
             if(transform.GetChild(i).gameObject.GetComponent<Glow>() != null)
             {
-                Destroy(transform.GetChild(i).gameObject);
+                GameObject go = transform.GetChild(i).gameObject;
+                ParticleManager.SpawnDestroyedParticle(go);
+                Destroy(go); 
             }
         }
     }
