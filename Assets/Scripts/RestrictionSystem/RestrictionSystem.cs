@@ -10,6 +10,10 @@ public class RestrictionSystem : MonoBehaviour
     [Header("Drawing Lenght Restriction")]
     [SerializeField] private float MaxDrawingLenght = 50f;
 
+    [Header("Drawing Type Restrictions")]
+    [SerializeField] public bool OnlyDynamicDrawingsAllowed = false;
+    [SerializeField] public bool OnlyStaticDrawingsAllowed = false;
+
     [Header("Max Amount Of Drawings")]
     [SerializeField] private int MaxDrawingCount = 10;
 

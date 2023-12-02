@@ -2,6 +2,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 [DefaultExecutionOrder(-5000)]
 public class GameManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private static GameObject mainUI;
 
     [Header("ScreenShot Options")]
-    [SerializeField] private string screenshotDirectory = "";
+    private string screenshotDirectory = "";
 
     private void Awake()
     {
@@ -28,7 +29,7 @@ public class GameManager : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        PauseGame(); // Pause the game on scene load // 
+        PauseGame();
         GetReferences();
         InstantiateEventSystemIfNoneFound();
     }
@@ -51,9 +52,9 @@ public class GameManager : MonoBehaviour
     {
         #if UNITY_EDITOR
             screenshotDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/Screenshots";
-#elif ANDROID
+        #elif ANDROID
             screenshotDirectory = Application.persistentDataPath + "/Screenshots";
-#endif
+        #endif
 
         if (!Directory.Exists(screenshotDirectory))
         {

@@ -663,6 +663,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Restrictions
       objectReference: {fileID: 0}
+    - target: {fileID: 8454086093020030116, guid: 8d816299f5f435b42ba7a8d45049a539, type: 3}
+      propertyPath: OnlyDynamicDrawingsAllowed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8454086093020030117, guid: 8d816299f5f435b42ba7a8d45049a539, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

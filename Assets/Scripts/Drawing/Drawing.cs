@@ -44,7 +44,7 @@ public class Drawing : MonoBehaviour
     }
     public Vector3 GetMeshCenter()
     {
-        return render.bounds.center;
+        return GetComponent<MeshFilter>().mesh.bounds.center;
     }
     private void Debugging()
     {

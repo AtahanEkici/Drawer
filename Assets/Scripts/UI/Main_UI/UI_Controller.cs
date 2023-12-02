@@ -46,14 +46,14 @@ public class UI_Controller : MonoBehaviour
     }
     private void Start()
     {
-        GetForeignReferences();
-        DelegateToggles();
-        DelegateButtons();
+        
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        //GetForeignReferences();
         Startup(scene);
+        GetForeignReferences();
+        DelegateToggles();
+        DelegateButtons();
     }
     private void CheckInstance()
     {
@@ -110,9 +110,26 @@ public class UI_Controller : MonoBehaviour
             {
                 PhysicsToggle = SettingsPanel.transform.GetChild(0).GetComponent<Toggle>();
 
-                PhysicsType = PlayerPrefs.GetInt(LinephysicsType, 1) == 1;
+                RestrictionSystem restrictions = RestrictionSystem.instance;
 
-                PhysicsToggle.isOn = PhysicsType;
+                if(restrictions.OnlyDynamicDrawingsAllowed) // Dynamic is the true static is false //
+                {
+                    PhysicsType = true;
+                    PhysicsToggle.isOn = true;
+                }
+                else if(restrictions.OnlyStaticDrawingsAllowed)
+                {
+                    PhysicsType = false;
+                    PhysicsToggle.isOn = false;
+                }
+                else
+                {
+                    PhysicsType = PlayerPrefs.GetInt(LinephysicsType, 1) == 1; // Call Restrictions here instead of this in the future //
+
+                    PhysicsToggle.isOn = PhysicsType;
+                }
+
+               
             }
 
             if (PhysicsToggleText == null)
@@ -210,17 +227,34 @@ public class UI_Controller : MonoBehaviour
     }
     private void PhysicsToggleValueChanged(Toggle toggle_value)
     {
-        bool value = toggle_value.isOn;
-        PhysicsToggleTextChange(value);
+        RestrictionSystem restrictions = RestrictionSystem.instance;
 
-        if(value)
+        if(restrictions.OnlyStaticDrawingsAllowed)
         {
-            PlayerPrefs.SetInt(LinephysicsType,1);
+            ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyStaticDrawingsAllowed);
+            toggle_value.isOn = false;
+            return;
+        }
+        else if(restrictions.OnlyDynamicDrawingsAllowed)
+        {
+            ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyDynamicDrawingsAllowed);
+            toggle_value.isOn = true;
+            return;
         }
         else
         {
-            PlayerPrefs.SetInt(LinephysicsType, 0);
-        } 
+            bool value = toggle_value.isOn;
+            PhysicsToggleTextChange(value);
+
+            if (value)
+            {
+                PlayerPrefs.SetInt(LinephysicsType, 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt(LinephysicsType, 0);
+            }
+        }  
     }
     private void ShowFPSToggleValueChanged(Toggle toggle_value)
     {

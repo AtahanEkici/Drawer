@@ -118,7 +118,7 @@ public class ListController : MonoBehaviour
     }
     private void PopulateContainer()
     {
-        if(drawings == null) { return; }
+        if(drawings == null) { /*ErrorSystem.instance.SetErrorMessage(ErrorSystem.NoDrawingsFound);*/ return; }
 
         int Child_Count = drawings.transform.childCount;
 

@@ -105,7 +105,7 @@ public class Burn : MonoBehaviour
         {
             Ray2D hitRay = new(transform.position, -transform.up * raycastLength);
 
-            Debug.DrawRay(hitRay.origin, hitRay.direction, Color.red);
+            //Debug.DrawRay(hitRay.origin, hitRay.direction, Color.red);
 
             RaycastHit2D hit = Physics2D.Raycast(hitRay.origin, hitRay.direction, raycastLength);
 
@@ -134,7 +134,7 @@ public class Burn : MonoBehaviour
 
             if (isDrawing)
             {
-                destructionParticle = Instantiate(DestroyParticle, touch_point ?? drawing_ref.GetMeshCenter(), drawing_ref.transform.rotation);
+                destructionParticle = Instantiate(DestroyParticle, touch_point ?? drawing_ref.GetCenter(), drawing_ref.transform.rotation);
             }
             else
             {
