@@ -8,6 +8,7 @@ public class ParticleManager : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private static GameObject DestroyParticle;
 
+    [Header("Don't Destroy on Load?")]
     [SerializeField] private bool DontDestroyOn_Load = true;
 
     private void Awake()
@@ -42,7 +43,14 @@ public class ParticleManager : MonoBehaviour
     }
     private void GetResources()
     {
-        DestroyParticle = Resources.Load<GameObject>(DestroyParticle_Location) as GameObject;
+        try
+        {
+            DestroyParticle = Resources.Load<GameObject>(DestroyParticle_Location) as GameObject;
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        } 
     }
 
     public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)

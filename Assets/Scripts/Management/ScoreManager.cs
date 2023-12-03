@@ -71,10 +71,9 @@ public class ScoreManager : MonoBehaviour
         Score = GetScore();
         tmpro.text = Score_PlayerPrefs + Score.ToString();
     }
-    private int GetScore()
+    public int GetScore()
     {
         int score = PlayerPrefs.GetInt((Score_PlayerPrefs + SceneName), 0);
-
         return score < 0 ? 0 : score;
     }
     public void SetScore(int score)

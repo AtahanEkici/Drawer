@@ -118,37 +118,44 @@ public class ListController : MonoBehaviour
     }
     private void PopulateContainer()
     {
-        if(drawings == null) { /*ErrorSystem.instance.SetErrorMessage(ErrorSystem.NoDrawingsFound);*/ return; }
-
-        int Child_Count = drawings.transform.childCount;
-
-        for (int i=0;i<Child_Count;i++)
+        try
         {
-            GameObject temp = Instantiate(ListObject);
+            if (drawings == null) { /*ErrorSystem.instance.SetErrorMessage(ErrorSystem.NoDrawingsFound);*/ return; }
 
-            RectTransform rt = temp.GetComponent<RectTransform>();
-            temp.transform.SetParent(Container.transform);
-            rt.localScale = Vector3.one;
+            int Child_Count = drawings.transform.childCount;
 
-            GameObject Drawing = drawings.transform.GetChild(i).gameObject;
-            
-            if(Drawing == null)
+            for (int i = 0; i < Child_Count; i++)
             {
-                return;
+                GameObject temp = Instantiate(ListObject);
+
+                RectTransform rt = temp.GetComponent<RectTransform>();
+                temp.transform.SetParent(Container.transform);
+                rt.localScale = Vector3.one;
+
+                GameObject Drawing = drawings.transform.GetChild(i).gameObject;
+
+                if (Drawing == null)
+                {
+                    return;
+                }
+
+                temp.GetComponentInChildren<TextMeshProUGUI>().text = Drawing.name;
+
+                Toggle toggle = temp.GetComponentInChildren<Toggle>();
+                toggle.onValueChanged.AddListener(delegate { ToggleValueChanged(Drawing, toggle); });
+
+                if (Drawing.GetComponent<Glow>() != null)
+                {
+                    toggle.isOn = true;
+                    toggle.transform.parent.GetComponent<Image>().color = Color.red;
+                }
             }
-
-            temp.GetComponentInChildren<TextMeshProUGUI>().text = Drawing.name;
-
-            Toggle toggle = temp.GetComponentInChildren<Toggle>();
-            toggle.onValueChanged.AddListener(delegate { ToggleValueChanged(Drawing, toggle);});
-
-            if (Drawing.GetComponent<Glow>() != null)
-            {
-                toggle.isOn = true;
-                toggle.transform.parent.GetComponent<Image>().color = Color.red;
-            }
+            AdjustHegiht();
         }
-        AdjustHegiht();
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }   
     }
     private void AdjustHegiht()
     {

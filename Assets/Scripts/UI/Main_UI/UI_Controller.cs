@@ -9,6 +9,8 @@ public class UI_Controller : MonoBehaviour
     public const string ToggleLabelString = "Line Physics: ";
     public const string LinephysicsType = "LinePhysicsType";
     public const string ShowFPS = "ShowFPS";
+    public const string PostProcess = "PostProcess";
+    public const string FXAA = "FXAA";
 
     public static UI_Controller instance = null;
     private UI_Controller() { }
@@ -24,6 +26,8 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI PhysicsToggleText;
     [SerializeField] private Button MenuCloseButton;
     [SerializeField] private Toggle ShowFPSToggle;
+    [SerializeField] private Toggle PostProcessToggle;
+    [SerializeField] private Toggle FXAAToggle;
 
     [Header("Overlay")]
     [SerializeField] public TextMeshProUGUI ScoreBoard;
@@ -101,6 +105,8 @@ public class UI_Controller : MonoBehaviour
             // variables //
             bool PhysicsType = true;
             bool ShowFPSPref = false;
+            bool ShowPostProcessPref = true;
+            bool FXAAPref = true;
 
             // Settings //
             if (PhysicsToggle == null)
@@ -143,6 +149,24 @@ public class UI_Controller : MonoBehaviour
                 ShowFPSPref = PlayerPrefs.GetInt(ShowFPS, 0) == 1;
 
                 ShowFPSToggle.isOn = ShowFPSPref;
+            }
+
+            if (PostProcessToggle == null)
+            {
+                PostProcessToggle = SettingsPanel.transform.GetChild(3).GetComponent<Toggle>();
+
+                ShowPostProcessPref = PlayerPrefs.GetInt(PostProcess, 1) == 1;
+
+                PostProcessToggle.isOn = ShowPostProcessPref;
+            }
+
+            if(FXAAToggle == null)
+            {
+                FXAAToggle = SettingsPanel.transform.GetChild(4).GetComponent<Toggle>();
+
+                FXAAPref = PlayerPrefs.GetInt(FXAA, 1) == 1;
+
+                PostProcessToggle.isOn = FXAAPref;
             }
 
             // Overlay //
@@ -217,6 +241,38 @@ public class UI_Controller : MonoBehaviour
     {
         PhysicsToggle.onValueChanged.AddListener(delegate{PhysicsToggleValueChanged(PhysicsToggle);});
         ShowFPSToggle.onValueChanged.AddListener(delegate{ShowFPSToggleValueChanged(ShowFPSToggle);});
+        PostProcessToggle.onValueChanged.AddListener(delegate{ShowPostProcessValueChanged(PostProcessToggle);});
+        FXAAToggle.onValueChanged.AddListener(delegate{FXAAToggleValueChanged(FXAAToggle);});
+    }
+    private void FXAAToggleValueChanged(Toggle toggle)
+    {
+        bool toggle_value = toggle.isOn;
+
+        if(toggle_value)
+        {
+            PostProcessing_Manager.instance.EnableFXAA();
+            PlayerPrefs.SetInt(FXAA, 1);
+        }
+        else
+        {
+            PostProcessing_Manager.instance.DisableFXAA();
+            PlayerPrefs.SetInt(FXAA, 0);
+        }
+    }
+    private void ShowPostProcessValueChanged(Toggle toggle)
+    {
+        bool value = toggle.isOn;
+
+        if (value)
+        {
+            PostProcessing_Manager.instance.EnablePostProcess();
+            PlayerPrefs.SetInt(PostProcess, 1);
+        }
+        else
+        {
+            PostProcessing_Manager.instance.DisablePostProcess();
+            PlayerPrefs.SetInt(PostProcess, 0);
+        }
     }
     private void PhysicsToggleValueChanged(Toggle toggle_value)
     {
