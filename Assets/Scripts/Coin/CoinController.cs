@@ -30,9 +30,7 @@ public class CoinController : MonoBehaviour
     }
     private void Update()
     {
-        RotateCoin();
-        LevitateCoin();
-        ShrinkCoin();
+        AnimateCoin();
     }
     private void OnCoinTaken() // Disable collider and rigidbody then Play an animation //
     {
@@ -41,6 +39,19 @@ public class CoinController : MonoBehaviour
         isPickedUp = true;
         Audio_Source.Play();
     } 
+    private void AnimateCoin()
+    {
+        try
+        {
+            RotateCoin();
+            LevitateCoin();
+            ShrinkCoin();
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
     private void RotateCoin()
     {
         if (!isPickedUp) { return; }

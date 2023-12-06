@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6669843061171965911}
   - component: {fileID: 7651453808448742698}
+  - component: {fileID: 6725926279441220969}
   m_Layer: 6
   m_Name: Post_Processing_Manager
   m_TagString: GameController
@@ -49,3 +50,20 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
+--- !u!114 &6725926279441220969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7035014972921243555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d0d726f0724ea04d84e497fe56dd055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Post_Process_Volume: {fileID: 0}
+  Post_Process_Layer: {fileID: 0}
+  fxaa:
+    fastMode: 0
+    keepAlpha: 0

@@ -52,6 +52,12 @@ public class ParticleManager : MonoBehaviour
             Debug.LogException(e);
         } 
     }
+    private static void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
+    {
+        AudioSource audioSource_External = new GameObject("Destroyed_Sound").AddComponent<AudioSource>();
+        audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
+        Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 2);
+    }
 
     public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
     {
@@ -100,6 +106,8 @@ public class ParticleManager : MonoBehaviour
                 particleMaterial.SetColor("_Color", render.material.color);
                 renderer.material.shader = render.material.shader;
             }
+
+            PlayExplosionSound();
         }
         catch (System.Exception e)
         {

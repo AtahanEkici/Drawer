@@ -20,7 +20,7 @@ public class Burn : MonoBehaviour
     }
     public static bool CheckIsDrawing(GameObject go)
     {
-       return go.TryGetComponent(out Drawing drawing_reference);
+        return go.TryGetComponent(out Drawing _);
     }
     private void Update()
     {
@@ -32,7 +32,6 @@ public class Burn : MonoBehaviour
     {
         render = GetComponentInParent<Renderer>();
         InitialColor = render.material.color;
-        
     }
     public void AdjustBurnSpeed(float adjustedSpeed)
     {
@@ -63,16 +62,9 @@ public class Burn : MonoBehaviour
         // Check the approximate color difference instead of direct comparison
         if (ColorDifference(render.material.color, WantedColor) < 0.001f)
         {
-            PlayExplosionSound();
             Destroy(gameObject);
             ParticleManager.SpawnDestroyedParticle(gameObject, CheckCollision(gameObject));
         }
-    }
-    private void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
-    {
-        AudioSource audioSource_External = new GameObject("DestroyedBallSound").AddComponent<AudioSource>();
-        audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
-        Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 2);
     }
     private void CoolDown()
     {
