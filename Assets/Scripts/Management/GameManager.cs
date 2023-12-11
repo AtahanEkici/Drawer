@@ -2,7 +2,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 [DefaultExecutionOrder(-5000)]
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Main UI")]
     [SerializeField] private static GameObject mainUI;
+
+    [Header("Target FrameRate If All Fails")]
+    [SerializeField] private static readonly int LastResortFrameRate = 120;
 
     [Header("ScreenShot Options")]
     private string screenshotDirectory = "";
@@ -103,7 +105,17 @@ public class GameManager : MonoBehaviour
         catch(System.Exception e)
         {
             Debug.LogException(e);
+            Application.targetFrameRate = LastResortFrameRate;
         }
+
+        //Debug.Log("Frame Rate is Before Correction is: "+ Application.targetFrameRate + "");
+
+        if(Application.targetFrameRate < 60)
+        {
+            Application.targetFrameRate = LastResortFrameRate;
+        }
+
+        Debug.Log("Frame Rate is Set To: " + Application.targetFrameRate + "");
     }
     public static void PauseGame()
     {

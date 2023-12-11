@@ -52,18 +52,21 @@ public class ParticleManager : MonoBehaviour
             Debug.LogException(e);
         } 
     }
-    private static void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
+    private static void PlayExplosionSound(GameObject go) // Destroy the GameObject after the duration of the audio clip //
     {
-        AudioSource audioSource_External = new GameObject("Destroyed_Sound").AddComponent<AudioSource>();
-        audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
-        Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 2);
+        if(GameObject.Find("Destroyed_Sound_" + go.name) == null)
+        {
+            AudioSource audioSource_External = new GameObject("Destroyed_Sound_" + go.name).AddComponent<AudioSource>();
+            audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
+            Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 1.2f);
+        }
     }
 
     public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
     {
         try
         {
-            bool isDrawing = go.TryGetComponent<Drawing>(out Drawing drawing_ref);
+            bool isDrawing = go.TryGetComponent(out Drawing drawing_ref);
             GameObject destructionParticle;
 
             //Debug.Log("Touch Point: "+touch_point);
@@ -87,7 +90,7 @@ public class ParticleManager : MonoBehaviour
             {
                 mainModule.startSize = (go.transform.localScale.x) / 3;
 
-                if (go.TryGetComponent<MeshFilter>(out var meshfilter))
+                if (go.TryGetComponent(out MeshFilter meshfilter))
                 {
                     Mesh[] meshes = { meshfilter.sharedMesh };
                     renderer.SetMeshes(meshes);
@@ -107,7 +110,7 @@ public class ParticleManager : MonoBehaviour
                 renderer.material.shader = render.material.shader;
             }
 
-            PlayExplosionSound();
+            PlayExplosionSound(go);
         }
         catch (System.Exception e)
         {
