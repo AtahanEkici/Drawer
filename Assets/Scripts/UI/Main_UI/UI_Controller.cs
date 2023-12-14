@@ -11,6 +11,7 @@ public class UI_Controller : MonoBehaviour
     public const string ShowFPS = "ShowFPS";
     public const string PostProcess = "PostProcess";
     public const string FXAA = "FXAA";
+    public const string AudioVolume = "VOLUME: ";
 
     public static UI_Controller instance = null;
     private UI_Controller() { }
@@ -28,6 +29,8 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Toggle ShowFPSToggle;
     [SerializeField] private Toggle PostProcessToggle;
     [SerializeField] private Toggle FXAAToggle;
+    [SerializeField] private Slider VolumeSlider;
+    [SerializeField] private TextMeshProUGUI VolumeText;
 
     [Header("Overlay")]
     [SerializeField] public TextMeshProUGUI ScoreBoard;
@@ -42,6 +45,8 @@ public class UI_Controller : MonoBehaviour
 
     [Header("Last State")]
     [SerializeField] private bool LastState;
+
+    [SerializeField] private AudioListener Main_Audio_Listener;
 
     private void Awake()
     {
@@ -93,7 +98,7 @@ public class UI_Controller : MonoBehaviour
                 PrivacyPolicyUI = transform.GetChild(4).gameObject;
             }
         }
-        catch(System.Exception e)
+        catch(Exception e)
         {
             Debug.LogException(e);
         }  
@@ -107,6 +112,7 @@ public class UI_Controller : MonoBehaviour
             bool ShowFPSPref = false;
             bool ShowPostProcessPref = true;
             bool FXAAPref = true;
+            float audio_volume = 1.0f;
 
             // Settings //
             if (PhysicsToggle == null)
@@ -166,8 +172,19 @@ public class UI_Controller : MonoBehaviour
 
                 FXAAPref = PlayerPrefs.GetInt(FXAA, 1) == 1;
 
-                PostProcessToggle.isOn = FXAAPref;
+                FXAAToggle.isOn = FXAAPref;
             }
+
+            if(VolumeSlider == null)
+            {
+                VolumeSlider = SettingsPanel.transform.GetChild(5).GetComponent<Slider>();
+                VolumeText = VolumeSlider.GetComponentInChildren<TextMeshProUGUI>();
+                audio_volume = PlayerPrefs.GetFloat(AudioVolume, 1.0f);
+                VolumeSlider.value = audio_volume;
+                AudioListener.volume = VolumeSlider.value;
+                VolumeText.text = AudioVolume + (VolumeSlider.value * 100).ToString("F0");
+            }
+            // Settings End //
 
             // Overlay //
             if (MenuOpenButton == null)
@@ -189,7 +206,7 @@ public class UI_Controller : MonoBehaviour
                 ListViewButton = OverlayPanel.transform.GetChild(6).GetComponent<Button>();
             }
         }
-        catch(System.Exception e)
+        catch(Exception e)
         {
             Debug.LogException(e);
         }
@@ -218,8 +235,13 @@ public class UI_Controller : MonoBehaviour
                 ListPanel.SetActive(false);
                 PrivacyPolicyUI.SetActive(false);
             } 
+
+            if(Main_Audio_Listener == null)
+            {
+                Main_Audio_Listener = FindObjectOfType<AudioListener>();
+            }
         }
-        catch(System.Exception e)
+        catch(Exception e)
         {
             Debug.LogException(e);
         }
@@ -232,7 +254,7 @@ public class UI_Controller : MonoBehaviour
             MenuCloseButton.onClick.AddListener(CloseSettings);
             ListViewButton.onClick.AddListener(OpenList);
         }
-        catch(System.Exception e)
+        catch(Exception e)
         {
             Debug.LogException(e);
         }
@@ -243,6 +265,17 @@ public class UI_Controller : MonoBehaviour
         ShowFPSToggle.onValueChanged.AddListener(delegate{ShowFPSToggleValueChanged(ShowFPSToggle);});
         PostProcessToggle.onValueChanged.AddListener(delegate{ShowPostProcessValueChanged(PostProcessToggle);});
         FXAAToggle.onValueChanged.AddListener(delegate{FXAAToggleValueChanged(FXAAToggle);});
+        VolumeSlider.onValueChanged.AddListener(delegate{OnVolumeSliderValueChanged();});
+    }
+    private void OnVolumeSliderValueChanged()
+    {
+        float Slider_Volume = VolumeSlider.value;
+
+        AudioListener.volume = Slider_Volume;
+
+        VolumeText.text = AudioVolume + (Slider_Volume * 100).ToString("F0");
+
+        PlayerPrefs.SetFloat(AudioVolume, Slider_Volume);
     }
     private void FXAAToggleValueChanged(Toggle toggle)
     {

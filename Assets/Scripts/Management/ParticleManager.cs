@@ -54,14 +54,17 @@ public class ParticleManager : MonoBehaviour
     }
     private static void PlayExplosionSound(GameObject go) // Destroy the GameObject after the duration of the audio clip //
     {
-        if(GameObject.Find("Destroyed_Sound_" + go.name) == null)
+        if(CheckOthers(go))
         {
             AudioSource audioSource_External = new GameObject("Destroyed_Sound_" + go.name).AddComponent<AudioSource>();
             audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
             Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 1.2f);
         }
     }
-
+    private static bool CheckOthers(GameObject go)
+    {
+        return GameObject.Find("Destroyed_Sound_" + go.name) == null;
+    }
     public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
     {
         try
