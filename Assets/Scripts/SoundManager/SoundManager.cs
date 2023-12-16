@@ -19,7 +19,7 @@ public class SoundManager : MonoBehaviour
     private readonly string Hit_Audio_File = "Hit";
     private readonly string Click_Audio_File = "Click";
     private readonly string Destruction_Audio_File = "Destruction";
-
+    private readonly string Button_Audio_File = "Button";
 
     [Header("Pre-Build Sounds")]
     public static AudioClip Explosion_Sound;
@@ -28,6 +28,7 @@ public class SoundManager : MonoBehaviour
     public static AudioClip Hit_Sound;
     public static AudioClip Click_Sound;
     public static AudioClip Destruction_Sound;
+    public static AudioClip Button_Sound;
 
     // Main Functions Start //
     private void Awake()
@@ -56,6 +57,13 @@ public class SoundManager : MonoBehaviour
             Destroy(this);
             Destroy(gameObject);
         }
+    }
+    public static void PlayButtonSound()
+    {
+        GameObject go = new(Button_Sound.name);
+        AudioSource As = go.AddComponent<AudioSource>();
+        As.PlayOneShot(Button_Sound);
+        Destroy(go, Button_Sound.length);
     }
     private void GetSounds() // Get Sounds from the 
     {
@@ -89,6 +97,10 @@ public class SoundManager : MonoBehaviour
             else if (file_name == Destruction_Audio_File)
             {
                 Destruction_Sound = current_clip;
+            }
+            else if(file_name == Button_Audio_File)
+            {
+                Button_Sound = current_clip;
             }
             else
             {

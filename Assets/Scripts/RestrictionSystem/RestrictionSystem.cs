@@ -20,6 +20,9 @@ public class RestrictionSystem : MonoBehaviour
     [Header("Hide Scores On This Level")]
     [SerializeField] private bool Show_Score_On_This_Level = false;
 
+    [Header("Time Limit For This Level")]
+    [SerializeField] private float Time_Limit_Restriction = 600f;
+
     private void Awake()
     {
         CheckInstance();
@@ -28,6 +31,10 @@ public class RestrictionSystem : MonoBehaviour
     private void OnEnable()
     {
         GetTag(); 
+    }
+    private void Update()
+    {
+        CheckTime();
     }
     private void CheckForDynamics()
     {
@@ -54,6 +61,13 @@ public class RestrictionSystem : MonoBehaviour
                 OnlyDynamicDrawingsAllowed = false;
                 OnlyStaticDrawingsAllowed = false;
             }
+        }
+    }
+    private void CheckTime()
+    {
+        if(TimeController.Timer >= Time_Limit_Restriction)
+        {
+            GameManager.Instance.GameOver(GameManager.Time_Limit_Exceeded);
         }
     }
     private void CheckInstance()

@@ -16,6 +16,9 @@ public class UI_Controller : MonoBehaviour
     public static UI_Controller instance = null;
     private UI_Controller() { }
 
+    [Header("All Buttons")]
+    [SerializeField] private Button[] AllButtons;
+
     [Header("Panels")]
     [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject OverlayPanel;
@@ -49,11 +52,15 @@ public class UI_Controller : MonoBehaviour
 
     [SerializeField] private AudioListener Main_Audio_Listener;
 
+    [Header("Game Over Cause")]
+    [SerializeField] private TextMeshProUGUI Game_Over_Cause;
+
     private void Awake()
     {
         CheckInstance();
         GetLocalReferences();
         SceneManager.sceneLoaded += OnSceneLoaded;
+        AddButtonAudioToAllButtons();
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
@@ -61,6 +68,15 @@ public class UI_Controller : MonoBehaviour
         GetForeignReferences();
         DelegateToggles();
         DelegateButtons();
+    }
+    private void AddButtonAudioToAllButtons()
+    {
+        AllButtons = GetComponentsInChildren<Button>();
+
+        for(int i=0;i<AllButtons.Length;i++)
+        {
+            AllButtons[i].onClick.AddListener(delegate{SoundManager.PlayButtonSound();});
+        }
     }
     private void CheckInstance()
     {
@@ -102,6 +118,10 @@ public class UI_Controller : MonoBehaviour
             {
                 Game_Over_Panel = transform.GetChild(5).gameObject;
             }   
+            if(Game_Over_Cause == null)
+            {
+                Game_Over_Cause = Game_Over_Panel.transform.GetChild(2).GetComponentInChildren<TextMeshProUGUI>();
+            }
         }
         catch(Exception e)
         {
@@ -429,8 +449,15 @@ public class UI_Controller : MonoBehaviour
         OverlayPanel.SetActive(true);
         GameManager.SetGameState(LastState);
     }
-    public void IssueGameOverPanel()
+    public void IssueGameOverPanel(string cause)
     {
+        if (!GameManager.IsGamePaused()) { GameManager.PauseGame(); }
+
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        PrivacyPolicyUI.SetActive(false);
+        OverlayPanel.SetActive(false);
+        Game_Over_Cause.text = cause;
         Game_Over_Panel.SetActive(true);
     }
     private void SaveSettings()

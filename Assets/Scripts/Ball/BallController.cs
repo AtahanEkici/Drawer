@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class BallController : MonoBehaviour
 {
     public const string BallTag = "Ball";
@@ -82,5 +83,13 @@ public class BallController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         HandleCollisionSounds(collision.gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if(SceneManager.GetActiveScene().isLoaded)
+        {
+            GameManager.Instance.GameOver(GameManager.Ball_Is_Destroyed);
+        }
     }
 }

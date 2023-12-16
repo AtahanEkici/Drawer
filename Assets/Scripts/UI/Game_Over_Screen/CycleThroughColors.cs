@@ -10,30 +10,38 @@ public class CycleThroughColors : MonoBehaviour
     [SerializeField] private Color[] colors;
 
     [Header("Cycle Speed")]
-    [SerializeField] private float speed = 1.0f;
-    private float speedCounter = 0f;
+    [SerializeField] private float speed = 0.50f;
+    [SerializeField] private float speedCounter = 0f;
 
     [Header("Text")]
-    [SerializeField] private string initialText = "Sample Text";
+    private string initialText;
 
     private int colorIndex = 0;
 
     private void Awake()
     {
         GetLocalReferences();
+        CheckColors();
     }
-
     private void GetLocalReferences()
     {
         textMesh = GetComponentInChildren<TextMeshProUGUI>();
-        textMesh.text = initialText;
+        initialText = textMesh.text;
     }
 
+    private void CheckColors()
+    {
+        if (colors.Length <= 0)
+        {
+            colors = new Color[2];
+            colors[0] = Color.white;
+            colors[1] = Color.black;
+        }
+    }
     private void Update()
     {
         FormatTextColor();
     }
-
     private void FormatTextColor()
     {
         if (speedCounter >= speed)
@@ -46,7 +54,6 @@ public class CycleThroughColors : MonoBehaviour
             speedCounter += Time.unscaledDeltaTime;
         }
     }
-
     private void ShiftColors()
     {
         string coloredText = "";

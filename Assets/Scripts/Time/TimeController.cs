@@ -13,7 +13,7 @@ public class TimeController : MonoBehaviour
 
     [Header("Time Options")]
     [SerializeField] private static bool isTimerStopped = false;
-    [SerializeField] private static float Timer = 0f;
+    [SerializeField] public static float Timer = 0f;
     private void Awake()
     {
         CheckInstance();

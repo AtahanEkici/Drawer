@@ -123,6 +123,27 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1235739316 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2350051107289579026, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+  m_PrefabInstance: {fileID: 1746721170}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1235739320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235739316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e8d62f304cfca44882e9cffb699811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMesh: {fileID: 0}
+  colors: []
+  speed: 0.5
+  speedCounter: 0
 --- !u!1001 &1746721170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -149,6 +170,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3651514663166511209, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6971983534658467579, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: speed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6971983534658467579, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      propertyPath: colors.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7047602389144606064, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
@@ -259,7 +288,10 @@ PrefabInstance:
     - {fileID: 9010093591547703944, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2350051107289579026, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1235739320}
   m_SourcePrefab: {fileID: 100100000, guid: 80cebc0ed50148947948644ec81a6611, type: 3}
 --- !u!1 &2084092182
 GameObject:

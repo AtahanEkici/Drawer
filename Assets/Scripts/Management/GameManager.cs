@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public const string UITag = "UI";
     public const string StartMenuScene = "StartMenu";
     public const string EventSystemResource = "Management/Event_System/EventSystem";
+
+    private const string Cause_String = "Cause: ";
     public static GameManager Instance { get; private set; }
     private GameManager() { }
 
@@ -22,6 +24,10 @@ public class GameManager : MonoBehaviour
 
     [Header("ScreenShot Options")]
     private string screenshotDirectory = "";
+
+    [Header("Game Over Causes")]
+    [SerializeField] public static readonly string Ball_Is_Destroyed = "Ball is destroyed";
+    [SerializeField] public static readonly string Time_Limit_Exceeded = "Time Limit Exceeded";
 
     private void Awake()
     {
@@ -124,6 +130,16 @@ public class GameManager : MonoBehaviour
     public static void ResumeGame()
     {
         Time.timeScale = 1;
+    }
+    public void GameOver(string cause)
+    {
+        PauseGame();
+        UI_Controller.instance.IssueGameOverPanel(Cause_String + cause);
+    }
+    public void ReloadScene()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
     public static void SetGameState(bool state)
     {
