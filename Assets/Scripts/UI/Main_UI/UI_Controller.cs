@@ -21,6 +21,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject OverlayPanel;
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject ErrorPanel;
+    [SerializeField] private GameObject Game_Over_Panel;
 
     [Header("Settings")]
     [SerializeField] public Toggle PhysicsToggle;
@@ -97,6 +98,10 @@ public class UI_Controller : MonoBehaviour
             {
                 PrivacyPolicyUI = transform.GetChild(4).gameObject;
             }
+            if (Game_Over_Panel == null)
+            {
+                Game_Over_Panel = transform.GetChild(5).gameObject;
+            }   
         }
         catch(Exception e)
         {
@@ -182,7 +187,7 @@ public class UI_Controller : MonoBehaviour
                 audio_volume = PlayerPrefs.GetFloat(AudioVolume, 1.0f);
                 VolumeSlider.value = audio_volume;
                 AudioListener.volume = VolumeSlider.value;
-                VolumeText.text = AudioVolume + (VolumeSlider.value * 100).ToString("F0");
+                VolumeText.text = "<color=white>" + AudioVolume + "</color>" + "<color=black>" + (VolumeSlider.value * 100).ToString("F0") + "</color>";
             }
             // Settings End //
 
@@ -240,6 +245,8 @@ public class UI_Controller : MonoBehaviour
             {
                 Main_Audio_Listener = FindObjectOfType<AudioListener>();
             }
+
+            Game_Over_Panel.SetActive(false);
         }
         catch(Exception e)
         {
@@ -273,7 +280,7 @@ public class UI_Controller : MonoBehaviour
 
         AudioListener.volume = Slider_Volume;
 
-        VolumeText.text = AudioVolume + (Slider_Volume * 100).ToString("F0");
+        VolumeText.text = "<color=white>" + AudioVolume+ "</color>" + "<color=black>" + (Slider_Volume * 100).ToString("F0")+ "</color>";
 
         PlayerPrefs.SetFloat(AudioVolume, Slider_Volume);
     }
@@ -421,6 +428,10 @@ public class UI_Controller : MonoBehaviour
         PrivacyPolicyUI.SetActive(false);
         OverlayPanel.SetActive(true);
         GameManager.SetGameState(LastState);
+    }
+    public void IssueGameOverPanel()
+    {
+        Game_Over_Panel.SetActive(true);
     }
     private void SaveSettings()
     {
