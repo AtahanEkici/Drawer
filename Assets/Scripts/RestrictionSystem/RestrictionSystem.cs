@@ -7,6 +7,9 @@ public class RestrictionSystem : MonoBehaviour
 
     public string RestrictionTag = "Restriction";
 
+    [Header("Is Time Restricted")]
+    [SerializeField] private bool isTimeRestricted = false;
+
     [Header("Drawing Lenght Restriction")]
     [SerializeField] private float MaxDrawingLenght = 50f;
 
@@ -23,6 +26,9 @@ public class RestrictionSystem : MonoBehaviour
     [Header("Time Limit For This Level")]
     [SerializeField] private float Time_Limit_Restriction = 600f;
 
+    [Header("Death Walls on This Level ? ")]
+    [SerializeField] private bool isDeathWalls = false;
+
     private void Awake()
     {
         CheckInstance();
@@ -35,6 +41,10 @@ public class RestrictionSystem : MonoBehaviour
     private void Update()
     {
         CheckTime();
+    }
+    public bool IsDeathWallsOnThisLevel()
+    {
+        return isDeathWalls;
     }
     private void CheckForDynamics()
     {
@@ -65,6 +75,8 @@ public class RestrictionSystem : MonoBehaviour
     }
     private void CheckTime()
     {
+        if (!isTimeRestricted) { return; }
+
         if(TimeController.Timer >= Time_Limit_Restriction)
         {
             GameManager.Instance.GameOver(GameManager.Time_Limit_Exceeded);

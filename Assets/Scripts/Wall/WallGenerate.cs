@@ -35,17 +35,23 @@ public class WallGenerate : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         GetLocalReferences();
     }
-    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode LoadScene_Mode)
     {
-        
+        if(scene.name != GameManager.StartMenuScene)
+        {
+            GenerateWalls();
+        }
+
+        if(RestrictionSystem.instance.IsDeathWallsOnThisLevel() == true)
+        {
+            DeathSwitch();
+        }
     }
     private void OnEnable()
     {
         GetForeignReferences(); // Get Foreign References in Start //
         GetOrthographicBounds(); // Get Camera Boundaries //
         CalculateBounds();
-        GenerateWalls();
-        DeathSwitch();
     }
     private void DeathSwitch()
     {

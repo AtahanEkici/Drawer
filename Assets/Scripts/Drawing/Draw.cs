@@ -39,7 +39,8 @@ public class Draw : MonoBehaviour
     [SerializeField] private PhysicsMaterial2D physicMaterial2D;
 
     [Header("Minimum Distance")]
-    [SerializeField] private float MinDistance = 10f;
+    [SerializeField] private float totalDistance = 0f;
+    [SerializeField] private float MinDistance = 1f;
 
     [Header("Is On UI Element")]
     [SerializeField] private bool IsOnUI = false;
@@ -89,7 +90,7 @@ public class Draw : MonoBehaviour
     }
     private void StartUp(Scene scene)
     {
-        if(scene.name == GameManager.StartMenuScene) { DisableDrawing(); }
+        if(scene.name == GameManager.StartMenuScene) { /* DisableDrawing(); */ }
         else { EnableDrawing(); }
 
         TotalCount = 0;
@@ -130,15 +131,12 @@ public class Draw : MonoBehaviour
     }
     private void StartDrawing()
     {
-        if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { /*Debug.Log("Can not draw on start menu");*/ return; }
-        else if (IsOnUI) { /*Debug.Log("Mouse Over UI Object");*/ return; }
+        //if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { /*Debug.Log("Can not draw on start menu");*/ return; }
+        if (IsOnUI) { /*Debug.Log("Mouse Over UI Object");*/ return; }
         else if (GameManager.IsGamePaused() && IsLineDynamic()) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.DynamicLineWhileGamePaused); return; }
         else if(DrawingContainer.instance.GetTotalDrawingCount() >= MaxDrawingCount) { ErrorSystem.instance.SetErrorMessage(ErrorSystem.ReachedMaxDrawingCount); return; }
 
-        NewDrawing = new("Drawing_" + TotalCount.ToString())
-        {
-            tag = DrawingTag
-        };
+        NewDrawing = new("Drawing_" + TotalCount.ToString()){tag = DrawingTag};
 
         Line_Renderer = NewDrawing.AddComponent<LineRenderer>();
         Line_Renderer.material = LineMaterial;
@@ -209,7 +207,7 @@ public class Draw : MonoBehaviour
     private float AttachCapsuleCollidersToPoints(LineRenderer lr, GameObject go) // returns total density for configuring drawing mass //
     {
         float totaldensity = 1f;
-        float totalDistance = 0f;
+        totalDistance = 0f;
         try
         {
             int posCount = lr.positionCount;
@@ -273,26 +271,6 @@ public class Draw : MonoBehaviour
     {
         LineMaterial =  Resources.Load(LineMaterialResourcePath) as Material;
         physicMaterial2D = Resources.Load(DrawPhysicsMaterialResourcePath) as PhysicsMaterial2D;
-    }
-    private float GetLineRendererLengthRelativeToCamera()
-    {
-        Vector3[] positions = new Vector3[Line_Renderer.positionCount];
-        Line_Renderer.GetPositions(positions);
-
-        float length = 0f;
-
-        for (int i = 1; i < positions.Length; i++)
-        {
-            Vector3 viewportPos1 = MainCamera.WorldToViewportPoint(positions[i - 1]);
-            Vector3 viewportPos2 = MainCamera.WorldToViewportPoint(positions[i]);
-            length += Vector3.Distance(viewportPos1, viewportPos2);
-        }
-
-        float screenWidth = MainCamera.pixelWidth;
-        float screenHeight = MainCamera.pixelHeight;
-        float screenDiagonal = Mathf.Sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
-
-        return length * screenDiagonal;
     }
     private bool IsLineDynamic()
     {

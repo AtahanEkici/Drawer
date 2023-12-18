@@ -37,9 +37,12 @@ public class GameManager : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        PauseGame();
-        GetReferences();
+        if(scene.name != StartMenuScene)
+        {
+            PauseGame();
+        }
         InstantiateEventSystemIfNoneFound();
+        GetReferences();
     }
     private void Start()
     {
@@ -47,7 +50,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        ScreenShot();
+        //ScreenShot();
     }
     private void GetReferences()
     {

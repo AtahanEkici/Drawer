@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 public class SoundManager : MonoBehaviour
 {
     public static readonly string Audio_Path = "Sounds";
@@ -56,6 +57,15 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(this);
             Destroy(gameObject);
+        }
+    }
+    public static void AddButtonAudioToAllButtons(Button[] buttons, GameObject go)
+    {
+        buttons = go.GetComponentsInChildren<Button>();
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].onClick.AddListener(delegate { SoundManager.PlayButtonSound(); });
         }
     }
     public static void PlayButtonSound()

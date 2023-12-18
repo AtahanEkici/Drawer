@@ -17,16 +17,19 @@ public class TimeController : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-    private void OnSceneUnloaded(Scene scene)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode lsm)
     {
-        ResetTimer();
-    }
-    private void Start()
-    {
-        GetForeignReferences();
-        UpdateTimerUI();
+        if(scene.name == GameManager.StartMenuScene)
+        {
+            return;
+        }
+        else
+        {
+            GetForeignReferences();
+            ResetTimer();
+        } 
     }
     private void Update()
     {
@@ -87,6 +90,6 @@ public class TimeController : MonoBehaviour
     }
     private void OnDestroy()
     {
-        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

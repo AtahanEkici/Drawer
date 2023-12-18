@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class ErrorSystem : MonoBehaviour
 {
@@ -124,6 +125,7 @@ public class ErrorSystem : MonoBehaviour
     private void AnimateTable()
     {
         if (!ErrorReceived) { return; }
+        if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene) { return; } // Do not call Error System on Start Menu //
 
         Vector2 anchors = rectrans.anchoredPosition;
        

@@ -5,6 +5,7 @@ public class Drawing : MonoBehaviour
 
     [Header("Local Components")]
     [SerializeField] private MeshRenderer render;
+    [SerializeField] private MeshFilter mesh_filter;
 
     [Header("Debugging")]
     [SerializeField] private bool DebugMode = false;
@@ -12,6 +13,9 @@ public class Drawing : MonoBehaviour
 
     [Header("Initial Color")]
     [SerializeField] private Color InitialColor;
+
+    [Header("Position Threshold")]
+    [SerializeField] private float MaxDistance = -50f;
 
     private void Awake()
     {
@@ -24,6 +28,7 @@ public class Drawing : MonoBehaviour
     private void Update()
     {
         Debugging();
+        DestroyOnCertainPoint();
     }
     private void StartUpTasks()
     {
@@ -32,6 +37,7 @@ public class Drawing : MonoBehaviour
     private void GetComponents()
     {
         render = GetComponent<MeshRenderer>();
+        mesh_filter = GetComponent<MeshFilter>();
     }
     public Vector3 GetWorldPosition()
     {
@@ -44,7 +50,7 @@ public class Drawing : MonoBehaviour
     }
     public Vector3 GetMeshCenter()
     {
-        return GetComponent<MeshFilter>().mesh.bounds.center;
+        return mesh_filter.mesh.bounds.center;
     }
     private void Debugging()
     {
@@ -55,5 +61,13 @@ public class Drawing : MonoBehaviour
     public Color GetInitialColor()
     {
         return InitialColor;
+    }
+    private void DestroyOnCertainPoint()
+    {
+        if(transform.position.y < MaxDistance)
+        {
+            Destroy(gameObject);
+            ParticleManager.SpawnDestroyedParticle(this.gameObject);
+        }
     }
 }

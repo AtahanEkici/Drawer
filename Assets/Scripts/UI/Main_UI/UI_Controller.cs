@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-[DefaultExecutionOrder(-1200)]
+[DefaultExecutionOrder(-2200)]
 public class UI_Controller : MonoBehaviour
 {
     public const string ToggleLabelString = "Line Physics: ";
@@ -59,24 +59,24 @@ public class UI_Controller : MonoBehaviour
     {
         CheckInstance();
         GetLocalReferences();
+        AddSoundToButtons();
         SceneManager.sceneLoaded += OnSceneLoaded;
-        AddButtonAudioToAllButtons();
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         Startup(scene);
         GetForeignReferences();
+    }
+    private void Start()
+    {
+       
         DelegateToggles();
         DelegateButtons();
     }
-    private void AddButtonAudioToAllButtons()
+    private void AddSoundToButtons()
     {
         AllButtons = GetComponentsInChildren<Button>();
-
-        for(int i=0;i<AllButtons.Length;i++)
-        {
-            AllButtons[i].onClick.AddListener(delegate{SoundManager.PlayButtonSound();});
-        }
+        SoundManager.AddButtonAudioToAllButtons(AllButtons, gameObject);
     }
     private void CheckInstance()
     {
@@ -251,6 +251,7 @@ public class UI_Controller : MonoBehaviour
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
                 PrivacyPolicyUI.SetActive(false);
+                Game_Over_Panel.SetActive(false);
             }
 
             else
@@ -259,6 +260,7 @@ public class UI_Controller : MonoBehaviour
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
                 PrivacyPolicyUI.SetActive(false);
+                Game_Over_Panel.SetActive(false);
             } 
 
             if(Main_Audio_Listener == null)
@@ -389,8 +391,14 @@ public class UI_Controller : MonoBehaviour
             PhysicsToggleText.text = ToggleLabelString + "Static";
         }
     }
-    private void OpenSettings()
+    public void OpenSettings()
     {
+        if (SceneManager.GetActiveScene().name == GameManager.StartMenuScene)
+        {
+            OpenSettingsForStartMenu();
+            return;
+        }
+
         Draw.instance.DisableDrawing();
 
         LastState = GameManager.IsGamePaused();
@@ -399,19 +407,42 @@ public class UI_Controller : MonoBehaviour
 
         OverlayPanel.SetActive(false);
         ListPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
         SettingsPanel.SetActive(true);
     }
-    private void CloseSettings()
+    public void CloseSettings()
     {
+        if(SceneManager.GetActiveScene().name == GameManager.StartMenuScene)
+        {
+            CloseSettingsForStartMenu();
+            StartMenuController.instance.CloseSettings();
+            return;
+        }
+
         SaveSettings();
 
-        OverlayPanel.SetActive(true);
         SettingsPanel.SetActive(false);
         ListPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
+        OverlayPanel.SetActive(true);
 
         GameManager.SetGameState(LastState);
 
         Draw.instance.EnableDrawing();
+    }
+    public void OpenSettingsForStartMenu()
+    {
+        OverlayPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
+        SettingsPanel.SetActive(true);
+    }
+    public void CloseSettingsForStartMenu()
+    {
+        SettingsPanel.SetActive(false);
+        OverlayPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
     }
     public void OpenList()
     {
@@ -421,6 +452,7 @@ public class UI_Controller : MonoBehaviour
 
         OverlayPanel.SetActive(false);
         SettingsPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
         ListPanel.SetActive(true);
     }
     public void CloseList()
@@ -439,6 +471,7 @@ public class UI_Controller : MonoBehaviour
         OverlayPanel.SetActive(false);
         SettingsPanel.SetActive(false);
         ListPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
         PrivacyPolicyUI.SetActive(true);
     }
     public void ClosePrivacyPolicyUI()
@@ -446,6 +479,7 @@ public class UI_Controller : MonoBehaviour
         SettingsPanel.SetActive(false);
         ListPanel.SetActive(false);
         PrivacyPolicyUI.SetActive(false);
+        Game_Over_Panel.SetActive(false);
         OverlayPanel.SetActive(true);
         GameManager.SetGameState(LastState);
     }
