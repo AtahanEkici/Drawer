@@ -2,13 +2,12 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-[DefaultExecutionOrder(-5000)]
+[DefaultExecutionOrder(-9000)]
 public class GameManager : MonoBehaviour
 {
     public const string UITag = "UI";
     public const string StartMenuScene = "StartMenu";
     public const string EventSystemResource = "Management/Event_System/EventSystem";
-
     private const string Cause_String = "Cause: ";
     public static GameManager Instance { get; private set; }
     private GameManager() { }

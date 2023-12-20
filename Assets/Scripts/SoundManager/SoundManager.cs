@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+[DefaultExecutionOrder(-5000)]
 public class SoundManager : MonoBehaviour
 {
     public static readonly string Audio_Path = "Sounds";
@@ -63,18 +64,23 @@ public class SoundManager : MonoBehaviour
     {
         buttons = go.GetComponentsInChildren<Button>();
 
-        for (int i = 0; i < buttons.Length; i++)
+        foreach (Button button in buttons)
         {
-            buttons[i].onClick.AddListener(delegate { SoundManager.PlayButtonSound(); });
+            button.onClick.AddListener(PlayButtonSound);
         }
     }
+
     public static void PlayButtonSound()
     {
-        GameObject go = new(Button_Sound.name);
-        AudioSource As = go.AddComponent<AudioSource>();
-        As.PlayOneShot(Button_Sound);
-        Destroy(go, Button_Sound.length);
+        GameObject soundObject = new GameObject("ButtonSound");
+        soundObject.transform.parent = null;
+
+        AudioSource audioSource = soundObject.AddComponent<AudioSource>();
+        audioSource.PlayOneShot(Button_Sound);
+
+        Destroy(soundObject, Button_Sound.length * 1.2f);
     }
+
     private void GetSounds() // Get Sounds from the 
     {
         AllSoundFiles = Resources.LoadAll<AudioClip>(Audio_Path);

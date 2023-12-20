@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-[DefaultExecutionOrder(-20000)]
+[DefaultExecutionOrder(-2000)]
 public class StartMenuController : MonoBehaviour
 {
     public static StartMenuController instance = null;
