@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class CycleThroughColors : MonoBehaviour
 {
+    [Header("Randomize Colors")]
+    [SerializeField] private bool isRandom = false;
+
     [Header("TextMesh Object Reference")]
     [SerializeField] private TextMeshProUGUI textMesh;
 
@@ -46,7 +49,15 @@ public class CycleThroughColors : MonoBehaviour
     {
         if (speedCounter >= speed)
         {
-            ShiftColors();
+            if(isRandom)
+            {
+                RandomizeColors();
+            }
+            else
+            {
+                ShiftColors();
+            }
+            
             speedCounter = 0f;
         }
         else
@@ -60,11 +71,23 @@ public class CycleThroughColors : MonoBehaviour
 
         for (int i = 0; i < initialText.Length; i++)
         {
-            Color selectedColor = colors[colorIndex % colors.Length]; // Pick a color from the array
+            Color selectedColor = colors[colorIndex++ % colors.Length]; // Pick a color from the array
             coloredText += $"<color=#{ColorUtility.ToHtmlStringRGB(selectedColor)}>{initialText[i]}</color>";
-            colorIndex++;
+            //colorIndex++;
         }
 
-        textMesh.text = coloredText;
+        textMesh.SetText(coloredText);
+    }
+    private void RandomizeColors()
+    {
+        string coloredText = "";
+
+        for (int i = 0; i < initialText.Length; i++)
+        {
+            Color selectedColor = Random.ColorHSV();
+            coloredText += $"<color=#{ColorUtility.ToHtmlStringRGB(selectedColor)}>{initialText[i]}</color>";
+        }
+
+        textMesh.SetText(coloredText);
     }
 }

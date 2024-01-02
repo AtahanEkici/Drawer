@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RestrictionTag: Restriction
-  MaxDrawingLenght: 7
-  OnlyDynamicDrawingsAllowed: 1
+  isTimeRestricted: 0
+  MaxDrawingLenght: 50
+  OnlyDynamicDrawingsAllowed: 0
   OnlyStaticDrawingsAllowed: 0
-  MaxDrawingCount: 2
+  MaxDrawingCount: 10
   Show_Score_On_This_Level: 0
-  Time_Limit_Restriction: 50
+  Time_Limit_Restriction: 600
+  isDeathWalls: 0

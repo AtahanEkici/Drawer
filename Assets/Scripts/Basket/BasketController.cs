@@ -71,6 +71,8 @@ public class BasketController : MonoBehaviour
                 Debug.Log("Max Value Reached");
                 Debug.LogWarning("Level Should End in Success After this prompt!!");
                 TimeController.StopTimer();
+                GameManager.PauseGame();
+                UI_Controller.instance.OpenNextLevelScreen();
                 // Call New Level transaction //
             }
         }
@@ -87,8 +89,6 @@ public class BasketController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //GameObject go = collision.gameObject;
-
         if(collision.CompareTag(BallTag))
         {
             isBallOnBasket = true;
@@ -96,8 +96,6 @@ public class BasketController : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        //GameObject go = collision.gameObject;
-
         if(collision.CompareTag(BallTag))
         {
             isBallOnBasket = false;

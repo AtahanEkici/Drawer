@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(-2200)]
 public class UI_Controller : MonoBehaviour
 {
+    public const string NextLevelPanelResourcePath = "NextLevelPanel/NextLevelPanel";
     public const string ToggleLabelString = "Line Physics: ";
     public const string LinephysicsType = "LinePhysicsType";
     public const string ShowFPS = "ShowFPS";
@@ -25,6 +26,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject ErrorPanel;
     [SerializeField] private GameObject Game_Over_Panel;
+    [SerializeField] private GameObject Level_Complete_Panel;
 
     [Header("Settings")]
     [SerializeField] public Toggle PhysicsToggle;
@@ -118,7 +120,11 @@ public class UI_Controller : MonoBehaviour
             {
                 Game_Over_Panel = transform.GetChild(5).gameObject;
             }   
-            if(Game_Over_Cause == null)
+            if(Level_Complete_Panel == null)
+            {
+                Level_Complete_Panel = transform.GetChild(6).gameObject;
+            }
+            if (Game_Over_Cause == null)
             {
                 Game_Over_Cause = Game_Over_Panel.transform.GetChild(2).GetComponentInChildren<TextMeshProUGUI>();
             }
@@ -251,7 +257,7 @@ public class UI_Controller : MonoBehaviour
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
                 PrivacyPolicyUI.SetActive(false);
-                Game_Over_Panel.SetActive(false);
+                Level_Complete_Panel.SetActive(false);
             }
 
             else
@@ -260,7 +266,7 @@ public class UI_Controller : MonoBehaviour
                 SettingsPanel.SetActive(false);
                 ListPanel.SetActive(false);
                 PrivacyPolicyUI.SetActive(false);
-                Game_Over_Panel.SetActive(false);
+                Level_Complete_Panel.SetActive(false);
             } 
 
             if(Main_Audio_Listener == null)
@@ -493,6 +499,24 @@ public class UI_Controller : MonoBehaviour
         OverlayPanel.SetActive(false);
         Game_Over_Cause.text = cause;
         Game_Over_Panel.SetActive(true);
+    }
+    public void OpenNextLevelScreen()
+    {
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        PrivacyPolicyUI.SetActive(false);
+        OverlayPanel.SetActive(false);
+        Game_Over_Panel.SetActive(false);
+        Level_Complete_Panel.SetActive(true);
+    }
+    public void CloseNextLevelScreen()
+    {
+        SettingsPanel.SetActive(false);
+        ListPanel.SetActive(false);
+        PrivacyPolicyUI.SetActive(false); 
+        Game_Over_Panel.SetActive(false);
+        Level_Complete_Panel.SetActive(false);
+        OverlayPanel.SetActive(true);
     }
     private void SaveSettings()
     {

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &50365862520302849
+--- !u!1 &4260867708369116842
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 50365862520302879}
-  - component: {fileID: 50365862520302848}
+  - component: {fileID: 2701245824239885086}
+  - component: {fileID: 6548303556832909787}
   m_Layer: 0
-  m_Name: Drawer
-  m_TagString: Untagged
+  m_Name: LevelManager
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &50365862520302879
+--- !u!4 &2701245824239885086
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 50365862520302849}
+  m_GameObject: {fileID: 4260867708369116842}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,31 +32,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &50365862520302848
+--- !u!114 &6548303556832909787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 50365862520302849}
+  m_GameObject: {fileID: 4260867708369116842}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c5193b799903a74c8a6ea97f388e5b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b8f8c6bfc964f3478c4ad4be5dc8b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDrawingDisabled: 0
-  Line_Renderer: {fileID: 0}
-  LineRendererWidth: 0.1
-  mousePos: {x: 0, y: 0}
-  Drawings: {fileID: 0}
-  NewDrawing: {fileID: 0}
-  TotalCount: 1
-  MainCamera: {fileID: 0}
-  SimplificationCoefficient: 0.025
-  LineMaterial: {fileID: 0}
-  physicMaterial2D: {fileID: 0}
-  totalDistance: 0
-  MinDistance: 1
-  IsOnUI: 0
-  MaxDrawingCount: 0
-  MaxDrawingLenght: 0
+  DontDestroy: 1
+  Max_Level_Reached: 0
