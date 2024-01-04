@@ -34,7 +34,6 @@ public class NextLevelScreen : MonoBehaviour
     private void LoadNextLevel()
     {
         LevelManager.LoadNextLevel();
-        Destroy(gameObject);
     }
     private void CheckInstance()
     {
