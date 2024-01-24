@@ -37,6 +37,7 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private Toggle FXAAToggle;
     [SerializeField] private Slider VolumeSlider;
     [SerializeField] private TextMeshProUGUI VolumeText;
+    [SerializeField] private Button ToStartMenuButton;
 
     [Header("Overlay")]
     [SerializeField] public TextMeshProUGUI ScoreBoard;
@@ -215,6 +216,11 @@ public class UI_Controller : MonoBehaviour
                 AudioListener.volume = VolumeSlider.value;
                 VolumeText.text = "<color=white>" + AudioVolume + "</color>" + "<color=black>" + (VolumeSlider.value * 100).ToString("F0") + "</color>";
             }
+
+            if(ToStartMenuButton == null)
+            {
+                ToStartMenuButton = SettingsPanel.transform.GetChild(6).GetComponent<Button>();
+            }
             // Settings End //
 
             // Overlay //
@@ -288,11 +294,16 @@ public class UI_Controller : MonoBehaviour
             MenuOpenButton.onClick.AddListener(OpenSettings);
             MenuCloseButton.onClick.AddListener(CloseSettings);
             ListViewButton.onClick.AddListener(OpenList);
+            ToStartMenuButton.onClick.AddListener(ToStartMenu);
         }
         catch(Exception e)
         {
             Debug.LogException(e);
         }
+    }
+    private void ToStartMenu()
+    {
+        LevelManager.LoadLevel(GameManager.StartMenuScene);
     }
     private void DelegateToggles()
     {

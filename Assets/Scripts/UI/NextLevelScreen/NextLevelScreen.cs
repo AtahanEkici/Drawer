@@ -17,7 +17,7 @@ public class NextLevelScreen : MonoBehaviour
     {
         if(NextlevelButton == null)
         {
-            NextlevelButton = GetComponent<Button>();
+            NextlevelButton = GetComponentInParent<Button>();
         }
     }
     private void DelegateButton()
