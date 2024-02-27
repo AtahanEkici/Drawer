@@ -1,18 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
 public class LevelStarController : MonoBehaviour
 {
     private static readonly string StarLocation = "UI/Star";
 
     public static LevelStarController instance = null;
 
-    [Header("Images")]
+    [Header("Sprites for Level Stars")]
     [SerializeField] private Sprite[] Stars;
     [SerializeField] private Sprite OutlineStar;
     [SerializeField] private Sprite YellowStar;
 
-    [Header("Resource Names")]
-    [SerializeField] private static readonly string Out = "out";
-    [SerializeField] private static readonly string In = "in";
+    [Header("All Buttons")]
+    [SerializeField] private Button[] buttons;
+
+    private static readonly string Out = "out";
 
     private void Awake()
     {
@@ -22,8 +24,8 @@ public class LevelStarController : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("OnEnable Called On Level Star Controller");
+        ChangeStarsOnLevelMenu();
     }
-    
     private void CheckInstance()
     {
         if(instance == null)
@@ -45,18 +47,25 @@ public class LevelStarController : MonoBehaviour
     }
     private void GetResources()
     {
-        Stars = Resources.LoadAll(StarLocation) as Sprite[];
+        Stars = Resources.LoadAll<Sprite>(StarLocation);
 
-        for(int i=0;i<Stars.Length;i++)
+        foreach(Sprite sprite in Stars)
         {
-            if (Stars[i].name.ToLower().Equals(Out))
+            if(sprite.name.Equals(Out))
             {
-                OutlineStar = Stars[i];
+                OutlineStar = sprite;
             }
-            else if(Stars[i].name.ToLower().Equals(In))
+            else
             {
-                YellowStar = Stars[i];
+                YellowStar = sprite;
             }
         }
+    }
+
+    private void ChangeStarsOnLevelMenu() // Change star sprites accordingly with the saved level stars //
+    {
+        buttons = GetComponentsInChildren<Button>();
+
+
     }
 }

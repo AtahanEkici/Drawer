@@ -16,6 +16,9 @@ public class Draw : MonoBehaviour
     [Header("Is Drawing Disabled")]
     [SerializeField] private bool isDrawingDisabled = false;
 
+    [Header("Is On UI Element")]
+    [SerializeField] private bool IsOnUI = false;
+
     [Header("Line Renderer")]
     [SerializeField] private LineRenderer Line_Renderer;
     [SerializeField] private float LineRendererWidth = 0.1f;
@@ -41,9 +44,6 @@ public class Draw : MonoBehaviour
     [Header("Minimum Distance")]
     [SerializeField] private float totalDistance = 0f;
     [SerializeField] private float MinDistance = 1f;
-
-    [Header("Is On UI Element")]
-    [SerializeField] private bool IsOnUI = false;
 
     [Header("Restrictions")]
     [SerializeField] private int MaxDrawingCount = 0;
