@@ -43,11 +43,11 @@ public class Draw : MonoBehaviour
 
     [Header("Minimum Distance")]
     [SerializeField] private float totalDistance = 0f;
-    [SerializeField] private float MinDistance = 1f;
 
     [Header("Restrictions")]
     [SerializeField] private int MaxDrawingCount = 0;
     [SerializeField] private float MaxDrawingLenght = 0f;
+    [SerializeField] private float MinDrawingLenght = 0f;
     private void Awake()
     {
         CheckInstance();
@@ -87,6 +87,7 @@ public class Draw : MonoBehaviour
 
         MaxDrawingLenght = (float)restrictions[0];
         MaxDrawingCount  = (int)restrictions[1];
+        MinDrawingLenght = (int)restrictions[2];
     }
     private void StartUp(Scene scene)
     {
@@ -225,14 +226,14 @@ public class Draw : MonoBehaviour
 
             //Debug.Log("Total Distance of the Drawing: " + totalDistance);
 
-            if (totalDistance < MinDistance)
+            if (totalDistance < MinDrawingLenght)
             {
                 Destroy(go);
                 TotalCount--;
                 ErrorSystem.instance.SetErrorMessage(ErrorSystem.DrawingTooSmall);
                 return 0f;
             }
-            else if(totalDistance > MaxDrawingLenght)
+            else if(totalDistance >= MaxDrawingLenght)
             {
                 Destroy(go);
                 TotalCount--;

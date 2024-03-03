@@ -18,6 +18,8 @@ public class ErrorSystem : MonoBehaviour
 
     public const string OnlyStaticDrawingsAllowed = "Only Static Drawings are allowed on this level";
     public const string OnlyDynamicDrawingsAllowed = "Only Dynamic Drawings are allowed on this level";
+
+    public const string TimeLimitExceeded = " Time Limit Exceeded";
     // Fixed Error Messages - END //
 
     public static ErrorSystem instance = null;

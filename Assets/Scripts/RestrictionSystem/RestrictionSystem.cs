@@ -20,6 +20,9 @@ public class RestrictionSystem : MonoBehaviour
     [Header("Max Amount Of Drawings")]
     [SerializeField] private int MaxDrawingCount = 10;
 
+    [Header("Min Lenght Of Drawings")]
+    [SerializeField] private int MinDrawingLenght = 1;
+
     [Header("Hide Scores On This Level")]
     [SerializeField] private bool Show_Score_On_This_Level = false;
 
@@ -80,6 +83,7 @@ public class RestrictionSystem : MonoBehaviour
         if(TimeController.Timer >= Time_Limit_Restriction)
         {
             GameManager.Instance.GameOver(GameManager.Time_Limit_Exceeded);
+            ErrorSystem.instance.SetErrorMessage(ErrorSystem.TimeLimitExceeded);
         }
     }
     private void CheckInstance()
@@ -107,11 +111,12 @@ public class RestrictionSystem : MonoBehaviour
     /// </summary>
     public object[] GetRestrictions()
     {
-        object[] restrictions = new object[4];
+        object[] restrictions = new object[3];
 
         // Restrictions //
         restrictions[0] = MaxDrawingLenght;
         restrictions[1] = MaxDrawingCount;
+        restrictions[2] = MinDrawingLenght;
         // Restrictions //
 
         return restrictions;
