@@ -33,7 +33,7 @@ public class CloseLevelScreen : MonoBehaviour
     }
     private void CheckForInput()
     {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        PointerEventData eventDataCurrentPosition = new(EventSystem.current);
         eventDataCurrentPosition.position = Input.mousePosition;
 
         List<RaycastResult> results = new List<RaycastResult>();
@@ -58,7 +58,7 @@ public class CloseLevelScreen : MonoBehaviour
     }
     private void AssignLevelsToButtons(int Button_Number)
     {
-        Debug.Log(Button_Number+" touched");
+        Debug.Log("Level Button: "+Button_Number+" touched");
         LevelManager.LoadLevel(Button_Number);
     }
 }
