@@ -93,6 +93,10 @@ public class BasketController : MonoBehaviour
         {
             isBallOnBasket = true;
         }
+        else if(collision.CompareTag(Drawing.DrawingTag))
+        {
+            Destroy(collision.gameObject);
+        }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour
             maxLevelReached = currentLevel;
             PlayerPrefs.SetInt(MaxLevel, maxLevelReached);
         }
+        Debug.Log("Current Level: "+currentLevel);
     }
 
     private void CheckInstance()
@@ -91,6 +92,8 @@ public class LevelManager : MonoBehaviour
 
     public static void LoadNextLevel()
     {
+        Debug.Log(PlayerPrefs.GetInt(MaxLevel, 0));
+
         if (maxLevelReached == 8)
         {
             Debug.LogWarning("Max level reached. Cannot load the next level.");
