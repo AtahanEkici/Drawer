@@ -58,7 +58,7 @@ public class CloseLevelScreen : MonoBehaviour
     }
     private void AssignLevelsToButtons(int Button_Number)
     {
-        Debug.Log("Level Button: "+Button_Number+" touched");
+        //Debug.Log("Level Button: "+Button_Number+" touched");
         LevelManager.LoadLevel(Button_Number);
     }
 }

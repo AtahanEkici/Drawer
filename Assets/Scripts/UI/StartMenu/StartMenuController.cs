@@ -54,10 +54,6 @@ public class StartMenuController : MonoBehaviour
         LevelsScreen.SetActive(false);
         StartingScreen.SetActive(true);
     }
-    public void LoadTest()
-    {
-        SceneManager.LoadScene("Test", LoadSceneMode.Single);
-    }
     private void CheckInstance()
     {
         if(instance == null)

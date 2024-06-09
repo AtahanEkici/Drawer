@@ -14,6 +14,7 @@ public class BallController : MonoBehaviour
     [SerializeField] private const string PlatformTag = "Platform";
     [SerializeField] private const string DrawingTag = "Drawing";
     [SerializeField] private const string StarTag = "Star";
+    [SerializeField] private const string SlingTag = "Sling";
 
     [Header("Local Components")]
     [SerializeField] private Rigidbody2D rb;
@@ -30,10 +31,9 @@ public class BallController : MonoBehaviour
     {
         CalculateMomentum();
     }
-    private float CalculateMomentum()
+    private void CalculateMomentum()
     {
-        Momentum = MassOfObject * rb.velocity.magnitude;
-        return Momentum;
+        Momentum = rb.mass * rb.velocity.magnitude;
     }
     private void GetLocalReferences()
     {
@@ -60,6 +60,9 @@ public class BallController : MonoBehaviour
                 case PlatformTag:
                     PlaySoundsBasedOnMomentum(SoundManager.Hit_Sound);
                     break;
+                case SlingTag:
+                    PlaySoundsBasedOnMomentum(SoundManager.RopeTouch);
+                    break;
                 default:
                     PlaySoundsBasedOnMomentum(SoundManager.Touch_Sound);
                     break;
@@ -69,7 +72,6 @@ public class BallController : MonoBehaviour
         {
             Debug.LogException(e);
         }
-
     }
     private void PlaySoundsBasedOnMomentum(AudioClip clip)
     {
@@ -90,6 +92,7 @@ public class BallController : MonoBehaviour
         if(SceneManager.GetActiveScene().isLoaded)
         {
             GameManager.Instance.GameOver(GameManager.Ball_Is_Destroyed);
+            Handheld.Vibrate();
         }
     }
 }

@@ -157,16 +157,30 @@ public class UI_Controller : MonoBehaviour
                 {
                     //Debug.Log("Static Allowed");
                     PhysicsType = false;
+                    PlayerPrefs.SetInt(LinephysicsType,0);
+
                 }
-                else
+                else if(restrictions.OnlyDynamicDrawingsAllowed)
                 {
                     //Debug.Log("Dynamic Allowed");
                     PhysicsType = true;
-                    PlayerPrefs.SetInt(LinephysicsType, 0);
+                    PlayerPrefs.SetInt(LinephysicsType, 1);
                 }
+                else
+                {
+                    int value = PlayerPrefs.GetInt(LinephysicsType, 1);
+
+                    if(value == 1)
+                    {
+                        PhysicsType = true;
+                    }
+                    else
+                    {
+                        PhysicsType = false;
+                    }
+                }
+
                 PhysicsToggle.isOn = PhysicsType;
-                PlayerPrefs.SetInt(LinephysicsType, Convert.ToInt32(PhysicsType));
-                //Debug.Log("Physics Type: " + PhysicsType);
             }
 
             if (PhysicsToggleText == null)

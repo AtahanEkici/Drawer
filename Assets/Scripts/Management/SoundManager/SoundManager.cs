@@ -22,8 +22,10 @@ public class SoundManager : MonoBehaviour
     private readonly string Click_Audio_File = "Click";
     private readonly string Destruction_Audio_File = "Destruction";
     private readonly string Button_Audio_File = "Button";
+    private readonly string Piston_Hit_Audio_File = "PistonHit";
+    private readonly string Rope_Touch = "RopeTouch";
 
-    [Header("Pre-Build Sounds")]
+    [Header("Pre-Built Sounds")]
     public static AudioClip Explosion_Sound;
     public static AudioClip Touch_Sound;
     public static AudioClip Pickup_Sound;
@@ -31,6 +33,8 @@ public class SoundManager : MonoBehaviour
     public static AudioClip Click_Sound;
     public static AudioClip Destruction_Sound;
     public static AudioClip Button_Sound;
+    public static AudioClip PistonHit;
+    public static AudioClip RopeTouch;
 
     // Main Functions Start //
     private void Awake()
@@ -72,13 +76,12 @@ public class SoundManager : MonoBehaviour
 
     public static void PlayButtonSound()
     {
-        GameObject soundObject = new GameObject("ButtonSound");
-        soundObject.transform.parent = null;
+        GameObject soundObject = new("ButtonSound");
 
         AudioSource audioSource = soundObject.AddComponent<AudioSource>();
         audioSource.PlayOneShot(Button_Sound);
 
-        Destroy(soundObject, Button_Sound.length * 1.2f);
+        Destroy(soundObject, Button_Sound.length * 2f);
     }
 
     private void GetSounds() // Get Sounds from the 
@@ -117,6 +120,14 @@ public class SoundManager : MonoBehaviour
             else if(file_name == Button_Audio_File)
             {
                 Button_Sound = current_clip;
+            }
+            else if (file_name == Piston_Hit_Audio_File)
+            {
+                PistonHit = current_clip;
+            }
+            else if (file_name == Rope_Touch)
+            {
+                RopeTouch = current_clip;
             }
             else
             {

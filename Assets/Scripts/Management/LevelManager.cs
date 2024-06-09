@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private bool dontDestroy = true;
 
     [Header("Max Level Reached")]
-    [SerializeField] private static int maxLevelReached = 0;
+    [SerializeField] private static int maxLevelReached = 1;
 
     private void Awake()
     {
@@ -32,14 +32,14 @@ public class LevelManager : MonoBehaviour
 
     private void CheckMaxLevel(int currentLevel)
     {
-        maxLevelReached = PlayerPrefs.GetInt(MaxLevel, 0);
+        maxLevelReached = PlayerPrefs.GetInt(MaxLevel, 1);
 
         if (maxLevelReached > currentLevel)
         {
             maxLevelReached = currentLevel;
             PlayerPrefs.SetInt(MaxLevel, maxLevelReached);
         }
-        Debug.Log("Current Level: "+currentLevel);
+        Debug.Log("Current Max Level: "+currentLevel);
     }
 
     private void CheckInstance()
@@ -92,7 +92,7 @@ public class LevelManager : MonoBehaviour
 
     public static void LoadNextLevel()
     {
-        Debug.Log(PlayerPrefs.GetInt(MaxLevel, 0));
+        Debug.Log(PlayerPrefs.GetInt(MaxLevel, 1));
 
         if (maxLevelReached == 8)
         {

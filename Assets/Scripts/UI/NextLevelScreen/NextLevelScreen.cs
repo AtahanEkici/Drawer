@@ -7,7 +7,7 @@ public class NextLevelScreen : MonoBehaviour
     [Header("Local References")]
     [SerializeField] private Button NextlevelButton;
 
-    private void Awake()
+    private void Start()
     {
         CheckInstance();
         GetLocalReferences();

@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53bd71cd9b94a6e49b1b230d37b06fef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundThreshold: 0.25
+  SoundThreshold: 0.05
   Momentum: 0
   MassOfObject: 0
   Velocity: 0
