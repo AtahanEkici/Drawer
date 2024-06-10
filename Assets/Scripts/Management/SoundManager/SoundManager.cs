@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour
     private readonly string Button_Audio_File = "Button";
     private readonly string Piston_Hit_Audio_File = "PistonHit";
     private readonly string Rope_Touch = "RopeTouch";
+    private readonly string Cannon_Shot = "CannonShot";
 
     [Header("Pre-Built Sounds")]
     public static AudioClip Explosion_Sound;
@@ -35,6 +36,7 @@ public class SoundManager : MonoBehaviour
     public static AudioClip Button_Sound;
     public static AudioClip PistonHit;
     public static AudioClip RopeTouch;
+    public static AudioClip CannonShot;
 
     // Main Functions Start //
     private void Awake()
@@ -128,6 +130,10 @@ public class SoundManager : MonoBehaviour
             else if (file_name == Rope_Touch)
             {
                 RopeTouch = current_clip;
+            }
+            else if(file_name == Cannon_Shot)
+            {
+                CannonShot = current_clip;
             }
             else
             {

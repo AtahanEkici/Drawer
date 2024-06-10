@@ -11,7 +11,6 @@ public class SlingLineRenderer : MonoBehaviour
 
     private GameObject ropeCollidersCollection;
 
-
     [Header("Chain Layer")]
     [SerializeField] private int chainColliderLayer;
     [SerializeField] private int RopeColliderLayer;
@@ -23,11 +22,12 @@ public class SlingLineRenderer : MonoBehaviour
 
     private void Start()
     {
-        ropeCollidersCollection = new("Rope Colliders Collection_"+GetInstanceID());
-        ropeCollidersCollection.tag = "Sling";
+        ropeCollidersCollection = new("Rope Colliders Collection_" + GetInstanceID())
+        {
+            tag = "Sling"
+        };
         ropeCollidersCollection.transform.localScale = Vector3.one;
 
-        // Assign the layer number for the chain colliders
         chainColliderLayer = LayerMask.NameToLayer("Chain");
         RopeColliderLayer = LayerMask.NameToLayer("Rope");
 
@@ -37,7 +37,7 @@ public class SlingLineRenderer : MonoBehaviour
     private void Update()
     {
         GetChainLocations();
-        //UpdateColliders();
+        UpdateColliders();
     }
     private void Initialize()
     {
@@ -82,7 +82,7 @@ public class SlingLineRenderer : MonoBehaviour
             Vector3 end = lineRenderer.GetPosition(i + 1);
 
             // Create a new GameObject for the collider
-            GameObject rope = new GameObject("LineCollider_" + i);
+            GameObject rope = new("LineCollider_" + i);
             rope.transform.parent = ropeCollidersCollection.transform;  // Parent to RopeCollidersCollection
             rope.tag = "Sling";
             rope.layer = RopeColliderLayer;
@@ -99,7 +99,12 @@ public class SlingLineRenderer : MonoBehaviour
             float angle = Mathf.Atan2(end.y - start.y, end.x - start.x) * Mathf.Rad2Deg;
             rope.transform.rotation = Quaternion.Euler(0, 0, angle);
 
-            //collider.excludeLayers = LayerMask.LayerToName(chainColliderLayer);
+            SpringJoint2D sj2d = rope.AddComponent<SpringJoint2D>();
+            sj2d.autoConfigureConnectedAnchor = true;
+            sj2d.dampingRatio = 0.9f;
+            sj2d.frequency = 3f;
+            sj2d.distance = 0.005f;
+            sj2d.connectedBody = chainsRigidbodies[i];
         }
     }
 }

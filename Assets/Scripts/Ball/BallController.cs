@@ -23,6 +23,16 @@ public class BallController : MonoBehaviour
     [Header("Collided Object")]
     [SerializeField] private GameObject CollidedObject;
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+    public static AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+    public static AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+    public static AndroidJavaObject vibrator = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
+#else
+    public static AndroidJavaClass unityPlayer;
+    public static AndroidJavaObject currentActivity;
+    public static AndroidJavaObject vibrator;
+#endif
+
     private void Awake()
     {
         GetLocalReferences();
@@ -85,6 +95,7 @@ public class BallController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         HandleCollisionSounds(collision.gameObject);
+        //Debug.Log("Touched: "+collision.gameObject);
     }
 
     private void OnDestroy()
@@ -92,7 +103,24 @@ public class BallController : MonoBehaviour
         if(SceneManager.GetActiveScene().isLoaded)
         {
             GameManager.Instance.GameOver(GameManager.Ball_Is_Destroyed);
-            Handheld.Vibrate();
+            Vibrate(500);
         }
+    }
+
+    public static void Vibrate(long milliseconds)
+    {
+        if (IsAndroid())
+            vibrator.Call("vibrate", milliseconds);
+        else
+            Handheld.Vibrate();
+    }
+
+    private static bool IsAndroid()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+	return true;
+#else
+        return false;
+#endif
     }
 }
