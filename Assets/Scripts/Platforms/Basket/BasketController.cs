@@ -51,7 +51,7 @@ public class BasketController : MonoBehaviour
         }
         catch(System.Exception e)
         {
-            Debug.LogException(e);
+            Debug.LogWarning("Hata: "+e);
         }
     }
     private void SliderOperations()

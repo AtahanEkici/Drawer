@@ -62,7 +62,6 @@ public class Burn : MonoBehaviour
         // Check the approximate color difference instead of direct comparison
         if (ColorDifference(render.material.color, WantedColor) < 0.001f)
         {
-            Destroy(gameObject);
             ParticleManager.SpawnDestroyedParticle(gameObject, CheckCollision(gameObject));
         }
     }

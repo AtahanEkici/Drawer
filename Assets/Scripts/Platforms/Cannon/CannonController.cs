@@ -1,6 +1,9 @@
 using UnityEngine;
 public class CannonController : MonoBehaviour
 {
+    [Header("Left Or Right")]
+    [SerializeField] private bool Right = true;
+
     [Header("Local Componenets")]
     [SerializeField] private Rigidbody2D rb2d;
     [SerializeField] private Vector3 InitialRotation;
@@ -74,7 +77,14 @@ public class CannonController : MonoBehaviour
         }
         else
         {
-            RotatablePlatform.RotateAround(GunBaseLocation.position, Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            if (Right)
+            {
+                RotatablePlatform.RotateAround(GunBaseLocation.position, Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            }
+            else
+            {
+                RotatablePlatform.RotateAround(GunBaseLocation.position, -Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            }
         }  
     }
     private void ResetCannonLocation()
@@ -90,7 +100,14 @@ public class CannonController : MonoBehaviour
         }
         else
         {
-            RotatablePlatform.RotateAround(GunBaseLocation.position, -Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            if(Right)
+            {
+                RotatablePlatform.RotateAround(GunBaseLocation.position, -Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            }
+            else
+            {
+                RotatablePlatform.RotateAround(GunBaseLocation.position, Vector3.back, RotationSpeed * Time.smoothDeltaTime);
+            }
         }
     }
     private void LaunchBall()

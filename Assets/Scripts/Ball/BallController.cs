@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class BallController : MonoBehaviour
@@ -22,16 +23,6 @@ public class BallController : MonoBehaviour
 
     [Header("Collided Object")]
     [SerializeField] private GameObject CollidedObject;
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-    public static AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-    public static AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-    public static AndroidJavaObject vibrator = currentActivity.Call<AndroidJavaObject>("getSystemService", "vibrator");
-#else
-    public static AndroidJavaClass unityPlayer;
-    public static AndroidJavaObject currentActivity;
-    public static AndroidJavaObject vibrator;
-#endif
 
     private void Awake()
     {
@@ -100,27 +91,16 @@ public class BallController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(SceneManager.GetActiveScene().isLoaded)
+        try
         {
             GameManager.Instance.GameOver(GameManager.Ball_Is_Destroyed);
-            Vibrate(500);
-        }
-    }
-
-    public static void Vibrate(long milliseconds)
-    {
-        if (IsAndroid())
-            vibrator.Call("vibrate", milliseconds);
-        else
             Handheld.Vibrate();
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning("Hata: "+e);
+        }
+        
     }
-
-    private static bool IsAndroid()
-    {
-#if UNITY_ANDROID && !UNITY_EDITOR
-	return true;
-#else
-        return false;
-#endif
-    }
+         
 }

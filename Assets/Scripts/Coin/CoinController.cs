@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class CoinController : MonoBehaviour
 {
     [Header("Coin Picked Up?")]
@@ -17,6 +18,9 @@ public class CoinController : MonoBehaviour
     [SerializeField] private float ShrinkThreshold = 0.0001f;
     [SerializeField] private Vector3 ShrinkVector = new(0.1f, 0.1f, 0.1f);
 
+    [Header("PlayerPref")]
+    private string CoinCheckPhrase;
+
     private void OnTriggerEnter2D(Collider2D col)
     {
         if(col.CompareTag("Ball"))
@@ -26,18 +30,36 @@ public class CoinController : MonoBehaviour
     }
     private void Awake()
     {
+        CoinCheckPhrase = (gameObject.name + SceneManager.GetActiveScene().name).Trim();
+        CheckTakenStatus();
         GetLocalComponents();
     }
     private void Update()
     {
         AnimateCoin();
     }
+    private void CheckTakenStatus()
+    {
+        bool status;
+
+        if(PlayerPrefs.GetInt(CoinCheckPhrase, 0) == 0)
+        {
+            status = false;
+        }
+        else
+        {
+            status = true;
+        }
+
+        gameObject.SetActive(!status);
+    }
     private void OnCoinTaken() // Disable collider and rigidbody then Play an animation //
     {
+        PlayerPrefs.SetInt(CoinCheckPhrase, 1);
         col.enabled = false;
         rb.simulated = false;
         isPickedUp = true;
-        Audio_Source.Play();
+        Audio_Source.Play(); 
     } 
     private void AnimateCoin()
     {
@@ -104,5 +126,10 @@ public class CoinController : MonoBehaviour
     private void OnDestroy()
     {
         StopAllCoroutines();
+        PlayerPrefs.Save();
+    }
+    private void OnDisable()
+    {
+        PlayerPrefs.Save();
     }
 }

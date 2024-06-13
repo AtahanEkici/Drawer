@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class LevelManager : MonoBehaviour
 {
     public const string MaxLevel = "MaxLevel";
@@ -94,9 +93,17 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log(PlayerPrefs.GetInt(MaxLevel, 1));
 
-        if (maxLevelReached == 8)
+        int currentlevel = int.Parse(SceneManager.GetActiveScene().name);
+
+        if (currentlevel + 1 > maxLevelReached)
+        {
+            PlayerPrefs.SetInt(MaxLevel, (currentlevel + 1));
+        }
+
+        if (maxLevelReached >= 9)
         {
             Debug.LogWarning("Max level reached. Cannot load the next level.");
+            SceneManager.LoadScene("StartMenu");
             return;
         }
         else

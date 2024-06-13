@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public class ParticleManager : MonoBehaviour
 {
@@ -52,18 +53,18 @@ public class ParticleManager : MonoBehaviour
             Debug.LogException(e);
         } 
     }
-    private static void PlayExplosionSound(GameObject go) // Destroy the GameObject after the duration of the audio clip //
+    private static void PlayExplosionSound() // Destroy the GameObject after the duration of the audio clip //
     {
-        if(CheckOthers(go))
-        {
-            AudioSource audioSource_External = new GameObject("Destroyed_Sound_" + go.name).AddComponent<AudioSource>();
-            audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
-            Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 1.2f);
-        }
-    }
-    private static bool CheckOthers(GameObject go)
-    {
-        return GameObject.Find("Destroyed_Sound_" + go.name) == null;
+            try
+            {
+                AudioSource audioSource_External = new GameObject("Destroyed_Sound_").AddComponent<AudioSource>();
+                audioSource_External.PlayOneShot(SoundManager.Explosion_Sound);
+                Destroy(audioSource_External.gameObject, SoundManager.Explosion_Sound.length * 1.2f);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }        
     }
     public static void SpawnDestroyedParticle(GameObject go, Vector3? touch_point = null)
     {
@@ -112,10 +113,10 @@ public class ParticleManager : MonoBehaviour
                 particleMaterial.SetColor("_Color", render.material.color);
                 renderer.material.shader = render.material.shader;
             }
-
-            PlayExplosionSound(go);
+            Destroy(go);
+            PlayExplosionSound();
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogException(e);
         }
