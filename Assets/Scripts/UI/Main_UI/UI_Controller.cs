@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class UI_Controller : MonoBehaviour
 {
     public const string NextLevelPanelResourcePath = "NextLevelPanel/NextLevelPanel";
-    public const string ToggleLabelString = "Line Physics: ";
-    public const string LinephysicsType = "LinePhysicsType";
     public const string ShowFPS = "ShowFPS";
     public const string PostProcess = "PostProcess";
     public const string FXAA = "FXAA";
@@ -29,8 +27,6 @@ public class UI_Controller : MonoBehaviour
     [SerializeField] private GameObject Level_Complete_Panel;
 
     [Header("Settings")]
-    [SerializeField] public Toggle PhysicsToggle;
-    [SerializeField] private TextMeshProUGUI PhysicsToggleText;
     [SerializeField] private Button MenuCloseButton;
     [SerializeField] private Toggle ShowFPSToggle;
     [SerializeField] private Toggle PostProcessToggle;
@@ -140,55 +136,10 @@ public class UI_Controller : MonoBehaviour
         try
         {
             // variables //
-            bool PhysicsType = true;
             bool ShowFPSPref = false;
             bool ShowPostProcessPref = true;
             bool FXAAPref = true;
             float audio_volume = 1.0f;
-
-            // Settings //
-            if (PhysicsToggle == null)
-            {
-                PhysicsToggle = SettingsPanel.transform.GetChild(0).GetComponent<Toggle>();
-
-                RestrictionSystem restrictions = RestrictionSystem.instance;
-
-                if(restrictions.OnlyStaticDrawingsAllowed)
-                {
-                    //Debug.Log("Static Allowed");
-                    PhysicsType = false;
-                    PlayerPrefs.SetInt(LinephysicsType,0);
-
-                }
-                else if(restrictions.OnlyDynamicDrawingsAllowed)
-                {
-                    //Debug.Log("Dynamic Allowed");
-                    PhysicsType = true;
-                    PlayerPrefs.SetInt(LinephysicsType, 1);
-                }
-                else
-                {
-                    int value = PlayerPrefs.GetInt(LinephysicsType, 1);
-
-                    if(value == 1)
-                    {
-                        PhysicsType = true;
-                    }
-                    else
-                    {
-                        PhysicsType = false;
-                    }
-                }
-
-                PhysicsToggle.isOn = PhysicsType;
-            }
-
-            if (PhysicsToggleText == null)
-            {
-                PhysicsToggleText = PhysicsToggle.GetComponentInChildren<TextMeshProUGUI>();
-
-                PhysicsToggleTextChange(PhysicsType);
-            }
             if (MenuCloseButton == null)
             {
                 MenuCloseButton = SettingsPanel.transform.GetChild(1).GetComponent<Button>();
@@ -321,7 +272,6 @@ public class UI_Controller : MonoBehaviour
     }
     private void DelegateToggles()
     {
-        PhysicsToggle.onValueChanged.AddListener(delegate{PhysicsToggleValueChanged(PhysicsToggle);});
         ShowFPSToggle.onValueChanged.AddListener(delegate{ShowFPSToggleValueChanged(ShowFPSToggle);});
         PostProcessToggle.onValueChanged.AddListener(delegate{ShowPostProcessValueChanged(PostProcessToggle);});
         FXAAToggle.onValueChanged.AddListener(delegate{FXAAToggleValueChanged(FXAAToggle);});
@@ -367,37 +317,6 @@ public class UI_Controller : MonoBehaviour
             PlayerPrefs.SetInt(PostProcess, 0);
         }
     }
-    private void PhysicsToggleValueChanged(Toggle toggle_value)
-    {
-        RestrictionSystem restrictions = RestrictionSystem.instance;
-
-        if(restrictions.OnlyStaticDrawingsAllowed)
-        {
-            ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyStaticDrawingsAllowed);
-            toggle_value.isOn = false;
-            return;
-        }
-        else if(restrictions.OnlyDynamicDrawingsAllowed)
-        {
-            ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyDynamicDrawingsAllowed);
-            toggle_value.isOn = true;
-            return;
-        }
-        else
-        {
-            bool value = toggle_value.isOn;
-            PhysicsToggleTextChange(value);
-
-            if (value)
-            {
-                PlayerPrefs.SetInt(LinephysicsType, 1);
-            }
-            else
-            {
-                PlayerPrefs.SetInt(LinephysicsType, 0);
-            }
-        }  
-    }
     private void ShowFPSToggleValueChanged(Toggle toggle_value)
     {
         bool value = toggle_value.isOn;
@@ -409,17 +328,6 @@ public class UI_Controller : MonoBehaviour
         else
         {
             PlayerPrefs.SetInt(ShowFPS, 0);
-        }
-    }
-    private void PhysicsToggleTextChange(bool value)
-    {
-        if (value)
-        {
-            PhysicsToggleText.text = ToggleLabelString + "Dynamic";
-        }
-        else
-        {
-            PhysicsToggleText.text = ToggleLabelString + "Static";
         }
     }
     public void OpenSettings()

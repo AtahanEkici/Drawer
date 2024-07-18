@@ -275,7 +275,7 @@ public class Draw : MonoBehaviour
     }
     private bool IsLineDynamic()
     {
-        int type = PlayerPrefs.GetInt(UI_Controller.LinephysicsType, 1);
+        int type = PlayerPrefs.GetInt(DrawingSpriteController.LinephysicsType, 1);
 
         if(type == 1)
         {
