@@ -112,6 +112,7 @@ public class DrawingSpriteController : MonoBehaviour
             }
             catch(System.Exception e)
             {
+                Debug.LogException(e);
                 ChangeDrawingState();
             }
         }

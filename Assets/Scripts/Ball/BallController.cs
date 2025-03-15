@@ -34,7 +34,7 @@ public class BallController : MonoBehaviour
     }
     private void CalculateMomentum()
     {
-        Momentum = rb.mass * rb.velocity.magnitude;
+        Momentum = rb.mass * rb.linearVelocity.magnitude;
     }
     private void GetLocalReferences()
     {

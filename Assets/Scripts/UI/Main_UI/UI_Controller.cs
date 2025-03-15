@@ -54,6 +54,7 @@ public class UI_Controller : MonoBehaviour
     [Header("Game Over Cause")]
     [SerializeField] private TextMeshProUGUI Game_Over_Cause;
 
+    [Obsolete]
     private void Awake()
     {
         CheckInstance();
@@ -61,6 +62,8 @@ public class UI_Controller : MonoBehaviour
         AddSoundToButtons();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    [Obsolete]
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         Startup(scene);
@@ -213,6 +216,8 @@ public class UI_Controller : MonoBehaviour
             Debug.LogException(e);
         }
     }
+
+    [Obsolete]
     private void Startup(Scene scene)
     {
         try
@@ -455,6 +460,8 @@ public class UI_Controller : MonoBehaviour
     {
         PlayerPrefs.Save();
     }
+
+    [Obsolete]
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
