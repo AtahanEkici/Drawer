@@ -47,7 +47,7 @@ public class ErrorSystem : MonoBehaviour
 
     [Header("Error Text")]
     [SerializeField] private TextMeshProUGUI ErrorMessage;
-    [SerializeField] private TextMeshProUGUI ErrorBaþlýk;
+    [SerializeField] private TextMeshProUGUI ErrorBaÅŸlÄ±k;
 
     private void Awake()
     {
@@ -90,9 +90,9 @@ public class ErrorSystem : MonoBehaviour
     {
         Timer = TimeCounter;
 
-        if (ErrorBaþlýk == null)
+        if (ErrorBaÅŸlÄ±k == null)
         {
-            ErrorBaþlýk = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            ErrorBaÅŸlÄ±k = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         }
 
         if (ErrorMessage == null)
@@ -102,7 +102,7 @@ public class ErrorSystem : MonoBehaviour
 
         if(TimerSlider == null)
         {
-            TimerSlider = ErrorBaþlýk.transform.GetChild(0).GetComponent<Slider>();
+            TimerSlider = ErrorBaÅŸlÄ±k.transform.GetChild(0).GetComponent<Slider>();
             TimerSlider.maxValue = TimeCounter;
             TimerSlider.minValue = 0f;
             TimerSlider.value = TimerSlider.maxValue;
@@ -118,10 +118,10 @@ public class ErrorSystem : MonoBehaviour
         ErrorMessage.text = Message;
         ErrorReceived = true;
     }
-    public void SetErrorMessage(string Message, string Baþlýk)
+    public void SetErrorMessage(string Message, string BaÅŸlÄ±k)
     {
         ErrorMessage.text = Message;
-        ErrorBaþlýk.text = Baþlýk;
+        ErrorBaÅŸlÄ±k.text = BaÅŸlÄ±k;
         ErrorReceived = true;
     }
     private void AnimateTable()

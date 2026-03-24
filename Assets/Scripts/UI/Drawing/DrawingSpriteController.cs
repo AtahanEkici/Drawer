@@ -22,26 +22,17 @@ public class DrawingSpriteController : MonoBehaviour
     [SerializeField] private Image imageComponent;
     [SerializeField] private Button DrawingButton;
 
-    [Header("Outside References")]
-    [SerializeField] private RestrictionSystem restrictions;
-
     public static DrawingSpriteController instance = null;
     private DrawingSpriteController() { }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        restrictions = RestrictionSystem.instance;
-    }
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
-        if (restrictions.OnlyStaticDrawingsAllowed)
+        if (RestrictionSystem.instance.OnlyStaticDrawingsAllowed)
         {
             //Debug.Log("Static Allowed");
             PlayerPrefs.SetInt(LinephysicsType, 0);
         }
-        else if (restrictions.OnlyDynamicDrawingsAllowed)
+        else if (RestrictionSystem.instance.OnlyDynamicDrawingsAllowed)
         {
             //Debug.Log("Dynamic Allowed");
             PlayerPrefs.SetInt(LinephysicsType, 1);
@@ -51,12 +42,8 @@ public class DrawingSpriteController : MonoBehaviour
     {
         CheckInstance();
         GetReferences();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        restrictions = RestrictionSystem.instance; 
-    }
-    private void Start()
-    {
         GetResources();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void GetReferences()
     {
@@ -91,8 +78,6 @@ public class DrawingSpriteController : MonoBehaviour
     }
     private void GetResources()
     {
-        
-
         try
         {
             WhiteSprite = Resources.Load<Sprite>(White_Drawing);
@@ -107,23 +92,29 @@ public class DrawingSpriteController : MonoBehaviour
     {
         //Debug.Log("DrawingButton clicked");
 
-        ToggleState = !ToggleState;
-
-        ChangeSprite();
-
-        if (restrictions.OnlyStaticDrawingsAllowed)
+        if (RestrictionSystem.instance.OnlyStaticDrawingsAllowed)
         {
             ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyStaticDrawingsAllowed);
             return;
         }
-        else if (restrictions.OnlyDynamicDrawingsAllowed)
+        else if (RestrictionSystem.instance.OnlyDynamicDrawingsAllowed)
         {
             ErrorSystem.instance.SetErrorMessage(ErrorSystem.OnlyDynamicDrawingsAllowed);
             return;
         }
         else
         {
-            ChangeDrawingState();
+            try
+            {
+                ChangeDrawingState();
+                ToggleState = !ToggleState;
+                ChangeSprite();
+            }
+            catch(System.Exception e)
+            {
+                Debug.LogException(e);
+                ChangeDrawingState();
+            }
         }
     }
     private void ChangeDrawingState()
