@@ -25,7 +25,7 @@ public class SlingLineRenderer : MonoBehaviour
 
     private void Start()
     {
-        ropeCollidersCollection = new("Rope Colliders Collection_" + GetInstanceID())
+        ropeCollidersCollection = new("Rope Colliders Collection_" + GetEntityId())
         {
             tag = "Sling"
         };

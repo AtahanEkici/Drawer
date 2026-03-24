@@ -14,7 +14,7 @@ public class CannonRammer : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ball"))
         {
-            collision.rigidbody.velocity = Vector3.zero;
+            collision.rigidbody.linearVelocity = Vector3.zero;
             collision.transform.parent = transform.parent;
 
             controller.isBallOnBreach = true;

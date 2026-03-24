@@ -1,0 +1,5 @@
+F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/x86_64/CMakeFiles/edit_cache.dir
+F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/x86_64/CMakeFiles/rebuild_cache.dir
+F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/x86_64/FramePacing/CMakeFiles/swappywrapper.dir
+F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/x86_64/FramePacing/CMakeFiles/edit_cache.dir
+F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/x86_64/FramePacing/CMakeFiles/rebuild_cache.dir

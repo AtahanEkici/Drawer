@@ -242,7 +242,7 @@ public class UI_Controller : MonoBehaviour
 
             if(Main_Audio_Listener == null)
             {
-                Main_Audio_Listener = FindObjectOfType<AudioListener>();
+                Main_Audio_Listener = FindAnyObjectByType<AudioListener>();
             }
 
             Game_Over_Panel.SetActive(false);

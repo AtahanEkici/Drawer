@@ -28,6 +28,12 @@ public class DrawingSpriteController : MonoBehaviour
     public static DrawingSpriteController instance = null;
     private DrawingSpriteController() { }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        restrictions = RestrictionSystem.instance;
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneLoadMode)
     {
         if (restrictions.OnlyStaticDrawingsAllowed)
@@ -45,8 +51,8 @@ public class DrawingSpriteController : MonoBehaviour
     {
         CheckInstance();
         GetReferences();
-        restrictions = RestrictionSystem.instance;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        restrictions = RestrictionSystem.instance; 
     }
     private void Start()
     {

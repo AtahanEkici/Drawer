@@ -95,21 +95,21 @@ public class LevelManager : MonoBehaviour
 
         int currentlevel = int.Parse(SceneManager.GetActiveScene().name);
 
-        if (currentlevel + 1 > maxLevelReached)
+        if (currentlevel >= 9)
         {
-            PlayerPrefs.SetInt(MaxLevel, (currentlevel + 1));
-        }
-
-        if (maxLevelReached >= 9)
-        {
-            Debug.LogWarning("Max level reached. Cannot load the next level.");
             SceneManager.LoadScene("StartMenu");
-            return;
         }
         else
         {
-            LoadLevel(maxLevelReached + 1);
+            ++currentlevel;
+            PlayerPrefs.SetInt(MaxLevel, currentlevel);
+            SceneManager.LoadScene(currentlevel);
         }
+    }
+
+    public static void LoadContinue()
+    {
+        SceneManager.LoadScene(PlayerPrefs.GetInt(MaxLevel));
     }
 
     private void OnDestroy()
