@@ -1,8 +1,7 @@
 {
   "buildFiles": [
     "F:\\Unity Projects\\Drawer\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
-    "F:\\Unity Projects\\Drawer\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt",
-    "F:\\Unity Projects\\Drawer\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\GameActivity\\CMakeLists.txt"
+    "F:\\Unity Projects\\Drawer\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
@@ -19,12 +18,6 @@
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
-    "game::@d02bb112ea9f9c2ed29f": {
-      "artifactName": "game",
-      "abi": "armeabi-v7a",
-      "output": "F:\\Unity Projects\\Drawer\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\RelWithDebInfo\\343kh6o2\\obj\\armeabi-v7a\\libgame.so",
-      "runtimeFiles": []
-    },
     "swappywrapper::@7e25bd1f32ce224db4e9": {
       "artifactName": "swappywrapper",
       "abi": "armeabi-v7a",

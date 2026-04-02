@@ -44,7 +44,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/armeabi-v7a/GameActivity/cmake_install.cmake")
   include("F:/Unity Projects/Drawer/.utmp/RelWithDebInfo/343kh6o2/armeabi-v7a/FramePacing/cmake_install.cmake")
 
 endif()

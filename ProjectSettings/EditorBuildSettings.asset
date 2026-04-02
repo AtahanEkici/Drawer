@@ -38,4 +38,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Test/Test/Test.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 76565a26cbe93d740881ea8a38aa2ec3, type: 2}
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 18bd517e38c31c242a4a0a0b86f0d4e7, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 376cb24ceef55ca489bcaec32115b1b8, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: af46bdcf3b0844347a69e7c6c1de0bb7, type: 2}
